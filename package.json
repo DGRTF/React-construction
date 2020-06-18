@@ -2,6 +2,12 @@
   "name": "react-construction",
   "version": "0.1.0",
   "private": true,
+  "babel": {
+    "plugins": [
+      "transform-react-pug",
+      "transform-react-jsx"
+    ]
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
@@ -10,9 +16,11 @@
     "@types/node": "^12.12.47",
     "@types/react": "^16.9.36",
     "@types/react-dom": "^16.9.8",
+    "ii": "^0.1.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
+    "save-dev": "0.0.1-security",
     "typescript": "^3.7.5"
   },
   "scripts": {
@@ -35,5 +43,17 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/react-redux": "^7.1.9",
+    "babel-plugin-transform-react-pug": "^7.0.1",
+    "eslint-config-ts-react": "^0.2.18",
+    "eslint-plugin-react": "^7.20.0",
+    "eslint-plugin-react-hooks": "^4.0.4",
+    "immutable": "^4.0.0-rc.12",
+    "node-sass": "^4.14.1",
+    "react-redux": "^7.2.0",
+    "redux": "^4.0.5",
+    "sass-loader": "^8.0.2"
   }
 }

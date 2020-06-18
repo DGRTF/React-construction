@@ -1,0 +1,19 @@
+.submit {
+  width: 100%;
+  border: none;
+  display: flex;
+  justify-content: start;
+  background-color: transparent;
+  color: #5f5e5e;
+  padding: 0;
+  overflow: hidden;
+
+  &:hover {
+    background-color: rgba(207, 207, 207, 0.8);
+  }
+
+  &:focus {
+    outline: none;
+    background-color: rgba(207, 207, 207, 0.8);
+  }
+}

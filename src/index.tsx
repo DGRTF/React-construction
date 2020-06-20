@@ -5,12 +5,25 @@ import App from './App'
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import store from './store/store';
+import AddConstruction from './components/AddConstruction/AddConstruction';
+import {
+  Route,
+  Switch,
+  Router,
+  Redirect,
+  withRouter
+} from "react-router-dom";
+import history from './history/history'
+
+// const history = createBrowserHistory();
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <App />
+      <AddConstruction />
     </Provider>
+
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import Submit from './Submit';
-import './FormHeader.scss';
+import './FormOneSubmit.scss';
 
-interface IFormHeaderProps {
+interface IFormOneSubmitProps {
   name: string;
   EventGetData: (formData: FormData) => Promise<void>;
 }
 
-export default class FormHeader extends Component<IFormHeaderProps> {
+export default class FormOneSubmit extends Component<IFormOneSubmitProps> {
   render() {
     return (
-      <form className='form-header' onSubmit={this.GetData.bind(this)}>
+      <form className='form-one-submit' onSubmit={this.GetData.bind(this)}>
         <Submit name={this.props.name}/>
       </form>
     );

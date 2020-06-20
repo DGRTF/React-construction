@@ -20,8 +20,12 @@
   &__content {
     padding-left: 20px;
 
-    &-hide{
+    &-hide {
       display: none;
     }
+  }
+
+  &__content-item {
+    display: flex;
   }
 }

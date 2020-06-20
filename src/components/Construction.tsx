@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import './Construction.scss';
-import FormHeader from './FormHeader';
+import FormOneSubmit from './FormOneSubmit';
 import Room from './Room';
 import Submit from './Submit';
 import store from '../store/store';
+import Button from './Button/Button';
+import AddEditRoom from './AddEditRoom/AddEditRoom';
 
 
 interface IConstructionProps {
-  constructorJSON: {
+  constructionJSON: {
     id: number;
     name: string;
     address: string;
@@ -15,40 +17,28 @@ interface IConstructionProps {
 }
 
 interface IConstructionState {
-  roomList?: JSX.Element;
   showContent: boolean;
-}
-
-export default class Construction extends Component<IConstructionProps, IConstructionState> {
-  private roomJSONArr: {
+  visibleButton: boolean;
+  roomJSONArr: {
     id: number;
     name: string;
     floor: number;
-  }[] = [];
+  }[];
+}
 
+export default class Construction extends Component<IConstructionProps, IConstructionState> {
   constructor(props: any) {
     super(props);
-    this.roomJSONArr = [
-      {
-        id: 1,
-        name: 'Кладовая',
-        floor: 2,
-      },
-    ];
     this.state = {
-      roomList:
-        <div className='construction__list'>
-          {this.roomJSONArr.map(room =>
-            <Room roomJSON={room}></Room>
-          )}
-        </div>,
+      visibleButton: true,
+      roomJSONArr: [],
       showContent: false,
     }
   }
 
-  private machineInConstructorPath = 'Warehouse/GetRoomsInConstructor?';
+  private machineInConstructorPath = 'Warehouse/GetMachinesInConstruction?';
 
-  private roomInConstructorPath = 'Warehouse/GetMachineInConstructor?';
+  private roomInConstructorPath = 'Warehouse/GetRoomsInConstruction?';
 
   private machineJSONArr: {
     id: number;
@@ -56,74 +46,60 @@ export default class Construction extends Component<IConstructionProps, IConstru
     createYear: number;
   }[];
 
+  private visibleButtonForm: JSX.Element;
+
   render() {
+    this.visibleButtonForm =
+      this.state.visibleButton ? <Button name='Добавить комнату' ClickHandler={this.VisibleButtonForm.bind(this)} /> :
+        <AddEditRoom EventGetData={this.AddRoom.bind(this)} submitText='Добавить комнату'></AddEditRoom>
     return (
       <div className='construction'>
         <div className='construction__head'>
           <div className='construction__label'>
-            <form onSubmit={this.GetRoomsInConstructor.bind(this)}>
+            <form onSubmit={this.GetRoomsInConstruction.bind(this)}>
               <Submit name='V' />
             </form>
           </div>
           <div className='construction__header'>
-            <FormHeader name={this.props.constructorJSON.name}
-              EventGetData={this.GetMachineInConstructor.bind(this)}></FormHeader>
+            <FormOneSubmit name={this.props.constructionJSON.name}
+              EventGetData={this.GetMachineInConstruction.bind(this)}></FormOneSubmit>
           </div>
         </div>
         <div className={'construction__content ' + (this.state.showContent ? '' : 'construction__content-hide')}>
-          {this.state.roomList && <div>{this.state.roomList}</div>}
+          {this.visibleButtonForm}
+          <div className='construction__list'>
+            {this.state.roomJSONArr.map(roomJSON =>
+            <div className='construction__content-item'>
+              <Room roomJSON={roomJSON}></Room>
+              <form onSubmit={this.DeleteRoomInConstruction.bind(this)}>
+                <input type="hidden" value={`${roomJSON.id}`} name='roomId' />
+                <input type="hidden" value={`${this.props.constructionJSON.id}`} name='constructionId' />
+                <Submit name='X' />
+              </form>
+            </div>
+            )}
+          </div>
         </div>
       </div>
     );
   }
 
-  private async GetRoomsInConstructor(ev: React.FormEvent): Promise<void> {
+  private async GetRoomsInConstruction(ev: React.FormEvent): Promise<void> {
     ev.preventDefault();
     if (!this.state.showContent) {
-      // let formData = new FormData(ev.currentTarget as HTMLFormElement);
-      // const response = await fetch(this.roomInConstructorPath + this.props.constructorJSON.id, {
-      //   method: 'POST',
-      //   body: formData
-      // });
+      let formData = new FormData(ev.currentTarget as HTMLFormElement);
+      const response = await fetch(this.roomInConstructorPath + `constructionId=${this.props.constructionJSON.id}`, {
+        method: 'POST',
+        body: formData
+      });
 
-      // this.roomJSONArr = await response.json();
-
-      //Заглушка
-      this.roomJSONArr = [
-        {
-          id: 1,
-          name: 'Кладовая',
-          floor: 2,
-        },
-        {
-          id: 2,
-          name: 'Офис',
-          floor: 2,
-        },
-        {
-          id: 3,
-          name: 'Помещение склада',
-          floor: 2,
-        },
-      ];
-      this.UpdateContent();
+      let JSONArr = await response.json();
+      this.setState({ roomJSONArr: JSONArr });
     }
     this.setState({ showContent: !this.state.showContent });
   }
 
-  private UpdateContent() {
-    const roomList: JSX.Element =
-      <div className='constructor__list'>
-        {this.roomJSONArr.map(room =>
-          <Room roomJSON={room}></Room>
-        )}
-      </div>;
-    this.setState({
-      roomList: roomList
-    });
-  }
-
-  private async GetMachineInConstructor(formData: FormData): Promise<void> {
+  private async GetMachineInConstruction(formData: FormData): Promise<void> {
     // const response = await fetch(this.machineInConstructorPath + '/' + this.props.constructorJSON.id, {
     //   method: 'POST',
     //   body: formData
@@ -156,6 +132,33 @@ export default class Construction extends Component<IConstructionProps, IConstru
         machineJSONArr: this.machineJSONArr
       }
     });
+  }
+
+  private async AddRoom(formData: FormData) {
+    const response = await fetch(`Warehouse/AddRoomInConstruction?constructionId=${this.props.constructionJSON.id}`, {
+      method: 'POST',
+      body: formData
+    });
+
+    let JSONArr = await response.json();
+    this.setState({ roomJSONArr: JSONArr });
+    this.setState({ visibleButton: !this.state.visibleButton });
+  }
+
+  private VisibleButtonForm() {
+    this.setState({ visibleButton: !this.state.visibleButton });
+  }
+
+  private async DeleteRoomInConstruction(ev: React.FormEvent) {
+    ev.preventDefault();
+    let formData = new FormData(ev.currentTarget as HTMLFormElement);
+    const response = await fetch('Warehouse/DeleteRoomInConstruction', {
+      method: 'POST',
+      body: formData
+    });
+
+    let JSONArr = await response.json();
+    this.setState({ roomJSONArr: JSONArr });
   }
 
 }

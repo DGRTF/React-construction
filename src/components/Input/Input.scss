@@ -1,0 +1,14 @@
+.input-default {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+
+  &__field {
+    height: 20px;
+    width: 80%;
+    max-width: 200px;
+    border: 1px solid black;
+    border-radius: 3px;
+    box-sizing: border-box;
+  }
+}

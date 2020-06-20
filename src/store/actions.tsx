@@ -23,5 +23,3 @@ export let deleteMachine = function (machineJSON: { id: number; name: string; cr
 function GetLiteralInString<T extends string>(str: T): T {
   return str;
 }
-
-// module.exports = { setState, addMachine, deleteMachine }

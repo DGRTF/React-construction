@@ -5,6 +5,7 @@ import * as actions from "./store/actions";
 import Table from './components/table/Table';
 import store from './store/store';
 import './App.scss';
+import { Link } from "react-router-dom";
 
 interface IAppProps {
   machineJSONArr?: {

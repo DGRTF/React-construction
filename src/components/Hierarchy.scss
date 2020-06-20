@@ -9,6 +9,10 @@
     width: 100%;
   }
 
+  &__content-item {
+    display: flex;
+  }
+
   &__border-move {
     position: absolute;
     display: flex;

@@ -1,29 +1,57 @@
 import React from 'react';
 import './Hierarchy.scss';
 import Construction from './Construction';
+import Button from './Button/Button';
+import Submit from './Submit';
+import store from './../store/store/AddConstructionCallBack';
+import storeVisible from './../store/store/AddConstructionVisible';
 
-export default class Hierarchy extends React.Component {
-  constructor(props: any) {
-    super(props);
-    this.Init();
-  }
+interface IHierarchyProps {
 
-  private constructionPath:  'Warehouse/GetConstructions?';
+}
 
-  private constructorJSONArr: {
+interface IHierarchyState {
+  visibleButton: boolean;
+  constructionJSONArr: {
     id: number;
     name: string;
     address: string;
-  }[] = [];
+  }[];
+}
+
+export default class Hierarchy extends React.Component<IHierarchyProps, IHierarchyState> {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      visibleButton: true,
+      constructionJSONArr: []
+    }
+
+    this.Init();
+  }
+
+
+
+  private constructionPath = 'Warehouse/GetConstructions?';
+
+  private visibleButtonForm: JSX.Element;
 
   render() {
+
+
     return (
       <div className="hierarchy" style={{ width: '150px', minWidth: '150px' }}>
         <div className="hierarchy__content">
-          {
-            this.constructorJSONArr && this.constructorJSONArr.map(constructorJSON =>
-              <Construction constructorJSON={constructorJSON} />
-            )
+          <Button name='Добавить здание' ClickHandler={this.VisibleButtonForm.bind(this)} />
+          {this.state.constructionJSONArr && this.state.constructionJSONArr.map(constructionJSON =>
+            <div className='hierarchy__content-item'>
+              <Construction constructionJSON={constructionJSON} />
+              <form onSubmit={this.DeleteConstruction.bind(this)}>
+                <input type="hidden" value={`${constructionJSON.id}`} name='id' />
+                <Submit name='X' />
+              </form>
+            </div>
+          )
           }
         </div>
         <div className="hierarchy__border-move" style={{ left: '148px' }}
@@ -37,33 +65,47 @@ export default class Hierarchy extends React.Component {
   }
 
   private Init() {
-    this.GetData();
+    this.GetConstructions();
   }
 
-  private async GetData() {
-      // const response = await fetch(this.constructionPath + 'count=10', {
-      //   method: 'POST',
-      // });
+  private VisibleButtonForm() {
+    store.dispatch({
+      type: 'SET_CALLBACK',
+      UpdateCallback: this.SetConstructionJSONArr.bind(this)
+    });
+    storeVisible.dispatch({
+      type: 'SET_VISIBLE',
+      visible: true
+    });
+  }
 
-      // this.constructorJSONArr = await response.json();
-    // заглушка
-    this.constructorJSONArr = [
-      {
-        id: 1,
-        name: 'Офис',
-        address: 'Невский пр-кт, 246',
-      },
-      {
-        id: 1,
-        name: 'Склад расходников',
-        address: 'ул. Пионерская, 117',
-      },
-      {
-        id: 1,
-        name: 'Склад техники',
-        address: 'ВО, 11-я линия, 32К3',
-      },
-    ]
+  private SetConstructionJSONArr(JSONArr: {
+    id: number;
+    name: string;
+    address: string;
+  }[]) {
+    this.setState({ constructionJSONArr: JSONArr });
+    
+  }
+
+  private async GetConstructions() {
+    const response = await fetch(this.constructionPath, {
+      method: 'POST',
+    });
+    let JSONArr = await response.json();
+    this.setState({ constructionJSONArr: JSONArr });
+  }
+
+  private async DeleteConstruction(ev: React.FormEvent) {
+    ev.preventDefault();
+    let formData = new FormData(ev.currentTarget as HTMLFormElement);
+    const response = await fetch('Warehouse/DeleteConstruction', {
+      method: 'POST',
+      body: formData
+    });
+
+    let JSONArr = await response.json();
+    this.setState({ constructionJSONArr: JSONArr });
   }
 
   private mouseX: number;

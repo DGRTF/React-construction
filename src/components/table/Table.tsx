@@ -42,8 +42,6 @@ export default class Table extends Component<ITableProps> {
 
   selectLine: number;
 
-  private firstLoad = false;
-
   private currentElement: HTMLElement;
 
   private verticalBorderArr: VerticalBorder[] = [];
@@ -101,7 +99,7 @@ export default class Table extends Component<ITableProps> {
   private Init(cont: HTMLElement[]) {
     this.Create(cont);
     this.IntervalCheckSize();
-    this.firstLoad = true;
+    // this.firstLoad = true;
   }
 
   Create(cont: HTMLElement[]) {

@@ -30,15 +30,9 @@ export default class Hierarchy extends React.Component<IHierarchyProps, IHierarc
     this.Init();
   }
 
-
-
   private constructionPath = 'Warehouse/GetConstructions?';
 
-  private visibleButtonForm: JSX.Element;
-
   render() {
-
-
     return (
       <div className="hierarchy" style={{ width: '150px', minWidth: '150px' }}>
         <div className="hierarchy__content">
@@ -85,7 +79,7 @@ export default class Hierarchy extends React.Component<IHierarchyProps, IHierarc
     address: string;
   }[]) {
     this.setState({ constructionJSONArr: JSONArr });
-    
+
   }
 
   private async GetConstructions() {

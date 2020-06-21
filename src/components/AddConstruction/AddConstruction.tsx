@@ -15,10 +15,7 @@ export default class AddConstruction extends React.Component<{}, IAddConstructio
       visible: false
     };
 
-    this.SetVisible();
     storeVisible.subscribe(this.SetVisible.bind(this));
-
-    this.SetUpdateCallback();
     store.subscribe(this.SetUpdateCallback);
   }
 
@@ -28,17 +25,6 @@ export default class AddConstruction extends React.Component<{}, IAddConstructio
     address: string;
   }[]) => void;
 
-  private SetUpdateCallback = () => {
-    this.UpdateCallback = store.getState();
-  }
-
-  private SetVisible() {
-    console.warn('object');
-    this.setState({
-      visible: storeVisible.getState()
-    });
-  }
-
   private visibleElement: JSX.Element;
 
   render() {
@@ -47,6 +33,16 @@ export default class AddConstruction extends React.Component<{}, IAddConstructio
     return (
       this.visibleElement
     );
+  }
+
+  private SetUpdateCallback = () => {
+    this.UpdateCallback = store.getState();
+  }
+
+  private SetVisible() {
+    this.setState({
+      visible: storeVisible.getState()
+    });
   }
 
   private async AddConstruction(formData: FormData) {

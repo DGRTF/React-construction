@@ -4,6 +4,8 @@ import FormOneSubmit from './FormOneSubmit';
 import store from '../store/store';
 import Button from './Button/Button';
 import AddEditMachine from './AddEditMachine/AddEditMachine';
+// import storeVisibleAddRoom from '../store/store/AddRoomVisible';
+// import storeCallbackAddRoom from './../store/store/CallbackAddRoom';
 
 
 interface IRoomProps {

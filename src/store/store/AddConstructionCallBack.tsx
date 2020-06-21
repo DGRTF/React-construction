@@ -1,13 +1,13 @@
 import { createStore } from 'redux';
 import { reducer } from './../reducers/AddConstructionCallBack';
 
-const store = createStore(reducer);
+const storeCallbackModal = createStore(reducer);
 
-store.dispatch({
+storeCallbackModal.dispatch({
   type: "SET_STATE",
   state: {
     UpdateCallBack: null
   }
 });
 
-export default store;
+export default storeCallbackModal;

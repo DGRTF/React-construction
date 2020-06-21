@@ -5,7 +5,10 @@ import Room from './Room';
 import Submit from './Submit';
 import store from '../store/store';
 import Button from './Button/Button';
-import AddEditRoom from './AddEditRoom/AddEditRoom';
+import storeVisibleAddRoom from '../store/store/AddRoomVisible';
+import storeCallbackAddRoom from './../store/store/CallbackAddRoom';
+import storeConstructionId from '../store/store/ConstructionId';
+import storeRoomJSON from '../store/store/RoomJSON';
 
 
 interface IConstructionProps {
@@ -36,8 +39,6 @@ export default class Construction extends Component<IConstructionProps, IConstru
     }
   }
 
-  private machineInConstructorPath = 'Warehouse/GetMachinesInConstruction?';
-
   private roomInConstructorPath = 'Warehouse/GetRoomsInConstruction?';
 
   private machineJSONArr: {
@@ -46,12 +47,7 @@ export default class Construction extends Component<IConstructionProps, IConstru
     createYear: number;
   }[];
 
-  private visibleButtonForm: JSX.Element;
-
   render() {
-    this.visibleButtonForm =
-      this.state.visibleButton ? <Button name='Добавить комнату' ClickHandler={this.VisibleButtonForm.bind(this)} /> :
-        <AddEditRoom EventGetData={this.AddRoom.bind(this)} submitText='Добавить комнату'></AddEditRoom>
     return (
       <div className='construction'>
         <div className='construction__head'>
@@ -66,22 +62,47 @@ export default class Construction extends Component<IConstructionProps, IConstru
           </div>
         </div>
         <div className={'construction__content ' + (this.state.showContent ? '' : 'construction__content-hide')}>
-          {this.visibleButtonForm}
+          <Button name='Добавить комнату' ClickHandler={this.VisibleButtonForm.bind(this)} />
           <div className='construction__list'>
-            {this.state.roomJSONArr.map(roomJSON =>
-            <div className='construction__content-item'>
-              <Room roomJSON={roomJSON}></Room>
-              <form onSubmit={this.DeleteRoomInConstruction.bind(this)}>
-                <input type="hidden" value={`${roomJSON.id}`} name='roomId' />
-                <input type="hidden" value={`${this.props.constructionJSON.id}`} name='constructionId' />
-                <Submit name='X' />
-              </form>
-            </div>
+            {this.state.roomJSONArr.map((roomJSON, item) =>
+              <div className='construction__content-item'>
+                <Room roomJSON={roomJSON}></Room>
+                <button data-room-item={`${item}`} onClick={this.EditRoom.bind(this)}>/</button>
+                <form onSubmit={this.DeleteRoomInConstruction.bind(this)}>
+                  <input type="hidden" value={`${roomJSON.id}`} name='roomId' />
+                  <input type="hidden" value={`${this.props.constructionJSON.id}`} name='constructionId' />
+                  <Submit name='X' />
+                </form>
+              </div>
             )}
           </div>
         </div>
       </div>
     );
+  }
+
+  private EditRoom(ev: React.MouseEvent) {
+    const item = (ev.currentTarget as HTMLElement).dataset.roomItem;
+    console.warn(item);
+    storeRoomJSON.dispatch({
+      type: 'SET_ROOMJSON',
+      roomJSON: this.state.roomJSONArr[Number(item)]
+    });
+
+    storeConstructionId.dispatch({
+      type: 'SET_CONSTRUCTIONID',
+      constructionId: this.props.constructionJSON.id
+    });
+
+    storeCallbackAddRoom.dispatch({
+      type: 'SET_CALLBACK',
+      UpdateCallback: this.SetRoomJSONArr.bind(this)
+    });
+
+    storeVisibleAddRoom.dispatch({
+      type: 'SET_VISIBLE',
+      visible: true
+    });
   }
 
   private async GetRoomsInConstruction(ev: React.FormEvent): Promise<void> {
@@ -134,19 +155,31 @@ export default class Construction extends Component<IConstructionProps, IConstru
     });
   }
 
-  private async AddRoom(formData: FormData) {
-    const response = await fetch(`Warehouse/AddRoomInConstruction?constructionId=${this.props.constructionJSON.id}`, {
-      method: 'POST',
-      body: formData
+  private VisibleButtonForm() {
+    storeConstructionId.dispatch({
+      type: 'SET_CONSTRUCTIONID',
+      constructionId: this.props.constructionJSON.id
     });
 
-    let JSONArr = await response.json();
-    this.setState({ roomJSONArr: JSONArr });
-    this.setState({ visibleButton: !this.state.visibleButton });
+    storeCallbackAddRoom.dispatch({
+      type: 'SET_CALLBACK',
+      UpdateCallback: this.SetRoomJSONArr.bind(this)
+    });
+
+    storeVisibleAddRoom.dispatch({
+      type: 'SET_VISIBLE',
+      visible: true
+    });
   }
 
-  private VisibleButtonForm() {
-    this.setState({ visibleButton: !this.state.visibleButton });
+  private SetRoomJSONArr(JSONArr: {
+    id: number;
+    name: string;
+    floor: number;
+  }[]) {
+    console.warn('callback');
+    console.warn(JSONArr);
+    this.setState({ roomJSONArr: JSONArr });
   }
 
   private async DeleteRoomInConstruction(ev: React.FormEvent) {

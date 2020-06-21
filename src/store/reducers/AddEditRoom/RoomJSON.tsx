@@ -1,4 +1,4 @@
-import { setRoomJSON, setState } from './../actions/RoomJSON';
+import { setRoomJSON, setState } from '../../actions/AddEditRoom/RoomJSON';
 
 type ActionTypes = ReturnType<typeof setRoomJSON> | ReturnType<typeof setState>;
 

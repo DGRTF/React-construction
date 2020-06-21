@@ -1,4 +1,4 @@
-import { setConstructionId, setState } from '../actions/ConstructionId';
+import { setConstructionId, setState } from '../../actions/AddEditRoom/ConstructionId';
 
 type ActionTypes = ReturnType<typeof setConstructionId> | ReturnType<typeof setState>;
 

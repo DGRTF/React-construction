@@ -1,5 +1,5 @@
 import { createStore } from 'redux';
-import { reducer } from './../reducers/CallbackAddRoom';
+import { reducer } from '../../reducers/AddEditRoom/CallbackAddRoom';
 
 const storeCallbackAddRoom = createStore(reducer);
 

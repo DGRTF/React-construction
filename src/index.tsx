@@ -6,7 +6,7 @@ import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import store from './store/store';
 import AddConstruction from './components/AddConstruction/AddConstruction';
-import AddRoom from './components/AddRoom/AddEditRoom';
+import AddRoom from './components/AddEditRoom/AddEditRoom';
 
 ReactDOM.render(
   <React.StrictMode>

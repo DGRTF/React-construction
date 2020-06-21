@@ -1,5 +1,5 @@
 import { createStore } from 'redux';
-import { reducer } from './../reducers/AddConstructionCallBack';
+import { reducer } from '../../reducers/AddEditConstruction/AddConstructionCallBack';
 
 const storeCallbackModal = createStore(reducer);
 

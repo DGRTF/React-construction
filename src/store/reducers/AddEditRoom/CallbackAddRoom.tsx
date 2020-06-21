@@ -1,4 +1,4 @@
-import { setCallback, setState } from './../actions/AddConstructionCallBack';
+import { setCallback, setState } from '../../actions/AddEditRoom/CallbackAddRoom';
 
 type ActionTypes = ReturnType<typeof setCallback> | ReturnType<typeof setState>;
 

@@ -1,5 +1,5 @@
 import { createStore } from 'redux';
-import { reducer } from './../reducers/ConstructionId';
+import { reducer } from '../../reducers/AddEditRoom/ConstructionId';
 
 const storeConstructionId = createStore(reducer);
 

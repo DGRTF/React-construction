@@ -1,11 +1,11 @@
 import React from 'react';
 import './AddEditRoom.scss';
-import storeVisibleAddRoom from '../../store/store/AddRoomVisible';
-import storeCallbackAddRoom from '../../store/store/CallbackAddRoom';
+import storeVisibleAddRoom from '../../store/store/AddEditRoom/AddRoomVisible';
+import storeCallbackAddRoom from '../../store/store/AddEditRoom/CallbackAddRoom';
 import Submit from '../Submit';
 import Input from '../Input/Input';
-import storeConstructionId from '../../store/store/ConstructionId';
-import storeRoomJSON from '../../store/store/RoomJSON';
+import storeConstructionId from '../../store/store/AddEditRoom/ConstructionId';
+import storeRoomJSON from '../../store/store/AddEditRoom/RoomJSON';
 import Button from '../Button/Button';
 
 interface IAddEditRoomState {

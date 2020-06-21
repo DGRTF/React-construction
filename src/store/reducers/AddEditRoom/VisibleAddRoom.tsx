@@ -1,4 +1,4 @@
-import { setVisible, setState } from './../actions/AddConstructionVisible';
+import { setVisible, setState } from '../../actions/AddEditConstruction/AddConstructionVisible';
 
 type ActionTypes = ReturnType<typeof setVisible> | ReturnType<typeof setState>;
 

@@ -3,12 +3,11 @@ import './Hierarchy.scss';
 import Construction from './Construction';
 import Button from './Button/Button';
 import Submit from './Submit';
-import store from './../store/store/AddConstructionCallBack';
-import storeVisible from './../store/store/AddConstructionVisible';
-
-interface IHierarchyProps {
-
-}
+import store from '../store/store/AddEditConstruction/AddConstructionCallBack';
+import storeConstructionJSON from '../store/store/AddEditConstruction/ConstructionJSON';
+import storeVisible from '../store/store/AddEditConstruction/AddConstructionVisible';
+import storeConstructionCallback from '../store/store/AddEditConstruction/AddConstructionCallBack';
+import storeVisibleAddEditConstruction from '../store/store/AddEditConstruction/AddConstructionVisible';
 
 interface IHierarchyState {
   visibleButton: boolean;
@@ -19,14 +18,13 @@ interface IHierarchyState {
   }[];
 }
 
-export default class Hierarchy extends React.Component<IHierarchyProps, IHierarchyState> {
+export default class Hierarchy extends React.Component<{}, IHierarchyState> {
   constructor(props: any) {
     super(props);
     this.state = {
       visibleButton: true,
       constructionJSONArr: []
     }
-
     this.Init();
   }
 
@@ -37,9 +35,10 @@ export default class Hierarchy extends React.Component<IHierarchyProps, IHierarc
       <div className="hierarchy" style={{ width: '150px', minWidth: '150px' }}>
         <div className="hierarchy__content">
           <Button name='Добавить здание' ClickHandler={this.VisibleButtonForm.bind(this)} />
-          {this.state.constructionJSONArr && this.state.constructionJSONArr.map(constructionJSON =>
+          {this.state.constructionJSONArr && this.state.constructionJSONArr.map((constructionJSON, item) =>
             <div className='hierarchy__content-item'>
               <Construction constructionJSON={constructionJSON} />
+              <Button dataSet={`${item}`} name='/' ClickHandler={this.EditConstruction.bind(this)}>/</Button>
               <form onSubmit={this.DeleteConstruction.bind(this)}>
                 <input type="hidden" value={`${constructionJSON.id}`} name='id' />
                 <Submit name='X' />
@@ -56,6 +55,26 @@ export default class Hierarchy extends React.Component<IHierarchyProps, IHierarc
         </div>
       </div >
     );
+  }
+
+  private EditConstruction(ev: React.MouseEvent) {
+    const item = (ev.currentTarget as HTMLElement).dataset.constructionItem;
+    console.warn(this.state.constructionJSONArr[Number(item)]);
+    storeConstructionJSON.dispatch({
+      type: 'SET_CONSTRUCTIONJSON',
+      constructionJSON: this.state.constructionJSONArr[Number(item)]
+    });
+
+    storeConstructionCallback.dispatch({
+      type: 'SET_CALLBACK',
+      UpdateCallback: this.SetConstructionJSONArr.bind(this)
+    });
+
+    storeVisibleAddEditConstruction.dispatch({
+      type: 'SET_VISIBLE',
+      visible: true
+    });
+
   }
 
   private Init() {

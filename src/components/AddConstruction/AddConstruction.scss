@@ -1,0 +1,14 @@
+.add-edit-construction {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  position: fixed;
+  top: 0px;
+
+  & > label {
+    margin: 10px;
+  }
+}

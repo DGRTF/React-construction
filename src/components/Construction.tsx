@@ -5,10 +5,10 @@ import Room from './Room';
 import Submit from './Submit';
 import store from '../store/store';
 import Button from './Button/Button';
-import storeVisibleAddRoom from '../store/store/AddRoomVisible';
-import storeCallbackAddRoom from './../store/store/CallbackAddRoom';
-import storeConstructionId from '../store/store/ConstructionId';
-import storeRoomJSON from '../store/store/RoomJSON';
+import storeVisibleAddRoom from '../store/store/AddEditRoom/AddRoomVisible';
+import storeCallbackAddRoom from '../store/store/AddEditRoom/CallbackAddRoom';
+import storeConstructionId from '../store/store/AddEditRoom/ConstructionId';
+import storeRoomJSON from '../store/store/AddEditRoom/RoomJSON';
 
 
 interface IConstructionProps {

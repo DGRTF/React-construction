@@ -8,6 +8,8 @@ import storeConstructionJSON from '../store/store/AddEditConstruction/Constructi
 import storeVisible from '../store/store/AddEditConstruction/AddConstructionVisible';
 import storeConstructionCallback from '../store/store/AddEditConstruction/AddConstructionCallBack';
 import storeVisibleAddEditConstruction from '../store/store/AddEditConstruction/AddConstructionVisible';
+import Indicate from './Indicate/Indicate';
+import storeConstructionJSONArr from '../store/store/ConstructionJSONArr/ConstructionJSONArr'
 
 interface IHierarchyState {
   visibleButton: boolean;
@@ -15,6 +17,7 @@ interface IHierarchyState {
     id: number;
     name: string;
     address: string;
+    haveMachine: boolean;
   }[];
 }
 
@@ -26,6 +29,11 @@ export default class Hierarchy extends React.Component<{}, IHierarchyState> {
       constructionJSONArr: []
     }
     this.Init();
+    storeConstructionJSONArr.subscribe(() => {
+      this.setState({
+        constructionJSONArr: storeConstructionJSONArr.getState().constructionJSONArr
+      });
+    });
   }
 
   private constructionPath = 'Warehouse/GetConstructions?';
@@ -37,12 +45,17 @@ export default class Hierarchy extends React.Component<{}, IHierarchyState> {
           <Button name='Добавить здание' ClickHandler={this.VisibleButtonForm.bind(this)} />
           {this.state.constructionJSONArr && this.state.constructionJSONArr.map((constructionJSON, item) =>
             <div className='hierarchy__content-item'>
+              <div className='hierarchy__edit-construction'>
+                <Button dataSetConstruction={`${item}`} name='/' ClickHandler={this.EditConstruction.bind(this)}>/</Button>
+              </div>
+              <div className='hierarchy__delete-construction'>
+                <form onSubmit={this.DeleteConstruction.bind(this)}>
+                  <input type="hidden" value={`${constructionJSON.id}`} name='id' />
+                  <Submit name='X' />
+                </form>
+              </div>
+              <Indicate indicate={constructionJSON.haveMachine} />
               <Construction constructionJSON={constructionJSON} />
-              <Button dataSet={`${item}`} name='/' ClickHandler={this.EditConstruction.bind(this)}>/</Button>
-              <form onSubmit={this.DeleteConstruction.bind(this)}>
-                <input type="hidden" value={`${constructionJSON.id}`} name='id' />
-                <Submit name='X' />
-              </form>
             </div>
           )
           }
@@ -96,6 +109,7 @@ export default class Hierarchy extends React.Component<{}, IHierarchyState> {
     id: number;
     name: string;
     address: string;
+    haveMachine: boolean;
   }[]) {
     this.setState({ constructionJSONArr: JSONArr });
 

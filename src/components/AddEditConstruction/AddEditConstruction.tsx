@@ -1,19 +1,20 @@
 import React from 'react';
-import './AddConstruction.scss';
+import './AddEditConstruction.scss';
 import store from '../../store/store/AddEditConstruction/AddConstructionCallBack';
 import storeVisible from '../../store/store/AddEditConstruction/AddConstructionVisible';
 import storeConstructionJSON from '../../store/store/AddEditConstruction/ConstructionJSON';
 import Button from '../Button/Button';
 import Submit from '../Submit';
 import Input from '../Input/Input';
+import storeConstructionJSONArr from '../../store/store/ConstructionJSONArr/ConstructionJSONArr';
 
 interface IAddConstructionState {
   visible: boolean;
-  UpdateCallback: (constructionJSONArr: {
-    id: number;
-    name: string;
-    address: string;
-  }[]) => void;
+  // UpdateCallback: (constructionJSONArr: {
+  //   id: number;
+  //   name: string;
+  //   address: string;
+  // }[]) => void;
   constructionJSON: {
     id: number;
     name: string;
@@ -26,19 +27,18 @@ export default class AddConstruction extends React.Component<{}, IAddConstructio
     super(prop);
     this.state = {
       visible: false,
-      UpdateCallback: store.getState(),
+      // UpdateCallback: store.getState(),
       constructionJSON: storeConstructionJSON.getState()
     };
 
     storeConstructionJSON.subscribe(this.SetConstructionJSON.bind(this));
     storeVisible.subscribe(this.SetVisible.bind(this));
-    store.subscribe(this.SetUpdateCallback);
+    // store.subscribe(this.SetUpdateCallback);
   }
 
   private visibleElement: JSX.Element;
 
   render() {
-    console.warn(storeConstructionJSON.getState());
     this.visibleElement = this.state.visible ?
       <div className='add-edit-construction'>
         <Button name='Закрыть' ClickHandler={this.Close.bind(this)}></Button>
@@ -67,11 +67,11 @@ export default class AddConstruction extends React.Component<{}, IAddConstructio
     });
   }
 
-  private SetUpdateCallback = () => {
-    this.setState({
-      UpdateCallback: store.getState()
-    });
-  }
+  // private SetUpdateCallback = () => {
+  //   this.setState({
+  //     UpdateCallback: store.getState()
+  //   });
+  // }
 
   private SetVisible() {
     this.setState({
@@ -109,7 +109,13 @@ export default class AddConstruction extends React.Component<{}, IAddConstructio
     })
 
     let JSONArr = await response.json();
-    this.state.UpdateCallback(JSONArr);
+
+    storeConstructionJSONArr.dispatch({
+      type:'SET_CONSTRUCTION_JSON',
+      payload: JSONArr
+    });
+
+    // this.state.UpdateCallback(JSONArr);
     storeVisible.dispatch({
       type: 'SET_VISIBLE',
       visible: false

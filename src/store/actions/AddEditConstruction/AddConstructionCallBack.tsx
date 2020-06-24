@@ -9,6 +9,7 @@ export let setCallback = function (UpdateCallback: (constructionJSONArr: {
   id: number;
   name: string;
   address: string;
+  haveMachine:boolean;
 }[]) => void) {
   return {
     type: GetLiteralInString("SET_CALLBACK"),

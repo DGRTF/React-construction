@@ -3,9 +3,8 @@ import './Room.scss';
 import FormOneSubmit from './FormOneSubmit';
 import store from '../store/store';
 import Button from './Button/Button';
-import AddEditMachine from './AddEditMachine/AddEditMachine';
-// import storeVisibleAddRoom from '../store/store/AddRoomVisible';
-// import storeCallbackAddRoom from './../store/store/CallbackAddRoom';
+import storeAddEditMachine from '../store/store/AddEditMachine/MachineJSON';
+import storeDeleteMachinePath from './../store/store/DeleteMachinePath/DeleteMachinePath';
 
 
 interface IRoomProps {
@@ -16,12 +15,7 @@ interface IRoomProps {
   };
 }
 
-interface IRoomState {
-  visibleButton: boolean;
-}
-
-
-export default class Room extends Component<IRoomProps, IRoomState> {
+export default class Room extends Component<IRoomProps> {
   constructor(prop: any) {
     super(prop);
     this.state = {
@@ -32,26 +26,33 @@ export default class Room extends Component<IRoomProps, IRoomState> {
     id: number;
     name: string;
     createYear: number;
+    roomId: number;
   }[];
 
-  private machineInRoomPath = 'Warehouse/GetMachinesInRoom?';
+  private machineInRoomPath = 'Warehouse/GetMachinesInRoom';
 
-  private visibleButtonForm: JSX.Element;
+  private machineInRoomPathEdit = 'Warehouse/EditMachineInRoom';
+
+  private machineInRoomPathAdd = 'Warehouse/AddMachineInRoom';
 
   render() {
-    this.visibleButtonForm =
-      this.state.visibleButton ? <Button name='+' ClickHandler={this.VisibleButtonForm.bind(this)} /> :
-        <AddEditMachine submitText='Добавить оборудование' EventGetData={this.AddMachinesInRoom.bind(this)} />
     return (
       <div className='room'>
         <div className='room__label'></div>
+        <div className='room__add-machine'>
+          <Button name='+' ClickHandler={this.AddMachineInRoom.bind(this)} />
+        </div>
         <FormOneSubmit name={this.props.roomJSON.name} EventGetData={this.GetMachineInRoom.bind(this)}></FormOneSubmit>
-        {this.visibleButtonForm}
       </div >
     );
   }
 
   private async GetMachineInRoom(formData: FormData): Promise<void> {
+    storeAddEditMachine.dispatch({
+      type: 'SET_EDIT_PATH',
+      payload: this.machineInRoomPathEdit
+    });
+
     formData.append('roomId', `${this.props.roomJSON.id}`);
     const response = await fetch(this.machineInRoomPath, {
       method: 'POST',
@@ -59,54 +60,59 @@ export default class Room extends Component<IRoomProps, IRoomState> {
     });
 
     this.machineJSONArr = await response.json();
-
-    // заглушка
-    // this.machineJSONArr = [
-    //   {
-    //     id: 1,
-    //     name: 'Кладовая',
-    //     createYear: 2,
-    //   },
-    //   {
-    //     id: 2,
-    //     name: 'Офис',
-    //     createYear: 2,
-    //   },
-    //   {
-    //     id: 3,
-    //     name: 'Помещение склада',
-    //     createYear: 2,
-    //   },
-    // ];
-
     store.dispatch({
       type: "SET_STATE",
       state: {
         machineJSONArr: this.machineJSONArr
       }
     });
+
+    storeDeleteMachinePath.dispatch({
+      type: 'SET_DELETE_PATH',
+      payload: `Warehouse/DeleteMachineInRoom?constructionId=${this.props.roomJSON.id}`
+    });
   }
 
-  private async  AddMachinesInRoom(formData: FormData) {
-    formData.append('roomId', `${this.props.roomJSON.id}`);
-    const response = await fetch('Warehouse/AddMachinesInRoom', {
-      method: 'POST',
-      body: formData
+  private AddMachineInRoom() {
+    storeAddEditMachine.dispatch({
+      type: 'SET_VISIBLE',
+      payload: true
     });
 
-    this.machineJSONArr = await response.json();
-
-    store.dispatch({
-      type: "SET_STATE",
-      state: {
-        machineJSONArr: this.machineJSONArr
+    storeAddEditMachine.dispatch({
+      type: 'SET_MACHINE_JSON',
+      payload: {
+        id: null,
+        name: '',
+        createYear: null,
+        roomId: this.props.roomJSON.id
       }
     });
-    this.VisibleButtonForm();
-  }
 
-  private VisibleButtonForm() {
-    this.setState({ visibleButton: !this.state.visibleButton });
+    storeAddEditMachine.dispatch({
+      type: 'SET_HEADER_NAME',
+      payload: `Добавить оборудование в комнату "${this.props.roomJSON.name}"`
+    });
+
+    storeAddEditMachine.dispatch({
+      type: 'SET_SUBMIT_NAME',
+      payload: `Добавить оборудование`
+    });
+
+    storeAddEditMachine.dispatch({
+      type: 'SET_PATH',
+      payload: this.machineInRoomPathAdd
+    });
+
+    storeAddEditMachine.dispatch({
+      type: 'SET_EDIT_PATH',
+      payload: this.machineInRoomPathEdit
+    });
+
+    storeDeleteMachinePath.dispatch({
+      type: 'SET_DELETE_PATH',
+      payload: `Warehouse/DeleteMachineInRoom?constructionId=${this.props.roomJSON.id}`
+    });
   }
 
 }

@@ -1,20 +1,20 @@
-export let setState = function (state: any) {
+export const setState = function (state: any) {
   return {
     type: GetLiteralInString("SET_STATE"),
-    state
+    payload: state
   }
 };
 
-export let setCallback = function (UpdateCallback: (constructionJSONArr: {
+export const setRoomJSONArr = function (roomJSONArr: {
   id: number;
   name: string;
   floor: number;
   constructionId: number;
   haveMachine: boolean;
-}[]) => void) {
+}[]) {
   return {
-    type: GetLiteralInString("SET_CALLBACK"),
-    UpdateCallback
+    type: GetLiteralInString("SET_ROOM_JSON"),
+    payload: roomJSONArr
   }
 };
 

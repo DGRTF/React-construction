@@ -1,5 +1,4 @@
-import React, { Component, LegacyRef, createElement } from 'react';
-// import Submit from './Submit';
+import React, { Component } from 'react';
 import './Table.scss';
 import VerticalBorder from './Control/VerticalBorder';
 import ColumnLineFacade from './View/ColumnLineFacade';
@@ -11,7 +10,14 @@ interface ITableProps {
     id: number;
     name: string;
     createYear: number;
+    roomId: number;
   }[];
+  GetMachineJSON?: (machineJSON: {
+    id: number;
+    name: string;
+    createYear: number;
+    roomId: number;
+  }) => void;
 }
 
 export default class Table extends Component<ITableProps> {
@@ -22,11 +28,11 @@ export default class Table extends Component<ITableProps> {
   }
 
 
-  private machineJSONArr?: {
-    id: number;
-    name: string;
-    createYear: number;
-  }[];
+  // private machineJSONArr?: {
+  //   id: number;
+  //   name: string;
+  //   createYear: number;
+  // }[];
 
   private contentLineArr: HTMLElement[] = [];
 
@@ -130,12 +136,16 @@ export default class Table extends Component<ITableProps> {
   private NewLines(contentLineArr: HTMLElement[]) {
     this.columnLineFacade.NewContent(contentLineArr.slice());
     this.bordersControl.UpdatePosition();
-    this.selectLine = -1;
+    this.SetSelectLine(-1);
   }
 
   private SetSelectLine(selectLine: number): void {
     this.selectLine = selectLine;
-    // this.$emit('selectLine', this.selectLine);
+    if (this.props.GetMachineJSON)
+      if (selectLine !== -1)
+        this.props.GetMachineJSON(store.getState().machineJSONArr[selectLine]);
+      else
+        this.props.GetMachineJSON(null);
   }
 
   private IntervalCheckSize() {

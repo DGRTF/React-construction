@@ -1,6 +1,7 @@
-import { addMachine, setState, deleteMachine } from './actions';
+import { addMachine, setState, deleteMachine, setMachineArr } from './actions';
 
-type ActionTypes = ReturnType<typeof addMachine> | ReturnType<typeof setState> | ReturnType<typeof deleteMachine>;
+type ActionTypes = ReturnType<typeof addMachine> | ReturnType<typeof setState> | ReturnType<typeof deleteMachine>
+| ReturnType<typeof setMachineArr> ;
 
 export let reducer = function (state: any, action: ActionTypes) {
     switch (action.type) {
@@ -12,5 +13,7 @@ export let reducer = function (state: any, action: ActionTypes) {
             return (state.machineJSONArr as Array<any>).filter(
                 (element) => element !== action.machineJSON
             );
+        case 'SET_MACHINEARR':
+            return state.machineJSONArr = action.machineJSONArr;
     }
 }

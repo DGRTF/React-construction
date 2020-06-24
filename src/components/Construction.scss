@@ -13,12 +13,17 @@
   }
 
   &__header {
+    display: flex;
     width: 100%;
     overflow: hidden;
   }
 
+  &__add-room{
+    min-width: 20px;
+  }
+
   &__content {
-    padding-left: 20px;
+    padding-left: 40px;
 
     &-hide {
       display: none;
@@ -27,5 +32,14 @@
 
   &__content-item {
     display: flex;
+    background-color: rgba(41, 46, 104, 0.301);
+  }
+
+  &__edit-room{
+    min-width: 20px;
+  }
+
+  &__delete-room{
+    min-width: 20px;
   }
 }

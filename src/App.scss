@@ -1,7 +1,21 @@
 .app{
   display: flex;
   align-items: flex-start;
-  width: 80%;
+  width: 95%;
   margin: auto;
   height: 500px;
+
+  &__table-container{
+    width: 100%;
+  }
+
+  &__table-edit-delete{
+    display: flex;
+    justify-content: space-around;
+    margin: 20px;
+  }
+
+  &__edit &__delete{
+    width: 100px;
+  }
 }

@@ -9,6 +9,10 @@ import storeVisibleAddRoom from '../store/store/AddEditRoom/AddRoomVisible';
 import storeCallbackAddRoom from '../store/store/AddEditRoom/CallbackAddRoom';
 import storeConstructionId from '../store/store/AddEditRoom/ConstructionId';
 import storeRoomJSON from '../store/store/AddEditRoom/RoomJSON';
+import storeAddEditMachine from '../store/store/AddEditMachine/MachineJSON';
+import storeRoomJSONArr from '../store/store/RoomJSONArr/RoomJSONArr';
+import storeDeleteMachinePath from '../store/store/DeleteMachinePath/DeleteMachinePath';
+import Indicate from './Indicate/Indicate';
 
 
 interface IConstructionProps {
@@ -26,6 +30,8 @@ interface IConstructionState {
     id: number;
     name: string;
     floor: number;
+    constructionId: number;
+    haveMachine: boolean;
   }[];
 }
 
@@ -37,14 +43,23 @@ export default class Construction extends Component<IConstructionProps, IConstru
       roomJSONArr: [],
       showContent: false,
     }
+
+    storeRoomJSONArr.subscribe(() => {
+      this.setState({
+        roomJSONArr: storeRoomJSONArr.getState().roomJSONArr
+      })
+    })
   }
 
   private roomInConstructorPath = 'Warehouse/GetRoomsInConstruction?';
+
+  private editMachineInConstructionPath = `Warehouse/EditMachinesInConstruction?constructionId=${this.props.constructionJSON.id}`;
 
   private machineJSONArr: {
     id: number;
     name: string;
     createYear: number;
+    roomId: number;
   }[];
 
   render() {
@@ -57,22 +72,29 @@ export default class Construction extends Component<IConstructionProps, IConstru
             </form>
           </div>
           <div className='construction__header'>
+            <div className='construction__add-room'>
+              <Button name='+' ClickHandler={this.VisibleButtonForm.bind(this)} />
+            </div>
             <FormOneSubmit name={this.props.constructionJSON.name}
               EventGetData={this.GetMachineInConstruction.bind(this)}></FormOneSubmit>
           </div>
         </div>
         <div className={'construction__content ' + (this.state.showContent ? '' : 'construction__content-hide')}>
-          <Button name='Добавить комнату' ClickHandler={this.VisibleButtonForm.bind(this)} />
           <div className='construction__list'>
             {this.state.roomJSONArr.map((roomJSON, item) =>
               <div className='construction__content-item'>
+                <div className='construction__edit-room'>
+                  <Button dataSetRoom={`${item}`} name='/' ClickHandler={this.EditRoom.bind(this)}></Button>
+                </div>
+                <div className='construction__delete-room'>
+                  <form onSubmit={this.DeleteRoomInConstruction.bind(this)}>
+                    <input type="hidden" value={`${roomJSON.id}`} name='roomId' />
+                    <input type="hidden" value={`${this.props.constructionJSON.id}`} name='constructionId' />
+                    <Submit name='X' />
+                  </form>
+                </div>
+                <Indicate indicate={roomJSON.haveMachine} />
                 <Room roomJSON={roomJSON}></Room>
-                <button data-room-item={`${item}`} onClick={this.EditRoom.bind(this)}>/</button>
-                <form onSubmit={this.DeleteRoomInConstruction.bind(this)}>
-                  <input type="hidden" value={`${roomJSON.id}`} name='roomId' />
-                  <input type="hidden" value={`${this.props.constructionJSON.id}`} name='constructionId' />
-                  <Submit name='X' />
-                </form>
               </div>
             )}
           </div>
@@ -121,37 +143,28 @@ export default class Construction extends Component<IConstructionProps, IConstru
   }
 
   private async GetMachineInConstruction(formData: FormData): Promise<void> {
-    // const response = await fetch(this.machineInConstructorPath + '/' + this.props.constructorJSON.id, {
-    //   method: 'POST',
-    //   body: formData
-    // });
+    const response = await fetch('Warehouse/GetMachinesInConstruction?constructionId=' + this.props.constructionJSON.id, {
+      method: 'POST',
+      body: formData
+    });
 
-    // this.machineJSONArr = await response.json();
-
-    // заглушка
-    this.machineJSONArr = [
-      {
-        id: 1,
-        name: 'Кладовая',
-        createYear: 2,
-      },
-      {
-        id: 2,
-        name: 'Офис',
-        createYear: 2,
-      },
-      {
-        id: 3,
-        name: 'Помещение склада',
-        createYear: 2,
-      },
-    ];
+    this.machineJSONArr = await response.json();
 
     store.dispatch({
       type: "SET_STATE",
       state: {
         machineJSONArr: this.machineJSONArr
       }
+    });
+
+    storeAddEditMachine.dispatch({
+      type: 'SET_EDIT_PATH',
+      payload: this.editMachineInConstructionPath
+    });
+
+    storeDeleteMachinePath.dispatch({
+      type: 'SET_DELETE_PATH',
+      payload: `Warehouse/DeleteMachineInConstruction?constructionId=${this.props.constructionJSON.id}`
     });
   }
 
@@ -176,9 +189,9 @@ export default class Construction extends Component<IConstructionProps, IConstru
     id: number;
     name: string;
     floor: number;
+    constructionId: number;
+    haveMachine: boolean;
   }[]) {
-    console.warn('callback');
-    console.warn(JSONArr);
     this.setState({ roomJSONArr: JSONArr });
   }
 

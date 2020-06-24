@@ -11,6 +11,16 @@
 
   &__content-item {
     display: flex;
+    overflow: hidden;
+    background-color: rgba(59, 240, 143, 0.5);
+  }
+
+  &__delete-construction {
+    min-width: 20px;
+  }
+
+  &__edit-construction {
+    min-width: 20px;
   }
 
   &__border-move {

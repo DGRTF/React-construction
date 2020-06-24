@@ -1,5 +1,6 @@
 .submit {
   width: 100%;
+  height: 20px;
   border: none;
   display: flex;
   justify-content: start;
@@ -7,6 +8,8 @@
   color: #5f5e5e;
   padding: 0;
   overflow: hidden;
+  padding-left: 5px;
+  padding-right: 5px;
 
   &:hover {
     background-color: rgba(207, 207, 207, 0.8);

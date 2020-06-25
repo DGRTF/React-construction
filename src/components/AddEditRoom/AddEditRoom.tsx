@@ -56,14 +56,21 @@ export default class AddEditRoom extends React.Component<{}, IAddEditRoomState> 
   render() {
     this.visibleElement = this.state.visible ?
       <div className='add-edit-room'>
-        <Button name='Закрыть' ClickHandler={this.Close.bind(this)}></Button>
-        <form onSubmit={this.AddEditConstruction.bind(this)}>
-          <input type="hidden" name='roomId' value={this.state.roomJSON ? this.state.roomJSON.id : 0} />
-          <input type="hidden" name='constructionId' value={this.state.id} />
-          <Input text='Введите название' name='name' value={this.state.roomJSON ? this.state.roomJSON.name : ''}></Input>
-          <Input text='Введите этаж' name='floor' value={this.state.roomJSON ? `${this.state.roomJSON.floor}` : ''}></Input>
-          <Submit name='Добавить комнату' />
-        </form>
+        <div className='add-edit-room__container'>
+          <div className='add-edit-room__header'>
+            <span>Добавить комнату</span>
+            <div className='add-edit-room__close'>
+              <Button name='Закрыть' ClickHandler={this.Close.bind(this)}></Button>
+            </div>
+          </div>
+          <form className='add-edit-room__form' onSubmit={this.AddEditConstruction.bind(this)}>
+            <input type="hidden" name='roomId' value={this.state.roomJSON ? this.state.roomJSON.id : 0} />
+            <input type="hidden" name='constructionId' value={this.state.id} />
+            <Input text='Введите название' name='name' value={this.state.roomJSON ? this.state.roomJSON.name : ''}></Input>
+            <Input text='Введите этаж' name='floor' value={this.state.roomJSON ? `${this.state.roomJSON.floor}` : ''}></Input>
+            <Submit name='Добавить комнату' />
+          </form>
+        </div>
       </div>
       : null
     return (

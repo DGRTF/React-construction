@@ -1,12 +1,45 @@
 .add-edit-construction {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   min-height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
+  color: #5f5e5e;
   overflow: hidden;
   position: fixed;
   top: 0px;
+  z-index: 3;
+
+  &__container {
+    flex-direction: column;
+    background-color: white;
+    // border: 1px solid #5f5e5e;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 10px;
+    height: 20px;
+  }
+
+  &__form {
+    min-width: 320px;
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid black;
+    // background-color: rgba(41, 46, 104, 0.301);
+
+    & > * {
+      margin: 10px;
+    }
+  }
+
+  &__submit-container {
+    display: inline-flex;
+  }
 
   & > label {
     margin: 10px;

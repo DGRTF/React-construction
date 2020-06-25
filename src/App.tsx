@@ -6,9 +6,10 @@ import Table from './components/table/Table';
 import store from './store/store';
 import './App.scss';
 import Button from './components/Button/Button';
-import storeAddEditMachine from './store/store/AddEditMachine/MachineJSON';
+import storeAddEditMachine from './store/store/AddEditMachine/AddEditMachine';
 import storeConstructionJSONArr from './store/store/ConstructionJSONArr/ConstructionJSONArr';
 import storeDeleteMachinePath from './store/store/DeleteMachinePath/DeleteMachinePath';
+import storeUpdate from './store/store/UpdateRoomInConstruction/UpdateRoomInConstruction';
 
 interface IAppProps {
   machineJSONArr?: {
@@ -90,7 +91,6 @@ export default class App extends React.Component<IAppProps> {
         method: 'POST',
       });
       let JSONArr = await response.json();
-      // &roomId=${this.machineJSON.roomId}
       store.dispatch({
         type: "SET_STATE",
         state: {
@@ -106,6 +106,11 @@ export default class App extends React.Component<IAppProps> {
       storeConstructionJSONArr.dispatch({
         type: 'SET_CONSTRUCTION_JSON',
         payload: ConstructionJSONArr
+      });
+
+      storeUpdate.dispatch({
+        type: 'SET_UPDATE',
+        payload: true
       });
     }
   }

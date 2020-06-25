@@ -2,10 +2,11 @@ import React from 'react';
 import './AddEditMachine.scss';
 import Input from '../Input/Input';
 import Submit from '../Submit';
-import storeAddEditMachine from '../../store/store/AddEditMachine/MachineJSON';
+import storeAddEditMachine from '../../store/store/AddEditMachine/AddEditMachine';
 import Button from '../Button/Button';
 import store from '../../store/store';
 import storeConstructionJSONArr from '../../store/store/ConstructionJSONArr/ConstructionJSONArr';
+import storeUpdate from '../../store/store/UpdateRoomInConstruction/UpdateRoomInConstruction';
 
 interface IAddEditMachineState {
   visible: boolean;
@@ -21,15 +22,13 @@ export default class AddEditMachine extends React.Component<{}, IAddEditMachineS
   constructor(prop: any) {
     super(prop);
     this.state = {
-      visible: true,
+      visible: false,
       machineJSON: storeAddEditMachine.getState().machineJSON
     };
     storeAddEditMachine.subscribe(this.SetMachineJSON.bind(this));
   }
 
   private constructionPath = 'Warehouse/GetConstructions?';
-
-  private roomInConstructorPath = 'Warehouse/GetRoomsInConstruction?';
 
   private SetMachineJSON() {
     this.setState({
@@ -127,8 +126,10 @@ export default class AddEditMachine extends React.Component<{}, IAddEditMachineS
       payload: ConstructionJSONArr
     });
 
-
-
+    storeUpdate.dispatch({
+      type: 'SET_UPDATE',
+      payload: true
+    });
   }
 
 }

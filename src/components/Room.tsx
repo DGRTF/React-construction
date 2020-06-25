@@ -3,8 +3,9 @@ import './Room.scss';
 import FormOneSubmit from './FormOneSubmit';
 import store from '../store/store';
 import Button from './Button/Button';
-import storeAddEditMachine from '../store/store/AddEditMachine/MachineJSON';
+import storeAddEditMachine from '../store/store/AddEditMachine/AddEditMachine';
 import storeDeleteMachinePath from './../store/store/DeleteMachinePath/DeleteMachinePath';
+import storeConstructionIdUpdate from '../store/store/UpdateRoomInConstruction/ConstructionId';
 
 
 interface IRoomProps {
@@ -12,6 +13,8 @@ interface IRoomProps {
     id: number;
     name: string;
     floor: number;
+    constructionId: number;
+    haveMachine: boolean;
   };
 }
 
@@ -71,6 +74,11 @@ export default class Room extends Component<IRoomProps> {
       type: 'SET_DELETE_PATH',
       payload: `Warehouse/DeleteMachineInRoom?constructionId=${this.props.roomJSON.id}`
     });
+
+    storeConstructionIdUpdate.dispatch({
+      type: 'SET_CONSTRUCTION_ID',
+      payload: this.props.roomJSON.constructionId
+    });
   }
 
   private AddMachineInRoom() {
@@ -112,6 +120,13 @@ export default class Room extends Component<IRoomProps> {
     storeDeleteMachinePath.dispatch({
       type: 'SET_DELETE_PATH',
       payload: `Warehouse/DeleteMachineInRoom?constructionId=${this.props.roomJSON.id}`
+    });
+
+    console.warn(this.props.roomJSON.constructionId);
+
+    storeConstructionIdUpdate.dispatch({
+      type: 'SET_CONSTRUCTION_ID',
+      payload: this.props.roomJSON.constructionId
     });
   }
 

@@ -1,11 +1,11 @@
 import { createStore } from 'redux';
 import { reducer } from '../../reducers/AddEditConstruction/ConstructionJSON';
 
-const storeConstructionJSON = createStore(reducer);
+const storeAddEditConstruction = createStore(reducer);
 
-storeConstructionJSON.dispatch({
+storeAddEditConstruction.dispatch({
   type: "SET_STATE",
   state: null
 });
 
-export default storeConstructionJSON;
+export default storeAddEditConstruction;

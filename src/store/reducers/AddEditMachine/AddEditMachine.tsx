@@ -1,4 +1,4 @@
-import { setMachineJSON, setState, setVisible, setHeaderName, setSubmitName, setPath, setEditPath } from '../../actions/AddEditMachine/MachineJSON';
+import { setMachineJSON, setState, setVisible, setHeaderName, setSubmitName, setPath, setEditPath } from '../../actions/AddEditMachine/AddEditMachine';
 
 type ActionTypes = ReturnType<typeof setMachineJSON> |
   ReturnType<typeof setState> |
@@ -7,16 +7,6 @@ type ActionTypes = ReturnType<typeof setMachineJSON> |
   ReturnType<typeof setPath> |
   ReturnType<typeof setSubmitName> |
   ReturnType<typeof setEditPath>;
-
-// type StateType = ReturnType<typeof {
-//   machineJSON: {
-//     id: number;
-//     name: string;
-//     createYear: number;
-//     roomId: number;
-//   };
-//   visible: boolean;
-// }>;
 
 export let reducer = function (state: {
   machineJSON: {

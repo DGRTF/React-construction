@@ -10,11 +10,6 @@ import storeConstructionJSONArr from '../../store/store/ConstructionJSONArr/Cons
 
 interface IAddConstructionState {
   visible: boolean;
-  // UpdateCallback: (constructionJSONArr: {
-  //   id: number;
-  //   name: string;
-  //   address: string;
-  // }[]) => void;
   constructionJSON: {
     id: number;
     name: string;
@@ -27,13 +22,11 @@ export default class AddConstruction extends React.Component<{}, IAddConstructio
     super(prop);
     this.state = {
       visible: false,
-      // UpdateCallback: store.getState(),
       constructionJSON: storeConstructionJSON.getState()
     };
 
     storeConstructionJSON.subscribe(this.SetConstructionJSON.bind(this));
     storeVisible.subscribe(this.SetVisible.bind(this));
-    // store.subscribe(this.SetUpdateCallback);
   }
 
   private visibleElement: JSX.Element;
@@ -41,13 +34,24 @@ export default class AddConstruction extends React.Component<{}, IAddConstructio
   render() {
     this.visibleElement = this.state.visible ?
       <div className='add-edit-construction'>
-        <Button name='Закрыть' ClickHandler={this.Close.bind(this)}></Button>
-        <form onSubmit={this.AddEditConstruction.bind(this)}>
-          <input type='hidden' name='constructionId' value={this.state.constructionJSON ? `${this.state.constructionJSON.id}` : ''}></input>
-          <Input text='Введите название' name='name' value={this.state.constructionJSON ? this.state.constructionJSON.name : ''}></Input>
-          <Input text='Введите адрес' name='address' value={this.state.constructionJSON ? this.state.constructionJSON.address : ''}></Input>
-          <Submit name='Добавить здание' />
-        </form>
+        <div className='add-edit-construction__container'>
+          <div className='add-edit-construction__header'>
+            <span>Добавить здание</span>
+            <div className='add-edit-construction__close'>
+              <Button name='Закрыть' ClickHandler={this.Close.bind(this)}></Button>
+            </div>
+          </div>
+          <form className='add-edit-construction__form' onSubmit={this.AddEditConstruction.bind(this)}>
+            <input type='hidden' name='constructionId' value={this.state.constructionJSON ? `${this.state.constructionJSON.id}` : ''}></input>
+            <Input text='Введите название' name='name' value={this.state.constructionJSON ? this.state.constructionJSON.name : ''}></Input>
+            <Input text='Введите адрес' name='address' value={this.state.constructionJSON ? this.state.constructionJSON.address : ''}></Input>
+            <div>
+              <div className='add-edit-construction__submit-container'>
+                <Submit name='Добавить здание' />
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
       : null
     return (
@@ -67,19 +71,13 @@ export default class AddConstruction extends React.Component<{}, IAddConstructio
     });
   }
 
-  // private SetUpdateCallback = () => {
-  //   this.setState({
-  //     UpdateCallback: store.getState()
-  //   });
-  // }
-
   private SetVisible() {
     this.setState({
       visible: storeVisible.getState()
     });
   }
 
-  private SetConstructionJSON(){
+  private SetConstructionJSON() {
     this.setState({
       constructionJSON: storeConstructionJSON.getState()
     });
@@ -104,18 +102,17 @@ export default class AddConstruction extends React.Component<{}, IAddConstructio
     }
 
     storeConstructionJSON.dispatch({
-      type:'SET_CONSTRUCTIONJSON',
+      type: 'SET_CONSTRUCTIONJSON',
       constructionJSON: null
     })
 
     let JSONArr = await response.json();
 
     storeConstructionJSONArr.dispatch({
-      type:'SET_CONSTRUCTION_JSON',
+      type: 'SET_CONSTRUCTION_JSON',
       payload: JSONArr
     });
 
-    // this.state.UpdateCallback(JSONArr);
     storeVisible.dispatch({
       type: 'SET_VISIBLE',
       visible: false

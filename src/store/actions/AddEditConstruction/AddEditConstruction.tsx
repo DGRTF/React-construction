@@ -16,18 +16,18 @@ export let setConstructionJSON = function (constructionJSON: {
   }
 };
 
-export let setCallback = function (UpdateCallback: (constructionJSONArr: {
-  id: number;
-  name: string;
-  address: string;
-  constructionId: number;
-  haveMachine: boolean;
-}[]) => void) {
-  return {
-    type: GetLiteralInString("SET_CALL_BACK"),
-    payload: UpdateCallback
-  }
-};
+// export let setCallback = function (UpdateCallback: (constructionJSONArr: {
+//   id: number;
+//   name: string;
+//   address: string;
+//   constructionId: number;
+//   haveMachine: boolean;
+// }[]) => void) {
+//   return {
+//     type: GetLiteralInString("SET_CALL_BACK"),
+//     payload: UpdateCallback
+//   }
+// };
 
 
 export let setVisible = function (visible: boolean) {

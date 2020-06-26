@@ -5,12 +5,8 @@ import Room from './Room';
 import Submit from './Submit';
 import store from '../store/store';
 import Button from './Button/Button';
-import storeVisibleAddRoom from '../store/store/AddEditRoom/AddRoomVisible';
-import storeCallbackAddRoom from '../store/store/AddEditRoom/CallbackAddRoom';
-import storeConstructionId from '../store/store/AddEditRoom/ConstructionId';
-import storeRoomJSON from '../store/store/AddEditRoom/RoomJSON';
+import storeAddEditRoom from '../store/store/AddEditRoom/AddEditRoom';
 import storeAddEditMachine from '../store/store/AddEditMachine/AddEditMachine';
-import storeRoomJSONArr from '../store/store/RoomJSONArr/RoomJSONArr';
 import storeDeleteMachinePath from '../store/store/DeleteMachinePath/DeleteMachinePath';
 import storeUpdate from '../store/store/UpdateRoomInConstruction/UpdateRoomInConstruction';
 import storeConstructionIdUpdate from '../store/store/UpdateRoomInConstruction/ConstructionId';
@@ -46,12 +42,6 @@ export default class Construction extends Component<IConstructionProps, IConstru
       showContent: false,
     }
 
-    storeRoomJSONArr.subscribe(() => {
-      this.setState({
-        roomJSONArr: storeRoomJSONArr.getState().roomJSONArr
-      });
-    });
-
     storeUpdate.subscribe(this.UpdateRoomInConstruction.bind(this));
   }
 
@@ -64,6 +54,8 @@ export default class Construction extends Component<IConstructionProps, IConstru
     name: string;
     createYear: number;
     roomId: number;
+    constructionId: number;
+    haveMachine: boolean
   }[];
 
   render() {
@@ -75,7 +67,7 @@ export default class Construction extends Component<IConstructionProps, IConstru
           </div>
           <div className='construction__header'>
             <div className='construction__add-room'>
-              <Button name='+' ClickHandler={this.VisibleButtonForm.bind(this)} />
+              <Button name='+' ClickHandler={this.AddRoomInConstruction.bind(this)} />
             </div>
             <FormOneSubmit name={this.props.constructionJSON.name}
               EventGetData={this.GetMachineInConstruction.bind(this)}></FormOneSubmit>
@@ -107,25 +99,35 @@ export default class Construction extends Component<IConstructionProps, IConstru
 
   private EditRoom(ev: React.MouseEvent) {
     const item = (ev.currentTarget as HTMLElement).dataset.roomItem;
-    console.warn(item);
-    storeRoomJSON.dispatch({
-      type: 'SET_ROOMJSON',
-      roomJSON: this.state.roomJSONArr[Number(item)]
+
+    storeAddEditRoom.dispatch({
+      type: 'SET_HEADER_NAME',
+      payload: `Редактировать комнату в здании "${this.props.constructionJSON.name}"`
+    });
+    
+    storeAddEditRoom.dispatch({
+      type: 'SET_SUBMIT_NAME',
+      payload: `Изменить`
     });
 
-    storeConstructionId.dispatch({
-      type: 'SET_CONSTRUCTIONID',
-      constructionId: this.props.constructionJSON.id
+    storeAddEditRoom.dispatch({
+      type: 'SET_ROOM_JSON',
+      payload: this.state.roomJSONArr[Number(item)]
     });
 
-    storeCallbackAddRoom.dispatch({
+    storeAddEditRoom.dispatch({
       type: 'SET_CALLBACK',
-      UpdateCallback: this.SetRoomJSONArr.bind(this)
+      payload: this.SetRoomJSONArr.bind(this)
     });
 
-    storeVisibleAddRoom.dispatch({
+    storeAddEditRoom.dispatch({
       type: 'SET_VISIBLE',
-      visible: true
+      payload: true
+    });
+
+    storeAddEditRoom.dispatch({
+      type: 'SET_PATH',
+      payload: 'Warehouse/EditRoomInConstruction'
     });
   }
 
@@ -141,10 +143,8 @@ export default class Construction extends Component<IConstructionProps, IConstru
       method: 'POST',
     });
 
-    console.warn('setRoom');
     let JSONArr = await response.json();
     this.setState({ roomJSONArr: JSONArr });
-    console.warn(JSONArr);
   }
 
   private async GetMachineInConstruction(formData: FormData): Promise<void> {
@@ -180,28 +180,46 @@ export default class Construction extends Component<IConstructionProps, IConstru
 
   private UpdateRoomInConstruction() {
     const constructionId = storeConstructionIdUpdate.getState().constructionId;
-    console.warn(constructionId);
-    console.warn(this.props.constructionJSON.id);
-    if (constructionId === this.props.constructionJSON.id){
-      console.warn('go');
+    if (constructionId === this.props.constructionJSON.id) {
       this.GetRooms();
     }
   }
 
-  private VisibleButtonForm() {
-    storeConstructionId.dispatch({
-      type: 'SET_CONSTRUCTIONID',
-      constructionId: this.props.constructionJSON.id
+  private AddRoomInConstruction() {
+    storeAddEditRoom.dispatch({
+      type: 'SET_HEADER_NAME',
+      payload: `Добавить комнату в здание "${this.props.constructionJSON.name}"`
     });
 
-    storeCallbackAddRoom.dispatch({
+    storeAddEditRoom.dispatch({
+      type: 'SET_SUBMIT_NAME',
+      payload: `Добавить комнату`
+    });
+
+    storeAddEditRoom.dispatch({
+      type: 'SET_ROOM_JSON',
+      payload: {
+        id: 0,
+        name: '',
+        floor: null,
+        haveMachine: false,
+        constructionId: this.props.constructionJSON.id,
+      }
+    });
+
+    storeAddEditRoom.dispatch({
       type: 'SET_CALLBACK',
-      UpdateCallback: this.SetRoomJSONArr.bind(this)
+      payload: this.SetRoomJSONArr.bind(this)
     });
 
-    storeVisibleAddRoom.dispatch({
+    storeAddEditRoom.dispatch({
       type: 'SET_VISIBLE',
-      visible: true
+      payload: true
+    });
+
+    storeAddEditRoom.dispatch({
+      type: 'SET_PATH',
+      payload: 'Warehouse/AddRoomInConstruction'
     });
   }
 

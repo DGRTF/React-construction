@@ -24,7 +24,6 @@ export default class AddConstruction extends React.Component<{}, IAddConstructio
     };
 
     storeAddEditConstruction.subscribe(this.SetConstructionJSON.bind(this));
-    // storeAddEditConstruction.subscribe(this.SetVisible.bind(this));
   }
 
   private visibleElement: JSX.Element;
@@ -74,9 +73,6 @@ export default class AddConstruction extends React.Component<{}, IAddConstructio
       payload: null
     });
   }
-
-  // private SetVisible() {
-  // }
 
   private SetConstructionJSON() {
     this.setState({

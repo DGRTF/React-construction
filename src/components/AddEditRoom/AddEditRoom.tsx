@@ -1,20 +1,18 @@
 import React from 'react';
 import './AddEditRoom.scss';
-import storeVisibleAddRoom from '../../store/store/AddEditRoom/AddRoomVisible';
-import storeCallbackAddRoom from '../../store/store/AddEditRoom/CallbackAddRoom';
 import Submit from '../Submit';
 import Input from '../Input/Input';
-import storeConstructionId from '../../store/store/AddEditRoom/ConstructionId';
-import storeRoomJSON from '../../store/store/AddEditRoom/RoomJSON';
+import storeAddEditRoom from '../../store/store/AddEditRoom/AddEditRoom';
 import Button from '../Button/Button';
 
 interface IAddEditRoomState {
   visible: boolean;
-  id: number;
   roomJSON: {
     id: number;
     name: string;
     floor: number;
+    constructionId: number;
+    haveMachine: boolean
   };
 }
 
@@ -23,26 +21,10 @@ export default class AddEditRoom extends React.Component<{}, IAddEditRoomState> 
     super(prop);
     this.state = {
       visible: false,
-      id: storeConstructionId.getState(),
-      roomJSON: storeRoomJSON.getState()
+      roomJSON: storeAddEditRoom.getState().roomJSON
     };
 
-    storeVisibleAddRoom.subscribe(this.SetVisible.bind(this));
-    storeCallbackAddRoom.subscribe(this.SetUpdateCallback);
-    storeRoomJSON.subscribe(this.SetRoomJSON.bind(this));
-    storeConstructionId.subscribe(this.SetStateIdJSON.bind(this));
-  }
-
-  private SetRoomJSON() {
-    this.setState({
-      roomJSON: storeRoomJSON.getState()
-    });
-  }
-
-  private SetStateIdJSON() {
-    this.setState({
-      id: storeConstructionId.getState()
-    });
+    storeAddEditRoom.subscribe(this.SetVisible.bind(this));
   }
 
   private UpdateCallback: (constructionJSONArr: {
@@ -53,22 +35,28 @@ export default class AddEditRoom extends React.Component<{}, IAddEditRoomState> 
 
   private visibleElement: JSX.Element;
 
+  private path: string;
+
+  private headerName: string;
+
+  private submitName: string;
+
   render() {
     this.visibleElement = this.state.visible ?
       <div className='add-edit-room'>
         <div className='add-edit-room__container'>
           <div className='add-edit-room__header'>
-            <span>Добавить комнату</span>
+  <span>{this.headerName}</span>
             <div className='add-edit-room__close'>
               <Button name='Закрыть' ClickHandler={this.Close.bind(this)}></Button>
             </div>
           </div>
           <form className='add-edit-room__form' onSubmit={this.AddEditConstruction.bind(this)}>
             <input type="hidden" name='roomId' value={this.state.roomJSON ? this.state.roomJSON.id : 0} />
-            <input type="hidden" name='constructionId' value={this.state.id} />
+            <input type="hidden" name='constructionId' value={this.state.roomJSON ? this.state.roomJSON.constructionId : 0} />
             <Input text='Введите название' name='name' value={this.state.roomJSON ? this.state.roomJSON.name : ''}></Input>
             <Input text='Введите этаж' name='floor' value={this.state.roomJSON ? `${this.state.roomJSON.floor}` : ''}></Input>
-            <Submit name='Добавить комнату' />
+            <Submit name={this.submitName} />
           </form>
         </div>
       </div>
@@ -78,57 +66,50 @@ export default class AddEditRoom extends React.Component<{}, IAddEditRoomState> 
     );
   }
 
-  private SetUpdateCallback = () => {
-    this.UpdateCallback = storeCallbackAddRoom.getState();
-  }
-
   private SetVisible() {
     this.setState({
-      visible: storeVisibleAddRoom.getState()
+      visible: storeAddEditRoom.getState().visible,
+      roomJSON: storeAddEditRoom.getState().roomJSON,
     });
+    this.UpdateCallback = storeAddEditRoom.getState().UpdateCallback;
+    this.path = storeAddEditRoom.getState().path;
+    this.headerName = storeAddEditRoom.getState().headerName;
+    this.submitName = storeAddEditRoom.getState().submitName;
   }
 
   private Close() {
-    storeVisibleAddRoom.dispatch({
+    storeAddEditRoom.dispatch({
       type: 'SET_VISIBLE',
-      visible: false
+      payload: false
     });
 
-    storeRoomJSON.dispatch({
-      type: 'SET_ROOMJSON',
-      roomJSON: null
+    storeAddEditRoom.dispatch({
+      type: 'SET_ROOM_JSON',
+      payload: null
     });
   }
 
   private async AddEditConstruction(ev: React.FormEvent) {
     ev.preventDefault();
-    let formData: FormData;
-    let response;
-    if (!this.state.roomJSON) {
-      formData = new FormData(ev.currentTarget as HTMLFormElement);
-      response = await fetch('Warehouse/AddRoomInConstruction', {
-        method: 'POST',
-        body: formData
-      });
-    } else {
-      formData = new FormData(ev.currentTarget as HTMLFormElement);
-      response = await fetch('Warehouse/EditRoomInConstruction', {
-        method: 'POST',
-        body: formData
-      });
-    }
 
-    storeRoomJSON.dispatch({
-      type: 'SET_ROOMJSON',
-      roomJSON: null
+    const formData = new FormData(ev.currentTarget as HTMLFormElement);
+    const response = await fetch(this.path, {
+      method: 'POST',
+      body: formData
+    });
+
+    storeAddEditRoom.dispatch({
+      type: 'SET_ROOM_JSON',
+      payload: null
     });
 
     let JSONArr = await response.json();
-    console.warn(JSONArr);
+
     this.UpdateCallback(JSONArr);
-    storeVisibleAddRoom.dispatch({
+
+    storeAddEditRoom.dispatch({
       type: 'SET_VISIBLE',
-      visible: false
+      payload: false
     });
   }
 

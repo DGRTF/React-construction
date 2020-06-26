@@ -1,9 +1,11 @@
-import { setConstructionJSON, setState, setCallback, setVisible, setHeaderName, setSubmitName, setPath, setEditPath } from '../../actions/AddEditConstruction/AddEditConstruction';
+import { setConstructionJSON, setState, 
+  // setCallback, 
+  setVisible, setHeaderName, setSubmitName, setPath, setEditPath } from '../../actions/AddEditConstruction/AddEditConstruction';
 
 type ActionTypes = ReturnType<typeof setConstructionJSON>
   | ReturnType<typeof setState>
   | ReturnType<typeof setVisible>
-  | ReturnType<typeof setCallback>
+  // | ReturnType<typeof setCallback>
   | ReturnType<typeof setHeaderName>
   | ReturnType<typeof setPath>
   | ReturnType<typeof setSubmitName>
@@ -15,8 +17,6 @@ export let reducer = function (state: any, action: ActionTypes) {
       return action.payload
     case "SET_VISIBLE":
       return { ...state, visible: action.payload }
-    case "SET_CALL_BACK":
-      return { ...state, UpdateCallback: action.payload }
     case "SET_CONSTRUCTION_JSON":
       return { ...state, constructionJSON: action.payload }
     case 'SET_HEADER_NAME':

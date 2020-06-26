@@ -3,8 +3,6 @@ import { reducer } from '../../reducers/AddEditMachine/AddEditMachine';
 
 const storeAddEditMachine = createStore(reducer);
 
-storeAddEditMachine.subscribe(() => console.warn(storeAddEditMachine.getState()))
-
 storeAddEditMachine.dispatch({
   type: "SET_STATE",
   payload: {

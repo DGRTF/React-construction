@@ -74,11 +74,6 @@ export default class Hierarchy extends React.Component<{}, IHierarchyState> {
     });
 
     storeAddEditConstruction.dispatch({
-      type: 'SET_CALL_BACK',
-      payload: this.SetConstructionJSONArr.bind(this)
-    });
-
-    storeAddEditConstruction.dispatch({
       type: 'SET_VISIBLE',
       payload: true
     });
@@ -90,7 +85,7 @@ export default class Hierarchy extends React.Component<{}, IHierarchyState> {
 
     storeAddEditConstruction.dispatch({
       type: 'SET_HEADER_NAME',
-      payload: 'Редактировать здание'
+      payload: `Редактировать здание "${this.state.constructionJSONArr[Number(item)].name}"`
     });
 
     storeAddEditConstruction.dispatch({
@@ -104,10 +99,6 @@ export default class Hierarchy extends React.Component<{}, IHierarchyState> {
   }
 
   private AddConstruction() {
-    storeAddEditConstruction.dispatch({
-      type: 'SET_CALL_BACK',
-      payload: this.SetConstructionJSONArr.bind(this)
-    });
 
     storeAddEditConstruction.dispatch({
       type: 'SET_VISIBLE',
@@ -128,16 +119,6 @@ export default class Hierarchy extends React.Component<{}, IHierarchyState> {
       type: 'SET_SUBMIT_NAME',
       payload: 'Добавить'
     });
-  }
-
-  private SetConstructionJSONArr(JSONArr: {
-    id: number;
-    name: string;
-    address: string;
-    haveMachine: boolean;
-  }[]) {
-    this.setState({ constructionJSONArr: JSONArr });
-
   }
 
   private async GetConstructions() {

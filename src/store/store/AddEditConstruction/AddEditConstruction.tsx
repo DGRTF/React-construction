@@ -11,7 +11,7 @@ storeAddEditConstruction.dispatch({
       name: '',
       address: ''
     },
-    UpdateCallback: null,
+    // UpdateCallback: null,
     visible: false,
     headerName: '',
     submitName: '',

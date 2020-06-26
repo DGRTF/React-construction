@@ -1,12 +1,10 @@
 import React from 'react';
 import './AddEditConstruction.scss';
-import store from '../../store/store/AddEditConstruction/AddConstructionCallBack';
-import storeVisible from '../../store/store/AddEditConstruction/AddConstructionVisible';
-import storeConstructionJSON from '../../store/store/AddEditConstruction/ConstructionJSON';
+import storeAddEditConstruction from '../../store/store/AddEditConstruction/AddEditConstruction';
+import storeConstructionJSONArr from '../../store/store/ConstructionJSONArr/ConstructionJSONArr';
 import Button from '../Button/Button';
 import Submit from '../Submit';
 import Input from '../Input/Input';
-import storeConstructionJSONArr from '../../store/store/ConstructionJSONArr/ConstructionJSONArr';
 
 interface IAddConstructionState {
   visible: boolean;
@@ -22,21 +20,27 @@ export default class AddConstruction extends React.Component<{}, IAddConstructio
     super(prop);
     this.state = {
       visible: false,
-      constructionJSON: storeConstructionJSON.getState()
+      constructionJSON: storeAddEditConstruction.getState().constructionJSON
     };
 
-    storeConstructionJSON.subscribe(this.SetConstructionJSON.bind(this));
-    storeVisible.subscribe(this.SetVisible.bind(this));
+    storeAddEditConstruction.subscribe(this.SetConstructionJSON.bind(this));
+    // storeAddEditConstruction.subscribe(this.SetVisible.bind(this));
   }
 
   private visibleElement: JSX.Element;
+
+  private path: string;
+
+  private headerName: string;
+
+  private submitName: string;
 
   render() {
     this.visibleElement = this.state.visible ?
       <div className='add-edit-construction'>
         <div className='add-edit-construction__container'>
           <div className='add-edit-construction__header'>
-            <span>Добавить здание</span>
+            <span>{this.headerName}</span>
             <div className='add-edit-construction__close'>
               <Button name='Закрыть' ClickHandler={this.Close.bind(this)}></Button>
             </div>
@@ -47,7 +51,7 @@ export default class AddConstruction extends React.Component<{}, IAddConstructio
             <Input text='Введите адрес' name='address' value={this.state.constructionJSON ? this.state.constructionJSON.address : ''}></Input>
             <div>
               <div className='add-edit-construction__submit-container'>
-                <Submit name='Добавить здание' />
+                <Submit name={this.submitName} />
               </div>
             </div>
           </form>
@@ -60,50 +64,43 @@ export default class AddConstruction extends React.Component<{}, IAddConstructio
   }
 
   private Close() {
-    storeVisible.dispatch({
+    storeAddEditConstruction.dispatch({
       type: 'SET_VISIBLE',
-      visible: false
+      payload: false
     });
 
-    storeConstructionJSON.dispatch({
-      type: 'SET_CONSTRUCTIONJSON',
-      constructionJSON: null
+    storeAddEditConstruction.dispatch({
+      type: 'SET_CONSTRUCTION_JSON',
+      payload: null
     });
   }
 
-  private SetVisible() {
-    this.setState({
-      visible: storeVisible.getState()
-    });
-  }
+  // private SetVisible() {
+  // }
 
   private SetConstructionJSON() {
     this.setState({
-      constructionJSON: storeConstructionJSON.getState()
+      constructionJSON: storeAddEditConstruction.getState().constructionJSON
     });
+    this.setState({
+      visible: storeAddEditConstruction.getState().visible
+    });
+    this.path = storeAddEditConstruction.getState().path;
+    this.headerName = storeAddEditConstruction.getState().headerName;
+    this.submitName = storeAddEditConstruction.getState().submitName;
   }
 
   private async AddEditConstruction(ev: React.FormEvent) {
     ev.preventDefault();
-    let formData: FormData;
-    let response;
-    if (!this.state.constructionJSON) {
-      formData = new FormData(ev.currentTarget as HTMLFormElement);
-      response = await fetch('Warehouse/AddConstruction', {
-        method: 'POST',
-        body: formData
-      });
-    } else {
-      formData = new FormData(ev.currentTarget as HTMLFormElement);
-      response = await fetch('Warehouse/EditConstruction', {
-        method: 'POST',
-        body: formData
-      });
-    }
+    const formData = new FormData(ev.currentTarget as HTMLFormElement);
+    const response = await fetch(this.path, {
+      method: 'POST',
+      body: formData
+    });
 
-    storeConstructionJSON.dispatch({
-      type: 'SET_CONSTRUCTIONJSON',
-      constructionJSON: null
+    storeAddEditConstruction.dispatch({
+      type: 'SET_CONSTRUCTION_JSON',
+      payload: null
     })
 
     let JSONArr = await response.json();
@@ -113,9 +110,9 @@ export default class AddConstruction extends React.Component<{}, IAddConstructio
       payload: JSONArr
     });
 
-    storeVisible.dispatch({
+    storeAddEditConstruction.dispatch({
       type: 'SET_VISIBLE',
-      visible: false
+      payload: false
     });
   }
 

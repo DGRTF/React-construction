@@ -3,13 +3,9 @@ import './Hierarchy.scss';
 import Construction from './Construction';
 import Button from './Button/Button';
 import Submit from './Submit';
-import store from '../store/store/AddEditConstruction/AddConstructionCallBack';
-import storeConstructionJSON from '../store/store/AddEditConstruction/ConstructionJSON';
-import storeVisible from '../store/store/AddEditConstruction/AddConstructionVisible';
-import storeConstructionCallback from '../store/store/AddEditConstruction/AddConstructionCallBack';
-import storeVisibleAddEditConstruction from '../store/store/AddEditConstruction/AddConstructionVisible';
+import storeAddEditConstruction from '../store/store/AddEditConstruction/AddEditConstruction';
+import storeConstructionJSONArr from '../store/store/ConstructionJSONArr/ConstructionJSONArr';
 import Indicate from './Indicate/Indicate';
-import storeConstructionJSONArr from '../store/store/ConstructionJSONArr/ConstructionJSONArr'
 
 interface IHierarchyState {
   visibleButton: boolean;
@@ -42,7 +38,7 @@ export default class Hierarchy extends React.Component<{}, IHierarchyState> {
     return (
       <div className="hierarchy" style={{ width: '150px', minWidth: '150px' }}>
         <div className="hierarchy__content">
-          <Button name='Добавить здание' ClickHandler={this.VisibleButtonForm.bind(this)} />
+          <Button name='Добавить здание' ClickHandler={this.AddConstruction.bind(this)} />
           {this.state.constructionJSONArr && this.state.constructionJSONArr.map((constructionJSON, item) =>
             <div className='hierarchy__content-item'>
               <div className='hierarchy__edit-construction'>
@@ -62,8 +58,7 @@ export default class Hierarchy extends React.Component<{}, IHierarchyState> {
         </div>
         <div className="hierarchy__border-move" style={{ left: '148px' }}
           onMouseDown={this.AddEventMouseMove.bind(this)}
-          onTouchStart={this.AddEventTouchMove.bind(this)}
-        >
+          onTouchStart={this.AddEventTouchMove.bind(this)}>
           <div className="hierarchy__border-move-handle"></div>
         </div>
       </div >
@@ -72,36 +67,66 @@ export default class Hierarchy extends React.Component<{}, IHierarchyState> {
 
   private EditConstruction(ev: React.MouseEvent) {
     const item = (ev.currentTarget as HTMLElement).dataset.constructionItem;
-    console.warn(this.state.constructionJSONArr[Number(item)]);
-    storeConstructionJSON.dispatch({
-      type: 'SET_CONSTRUCTIONJSON',
-      constructionJSON: this.state.constructionJSONArr[Number(item)]
+    
+    storeAddEditConstruction.dispatch({
+      type: 'SET_CONSTRUCTION_JSON',
+      payload: this.state.constructionJSONArr[Number(item)]
     });
 
-    storeConstructionCallback.dispatch({
-      type: 'SET_CALLBACK',
-      UpdateCallback: this.SetConstructionJSONArr.bind(this)
+    storeAddEditConstruction.dispatch({
+      type: 'SET_CALL_BACK',
+      payload: this.SetConstructionJSONArr.bind(this)
     });
 
-    storeVisibleAddEditConstruction.dispatch({
+    storeAddEditConstruction.dispatch({
       type: 'SET_VISIBLE',
-      visible: true
+      payload: true
     });
 
+    storeAddEditConstruction.dispatch({
+      type: 'SET_PATH',
+      payload: 'Warehouse/EditConstruction'
+    });
+
+    storeAddEditConstruction.dispatch({
+      type: 'SET_HEADER_NAME',
+      payload: 'Редактировать здание'
+    });
+
+    storeAddEditConstruction.dispatch({
+      type: 'SET_SUBMIT_NAME',
+      payload: 'Изменить'
+    });
   }
 
   private Init() {
     this.GetConstructions();
   }
 
-  private VisibleButtonForm() {
-    store.dispatch({
-      type: 'SET_CALLBACK',
-      UpdateCallback: this.SetConstructionJSONArr.bind(this)
+  private AddConstruction() {
+    storeAddEditConstruction.dispatch({
+      type: 'SET_CALL_BACK',
+      payload: this.SetConstructionJSONArr.bind(this)
     });
-    storeVisible.dispatch({
+
+    storeAddEditConstruction.dispatch({
       type: 'SET_VISIBLE',
-      visible: true
+      payload: true
+    });
+
+    storeAddEditConstruction.dispatch({
+      type: 'SET_PATH',
+      payload: 'Warehouse/AddConstruction'
+    });
+
+    storeAddEditConstruction.dispatch({
+      type: 'SET_HEADER_NAME',
+      payload: 'Добавить здание'
+    });
+
+    storeAddEditConstruction.dispatch({
+      type: 'SET_SUBMIT_NAME',
+      payload: 'Добавить'
     });
   }
 

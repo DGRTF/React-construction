@@ -32,7 +32,7 @@ export default class Hierarchy extends React.Component<{}, IHierarchyState> {
     });
   }
 
-  private constructionPath = 'Warehouse/GetConstructions?';
+  private constructionPath = 'Constructions/GetConstructions?';
 
   render() {
     return (
@@ -46,7 +46,7 @@ export default class Hierarchy extends React.Component<{}, IHierarchyState> {
               </div>
               <div className='hierarchy__delete-construction'>
                 <form onSubmit={this.DeleteConstruction.bind(this)}>
-                  <input type="hidden" value={`${constructionJSON.id}`} name='id' />
+                  <input type="hidden" value={`${constructionJSON.id}`} name='constructionId' />
                   <Submit name='X' />
                 </form>
               </div>
@@ -80,7 +80,7 @@ export default class Hierarchy extends React.Component<{}, IHierarchyState> {
 
     storeAddEditConstruction.dispatch({
       type: 'SET_PATH',
-      payload: 'Warehouse/EditConstruction'
+      payload: 'Constructions/EditConstruction'
     });
 
     storeAddEditConstruction.dispatch({
@@ -107,7 +107,7 @@ export default class Hierarchy extends React.Component<{}, IHierarchyState> {
 
     storeAddEditConstruction.dispatch({
       type: 'SET_PATH',
-      payload: 'Warehouse/AddConstruction'
+      payload: 'Constructions/AddConstruction'
     });
 
     storeAddEditConstruction.dispatch({
@@ -132,7 +132,7 @@ export default class Hierarchy extends React.Component<{}, IHierarchyState> {
   private async DeleteConstruction(ev: React.FormEvent) {
     ev.preventDefault();
     let formData = new FormData(ev.currentTarget as HTMLFormElement);
-    const response = await fetch('Warehouse/DeleteConstruction', {
+    const response = await fetch('Constructions/DeleteConstruction', {
       method: 'POST',
       body: formData
     });

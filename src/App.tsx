@@ -33,7 +33,7 @@ export default class App extends React.Component<IAppProps> {
     roomId: number;
   }
 
-  private constructionPath = 'Warehouse/GetConstructions?';
+  private constructionPath = 'Constructions/GetConstructions?';
 
   render() {
     return (
@@ -85,12 +85,13 @@ export default class App extends React.Component<IAppProps> {
 
   private async DeleteMachine() {
     if (this.machineJSON) {
-      console.warn(storeDeleteMachinePath.getState().deletePath);
       let response = await fetch(storeDeleteMachinePath.getState().deletePath +
-        `&id=${this.machineJSON.id}`, {
+        `&machineId=${this.machineJSON.id}`, {
         method: 'POST',
       });
+
       let JSONArr = await response.json();
+
       store.dispatch({
         type: "SET_STATE",
         state: {

@@ -45,9 +45,9 @@ export default class Construction extends Component<IConstructionProps, IConstru
     storeUpdate.subscribe(this.UpdateRoomInConstruction.bind(this));
   }
 
-  private roomInConstructorPath = 'Warehouse/GetRoomsInConstruction?';
+  private roomInConstructorPath = 'Rooms/GetRoomsInConstruction?';
 
-  private editMachineInConstructionPath = `Warehouse/EditMachinesInConstruction?constructionId=${this.props.constructionJSON.id}`;
+  private editMachineInConstructionPath = `Machines/EditMachinesInConstruction?constructionId=${this.props.constructionJSON.id}`;
 
   private machineJSONArr: {
     id: number;
@@ -127,7 +127,7 @@ export default class Construction extends Component<IConstructionProps, IConstru
 
     storeAddEditRoom.dispatch({
       type: 'SET_PATH',
-      payload: 'Warehouse/EditRoomInConstruction'
+      payload: 'Rooms/EditRoomInConstruction'
     });
   }
 
@@ -148,7 +148,7 @@ export default class Construction extends Component<IConstructionProps, IConstru
   }
 
   private async GetMachineInConstruction(formData: FormData): Promise<void> {
-    const response = await fetch('Warehouse/GetMachinesInConstruction?constructionId=' + this.props.constructionJSON.id, {
+    const response = await fetch('Machines/GetMachinesInConstruction?constructionId=' + this.props.constructionJSON.id, {
       method: 'POST',
       body: formData
     });
@@ -169,7 +169,7 @@ export default class Construction extends Component<IConstructionProps, IConstru
 
     storeDeleteMachinePath.dispatch({
       type: 'SET_DELETE_PATH',
-      payload: `Warehouse/DeleteMachineInConstruction?constructionId=${this.props.constructionJSON.id}`
+      payload: `Machines/DeleteMachineInConstruction?constructionId=${this.props.constructionJSON.id}`
     });
 
     storeConstructionIdUpdate.dispatch({
@@ -219,7 +219,7 @@ export default class Construction extends Component<IConstructionProps, IConstru
 
     storeAddEditRoom.dispatch({
       type: 'SET_PATH',
-      payload: 'Warehouse/AddRoomInConstruction'
+      payload: 'Rooms/AddRoomInConstruction'
     });
   }
 
@@ -236,7 +236,7 @@ export default class Construction extends Component<IConstructionProps, IConstru
   private async DeleteRoomInConstruction(ev: React.FormEvent) {
     ev.preventDefault();
     let formData = new FormData(ev.currentTarget as HTMLFormElement);
-    const response = await fetch('Warehouse/DeleteRoomInConstruction', {
+    const response = await fetch('Rooms/DeleteRoomInConstruction', {
       method: 'POST',
       body: formData
     });

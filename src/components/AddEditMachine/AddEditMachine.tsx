@@ -28,7 +28,7 @@ export default class AddEditMachine extends React.Component<{}, IAddEditMachineS
     storeAddEditMachine.subscribe(this.SetMachineJSON.bind(this));
   }
 
-  private constructionPath = 'Warehouse/GetConstructions?';
+  private constructionPath = 'Constructions/GetConstructions?';
 
   private SetMachineJSON() {
     this.setState({
@@ -59,7 +59,7 @@ export default class AddEditMachine extends React.Component<{}, IAddEditMachineS
             </div>
           </div>
           <form className='add-edit-machine__form' onSubmit={this.AddEditConstruction.bind(this)}>
-            <input type="hidden" name='id' value={this.state.machineJSON ? this.state.machineJSON.id : 0} />
+            <input type="hidden" name='machineId' value={this.state.machineJSON ? this.state.machineJSON.id : 0} />
             <input type="hidden" name='roomId' value={this.state.machineJSON ? this.state.machineJSON.roomId : 0} />
             <Input text='Введите название' name='name' value={this.state.machineJSON ? this.state.machineJSON.name : ''} />
             <Input text='Введите год изготовления' name='createYear' value={this.state.machineJSON ? `${this.state.machineJSON.createYear}` : ''} />

@@ -32,11 +32,11 @@ export default class Room extends Component<IRoomProps> {
     roomId: number;
   }[];
 
-  private machineInRoomPath = 'Warehouse/GetMachinesInRoom';
+  private machineInRoomPath = 'Machines/GetMachinesInRoom';
 
-  private machineInRoomPathEdit = 'Warehouse/EditMachineInRoom';
+  private machineInRoomPathEdit = 'Machines/EditMachineInRoom';
 
-  private machineInRoomPathAdd = 'Warehouse/AddMachineInRoom';
+  private machineInRoomPathAdd = 'Machines/AddMachineInRoom';
 
   render() {
     return (
@@ -72,7 +72,7 @@ export default class Room extends Component<IRoomProps> {
 
     storeDeleteMachinePath.dispatch({
       type: 'SET_DELETE_PATH',
-      payload: `Warehouse/DeleteMachineInRoom?constructionId=${this.props.roomJSON.id}`
+      payload: `Machines/DeleteMachineInRoom?roomId=${this.props.roomJSON.id}`
     });
 
     storeConstructionIdUpdate.dispatch({
@@ -119,7 +119,7 @@ export default class Room extends Component<IRoomProps> {
 
     storeDeleteMachinePath.dispatch({
       type: 'SET_DELETE_PATH',
-      payload: `Warehouse/DeleteMachineInRoom?constructionId=${this.props.roomJSON.id}`
+      payload: `Machines/DeleteMachineInRoom?constructionId=${this.props.roomJSON.id}`
     });
 
     console.warn(this.props.roomJSON.constructionId);

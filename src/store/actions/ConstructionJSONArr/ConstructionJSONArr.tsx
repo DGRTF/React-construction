@@ -13,6 +13,7 @@ export const setConstructionJSONArr = function (constructionJSONArr: {
 }
 
 export function getConstructionJSONArr() {
+  console.warn('object');
   return function (dispatch: any) {
     return fetch('Constructions/GetConstructions', {
       method: 'POST',

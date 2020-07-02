@@ -6,14 +6,36 @@ import Submit from './Submit';
 import store from '../store/store';
 import Button from './Button/Button';
 import storeAddEditRoom from '../store/store/AddEditRoom/AddEditRoom';
-import storeAddEditMachine from '../store/store/AddEditMachine/AddEditMachine';
-// import storeDeleteMachinePath from '../store/store/DeleteMachinePath/DeleteMachinePath';
+import { getMachineInConstruction } from '../store/actions';
 import storeUpdate from '../store/store/UpdateRoomInConstruction/UpdateRoomInConstruction';
 import storeConstructionIdUpdate from '../store/store/UpdateRoomInConstruction/ConstructionId';
 import Indicate from './Indicate/Indicate';
+import {
+  setAddPathInConstruction,
+  setEditPathInConstruction,
+  setDeletePathInConstruction
+} from "../store/actions/AddEditMachine/AddEditMachine";
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+// import { stateType } from '../store/store';
 
+interface ImapDispatchToProps {
+  setAddPathInConstruction?: (id: number) => {
+    type: "ADD_EDIT_MACHINE_SET_ADD_PATH";
+    payload: string;
+  }
+  setEditPathInConstruction?: (id: number) => {
+    type: "ADD_EDIT_MACHINE_SET_EDIT_PATH";
+    payload: string;
+  }
+  setDeletePathInConstruction?: (id: number) => {
+    type: "ADD_EDIT_MACHINE_SET_DELETE_PATH";
+    payload: string;
+  }
+  getMachineInConstruction?:(constructionId: number)=> (dispatch: any) => Promise<any>
+}
 
-interface IConstructionProps {
+interface IConstructionProps extends ImapDispatchToProps {
   constructionJSON: {
     id: number;
     name: string;
@@ -33,7 +55,7 @@ interface IConstructionState {
   }[];
 }
 
-export default class Construction extends Component<IConstructionProps, IConstructionState> {
+class Construction extends Component<IConstructionProps, IConstructionState> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -47,7 +69,7 @@ export default class Construction extends Component<IConstructionProps, IConstru
 
   private roomInConstructorPath = 'Rooms/GetRoomsInConstruction?';
 
-  private editMachineInConstructionPath = `Machines/EditMachinesInConstruction?constructionId=${this.props.constructionJSON.id}`;
+  // private editMachineInConstructionPath = `Machines/EditMachinesInConstruction?constructionId=${this.props.constructionJSON.id}`;
 
   private machineJSONArr: {
     id: number;
@@ -148,36 +170,9 @@ export default class Construction extends Component<IConstructionProps, IConstru
   }
 
   private async GetMachineInConstruction(formData: FormData): Promise<void> {
-    console.warn(store.getState().constructionJSONArr);
-
-    const response = await fetch('Machines/GetMachinesInConstruction?constructionId=' + this.props.constructionJSON.id, {
-      method: 'POST',
-      body: formData
-    });
-
-    this.machineJSONArr = await response.json();
-    console.warn(store.getState().constructionJSONArr);
-    store.dispatch({
-      type: "SET_MACHINE_ARR",
-      payload: this.machineJSONArr
-    });
-    console.warn(store.getState().constructionJSONArr);
-    storeAddEditMachine.dispatch({
-      type: 'ADD_EDIT_MACHINE_SET_EDIT_PATH',
-      payload: this.editMachineInConstructionPath
-    });
-    console.warn(store.getState().constructionJSONArr);
-    store.dispatch({
-      type: 'DELETE_MACHINE_PATH_SET_DELETE_PATH',
-      payload: `Machines/DeleteMachineInConstruction?constructionId=${this.props.constructionJSON.id}`
-    });
-    console.warn(store.getState().constructionJSONArr);
-    storeConstructionIdUpdate.dispatch({
-      type: 'UPDATE_ROOM_IN_CONSTRUCTION_SET_CONSTRUCTION_ID',
-      payload: this.props.constructionJSON.id
-    });
-
-    console.warn(store.getState().constructionJSONArr);
+    this.props.getMachineInConstruction(this.props.constructionJSON.id);
+    this.props.setEditPathInConstruction(this.props.constructionJSON.id);
+    this.props.setDeletePathInConstruction(this.props.constructionJSON.id);
   }
 
   private UpdateRoomInConstruction() {
@@ -248,3 +243,17 @@ export default class Construction extends Component<IConstructionProps, IConstru
   }
 
 }
+
+function mapDispatchToProps(dispatch: any) {
+  return bindActionCreators({
+    setAddPathInConstruction: setAddPathInConstruction,
+    setEditPathInConstruction: setEditPathInConstruction,
+    setDeletePathInConstruction: setDeletePathInConstruction,
+    getMachineInConstruction: getMachineInConstruction,
+  }, dispatch)
+}
+
+export default connect<{}, ImapDispatchToProps, IConstructionProps, {}>(
+  null,
+  mapDispatchToProps
+)(Construction);

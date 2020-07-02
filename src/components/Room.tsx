@@ -1,13 +1,66 @@
 import React, { Component } from 'react';
 import './Room.scss';
 import FormOneSubmit from './FormOneSubmit';
-import store from '../store/store';
 import Button from './Button/Button';
-import storeAddEditMachine from '../store/store/AddEditMachine/AddEditMachine';
-import storeConstructionIdUpdate from '../store/store/UpdateRoomInConstruction/ConstructionId';
+import { getMachineInRoom } from '../store/actions';
+import {
+  setAddPathInRoom,
+  setEditPathInRoom,
+  setDeletePathInRoom,
+  setVisible,
+  setMachineJSON,
+  setHeaderName,
+  setSubmitName,
+  setPathEqualAddPath,
+} from "../store/actions/AddEditMachine/AddEditMachine";
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { stateType } from '../store/store';
 
+interface ImapDispatchToProps {
+  setAddPathInRoom?: (id: number) => {
+    type: "ADD_EDIT_MACHINE_SET_ADD_PATH";
+    payload: string;
+  }
+  setEditPathInRoom?: (id: number) => {
+    type: "ADD_EDIT_MACHINE_SET_EDIT_PATH";
+    payload: string;
+  }
+  setDeletePathInRoom?: (id: number) => {
+    type: "ADD_EDIT_MACHINE_SET_DELETE_PATH";
+    payload: string;
+  }
+  getMachineInRoom?: (roomId: number) => (dispatch: any) => Promise<any>;
+  setVisible?: (visible: boolean) => {
+    type: "ADD_EDIT_MACHINE_SET_VISIBLE";
+    payload: boolean;
+  }
+  setMachineJSON?: (machineJSON: {
+    id: number;
+    name: string;
+    createYear: number;
+    roomId: number;
+  }) => {
+    type: "ADD_EDIT_MACHINE_SET_MACHINE_JSON";
+    payload: {
+      id: number;
+      name: string;
+      createYear: number;
+      roomId: number;
+    };
+  }
+  setHeaderName?: (headerName: string) => {
+    type: "ADD_EDIT_MACHINE_SET_HEADER_NAME";
+    payload: string;
+  }
+  setSubmitName?: (submitName: string) => {
+    type: "ADD_EDIT_MACHINE_SET_SUBMIT_NAME";
+    payload: string;
+  }
+  setPathEqualAddPath?: () => (dispatch: any, getState: () => stateType) => Promise<any>;
+}
 
-interface IRoomProps {
+interface IRoomProps extends ImapDispatchToProps {
   roomJSON: {
     id: number;
     name: string;
@@ -17,26 +70,10 @@ interface IRoomProps {
   };
 }
 
-export default class Room extends Component<IRoomProps> {
+class Room extends Component<IRoomProps> {
   constructor(prop: any) {
     super(prop);
-    this.state = {
-      visibleButton: true
-    }
   }
-  private machineJSONArr: {
-    id: number;
-    name: string;
-    createYear: number;
-    roomId: number;
-  }[];
-
-  private machineInRoomPath = 'Machines/GetMachinesInRoom';
-
-  private machineInRoomPathEdit = 'Machines/EditMachineInRoom';
-
-  private machineInRoomPathAdd = 'Machines/AddMachineInRoom';
-
   render() {
     return (
       <div className='room'>
@@ -50,81 +87,46 @@ export default class Room extends Component<IRoomProps> {
   }
 
   private async GetMachineInRoom(formData: FormData): Promise<void> {
-    storeAddEditMachine.dispatch({
-      type: 'ADD_EDIT_MACHINE_SET_EDIT_PATH',
-      payload: this.machineInRoomPathEdit
-    });
+    this.props.getMachineInRoom(this.props.roomJSON.id);
+    this.props.setAddPathInRoom(this.props.roomJSON.id);
+    this.props.setEditPathInRoom(this.props.roomJSON.id);
+    this.props.setDeletePathInRoom(this.props.roomJSON.id);
 
-    formData.append('roomId', `${this.props.roomJSON.id}`);
-    const response = await fetch(this.machineInRoomPath, {
-      method: 'POST',
-      body: formData
-    });
-
-    this.machineJSONArr = await response.json();
-    store.dispatch({
-      type: "SET_MACHINE_ARR",
-        payload: this.machineJSONArr
-    });
-
-    store.dispatch({
-      type: 'DELETE_MACHINE_PATH_SET_DELETE_PATH',
-      payload: `Machines/DeleteMachineInRoom?roomId=${this.props.roomJSON.id}`
-    });
-
-    storeConstructionIdUpdate.dispatch({
-      type: 'UPDATE_ROOM_IN_CONSTRUCTION_SET_CONSTRUCTION_ID',
-      payload: this.props.roomJSON.constructionId
-    });
+    // storeConstructionIdUpdate.dispatch({
+    //   type: 'UPDATE_ROOM_IN_CONSTRUCTION_SET_CONSTRUCTION_ID',
+    //   payload: this.props.roomJSON.constructionId
+    // });
   }
 
   private AddMachineInRoom() {
-    storeAddEditMachine.dispatch({
-      type: 'ADD_EDIT_MACHINE_SET_VISIBLE',
-      payload: true
-    });
-
-    storeAddEditMachine.dispatch({
-      type: 'ADD_EDIT_MACHINE_SET_MACHINE_JSON',
-      payload: {
-        id: null,
-        name: '',
-        createYear: null,
-        roomId: this.props.roomJSON.id
-      }
-    });
-
-    storeAddEditMachine.dispatch({
-      type: 'ADD_EDIT_MACHINE_SET_HEADER_NAME',
-      payload: `Добавить оборудование в комнату "${this.props.roomJSON.name}"`
-    });
-
-    storeAddEditMachine.dispatch({
-      type: 'ADD_EDIT_MACHINE_SET_SUBMIT_NAME',
-      payload: `Добавить оборудование`
-    });
-
-    storeAddEditMachine.dispatch({
-      type: 'ADD_EDIT_MACHINE_SET_PATH',
-      payload: this.machineInRoomPathAdd
-    });
-
-    storeAddEditMachine.dispatch({
-      type: 'ADD_EDIT_MACHINE_SET_EDIT_PATH',
-      payload: this.machineInRoomPathEdit
-    });
-
-    store.dispatch({
-      type: 'DELETE_MACHINE_PATH_SET_DELETE_PATH',
-      payload: `Machines/DeleteMachineInRoom?constructionId=${this.props.roomJSON.id}`
-    });
-
-    console.warn(this.props.roomJSON.constructionId);
-
-    storeConstructionIdUpdate.dispatch({
-      type: 'UPDATE_ROOM_IN_CONSTRUCTION_SET_CONSTRUCTION_ID',
-      payload: this.props.roomJSON.constructionId
-    });
+    this.props.setVisible(true);
+    this.props.setMachineJSON(null)
+    this.props.setHeaderName(`Добавить оборудование в комнату "${this.props.roomJSON.name}"`);
+    this.props.setSubmitName('Добавить оборудование');
+    this.props.setAddPathInRoom(this.props.roomJSON.id);
+    this.props.setPathEqualAddPath();
+    this.props.setDeletePathInRoom(this.props.roomJSON.id);
   }
 
 }
+
+
+
+function mapDispatchToProps(dispatch: any) {
+  return bindActionCreators({
+    setAddPathInRoom,
+    setEditPathInRoom,
+    setDeletePathInRoom,
+    getMachineInRoom,
+    setVisible,
+    setMachineJSON,
+    setHeaderName,
+    setSubmitName,
+    setPathEqualAddPath,
+  }, dispatch)
+}
+
+export default connect<{}, ImapDispatchToProps, IRoomProps, {}>(
+  null,
+  mapDispatchToProps
+)(Room);

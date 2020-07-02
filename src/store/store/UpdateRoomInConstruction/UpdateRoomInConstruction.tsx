@@ -3,9 +3,4 @@ import { reducer } from '../../reducers/UpdateRoomInConstruction/UpdateRoomInCon
 
 const storeUpdate = createStore(reducer);
 
-storeUpdate.dispatch({
-  type: "SET_STATE",
-  payload: null
-});
-
 export default storeUpdate;

@@ -1,40 +1,48 @@
-import { setMachineJSON, setState, setVisible, setHeaderName, setSubmitName, setPath, setEditPath } from '../../actions/AddEditMachine/AddEditMachine';
+import {
+  setMachineJSON,
+  setVisible,
+  setHeaderName,
+  setSubmitName,
+  setPath,
+  setEditPath
+} from '../../actions/AddEditMachine/AddEditMachine';
 
 type ActionTypes = ReturnType<typeof setMachineJSON> |
-  ReturnType<typeof setState> |
   ReturnType<typeof setVisible> |
   ReturnType<typeof setHeaderName> |
   ReturnType<typeof setPath> |
   ReturnType<typeof setSubmitName> |
   ReturnType<typeof setEditPath>;
 
-export let reducer = function (state: {
+export let reducer = function (state = {
   machineJSON: {
-    id: number;
-    name: string;
-    createYear: number;
-    roomId: number;
-  };
-  visible: boolean;
-  headerName: string;
-  submitName: string;
-  path: string,
-  editPath: string;
+    id: 0,
+    name: '',
+    createYear: 0,
+    roomId: 0
+  },
+  visible: false,
+  headerName: '',
+  submitName: '',
+  path: '',
+  editPath: ''
 }, action: ActionTypes) {
   switch (action.type) {
-    case "SET_STATE":
-      return action.payload;
-    case "SET_MACHINE_JSON":
+    case "ADD_EDIT_MACHINE_SET_MACHINE_JSON":
       return { ...state, machineJSON: action.payload };
-    case 'SET_VISIBLE':
+    case 'ADD_EDIT_MACHINE_SET_VISIBLE':
       return { ...state, visible: action.payload }
-    case 'SET_HEADER_NAME':
+    case 'ADD_EDIT_MACHINE_SET_HEADER_NAME':
       return { ...state, headerName: action.payload }
-    case 'SET_SUBMIT_NAME':
+    case 'ADD_EDIT_MACHINE_SET_SUBMIT_NAME':
       return { ...state, submitName: action.payload }
-    case 'SET_PATH':
+    case 'ADD_EDIT_MACHINE_SET_PATH':
       return { ...state, path: action.payload }
-    case 'SET_EDIT_PATH':
+    case 'ADD_EDIT_MACHINE_SET_EDIT_PATH':
       return { ...state, editPath: action.payload }
+    default:
+      return state
   }
 }
+
+export default reducer;

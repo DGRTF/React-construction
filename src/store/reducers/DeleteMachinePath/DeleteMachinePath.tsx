@@ -1,12 +1,16 @@
-import { setDeletePath, setState } from '../../actions/DeleteMachinePath/DeleteMachinePath';
+import { setDeletePath } from '../../actions/DeleteMachinePath/DeleteMachinePath';
 
-type ActionTypes = ReturnType<typeof setDeletePath> | ReturnType<typeof setState>;
+type ActionTypes = ReturnType<typeof setDeletePath>;
 
-export const reducer = function (state: any, action: ActionTypes) {
+export const reducer = function (state: any = {
+  deletePath: ''
+}, action: ActionTypes) {
   switch (action.type) {
-    case "SET_STATE":
-      return action.payload;
-    case "SET_DELETE_PATH":
+    case "DELETE_MACHINE_PATH_SET_DELETE_PATH":
       return { ...state, deletePath: action.payload }
+    default:
+      return state
   }
 }
+
+export default reducer;

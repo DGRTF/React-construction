@@ -3,13 +3,30 @@ import './Hierarchy.scss';
 import Construction from './Construction';
 import Button from './Button/Button';
 import Submit from './Submit';
-import storeAddEditConstruction from '../store/store/AddEditConstruction/AddEditConstruction';
-import storeConstructionJSONArr from '../store/store/ConstructionJSONArr/ConstructionJSONArr';
+import { connect } from 'react-redux';
+import { stateType } from '../store/store';
 import Indicate from './Indicate/Indicate';
+import {
+  getConstructionJSONArr,
+  deleteConstruction,
+} from "../store/actions/ConstructionJSONArr/ConstructionJSONArr";
+import { bindActionCreators } from 'redux';
+import {
+  setAddPathInPath,
+  setEditPathInPath,
+  setConstructionJSON,
+  setVisible,
+  setHeaderName,
+  setSubmitName
+} from '../store/actions/AddEditConstruction/AddEditConstruction';
 
-interface IHierarchyState {
-  visibleButton: boolean;
-  constructionJSONArr: {
+
+
+interface IHierarchyProps extends ImapStateToProps, ImapDispatchToProps {
+}
+
+interface ImapStateToProps {
+  constructionJSONArr?: {
     id: number;
     name: string;
     address: string;
@@ -17,29 +34,57 @@ interface IHierarchyState {
   }[];
 }
 
-export default class Hierarchy extends React.Component<{}, IHierarchyState> {
+interface ImapDispatchToProps {
+  getConstructionJSONArr?: () => (dispatch: any, getState: () => stateType) => Promise<any>;
+  setAddPathInPath?: () => {
+    type: 'ADD_EDIT_CONSTRUCTION_SET_PATH',
+    payload: string
+  };
+  setEditPathInPath?: () => {
+    type: 'ADD_EDIT_CONSTRUCTION_SET_PATH',
+    payload: string
+  };
+  setVisible?: (visible: boolean) => {
+    type: "ADD_EDIT_CONSTRUCTION_SET_VISIBLE";
+    payload: boolean;
+  }
+  setConstructionJSON?: (constructionJSON: {
+    id: number;
+    name: string;
+    address: string;
+    haveMachine: boolean;
+  }) => {
+    type: "ADD_EDIT_CONSTRUCTION_SET_CONSTRUCTION_JSON";
+    payload: {
+      id: number;
+      name: string;
+      address: string;
+      haveMachine: boolean;
+    };
+  };
+  setHeaderName?: (headerName: string) => {
+    type: "ADD_EDIT_CONSTRUCTION_SET_HEADER_NAME";
+    payload: string;
+  };
+  setSubmitName?: (submitName: string) => {
+    type: "ADD_EDIT_CONSTRUCTION_SET_SUBMIT_NAME";
+    payload: string;
+  };
+  deleteConstruction?: (formData: FormData) => (dispatch: any) => Promise<any>;
+}
+
+class Hierarchy extends React.Component<IHierarchyProps> {
   constructor(props: any) {
     super(props);
-    this.state = {
-      visibleButton: true,
-      constructionJSONArr: []
-    }
     this.Init();
-    storeConstructionJSONArr.subscribe(() => {
-      this.setState({
-        constructionJSONArr: storeConstructionJSONArr.getState().constructionJSONArr
-      });
-    });
   }
-
-  private constructionPath = 'Constructions/GetConstructions?';
 
   render() {
     return (
       <div className="hierarchy" style={{ width: '150px', minWidth: '150px' }}>
         <div className="hierarchy__content">
           <Button name='Добавить здание' ClickHandler={this.AddConstruction.bind(this)} />
-          {this.state.constructionJSONArr && this.state.constructionJSONArr.map((constructionJSON, item) =>
+          {this.props.constructionJSONArr && this.props.constructionJSONArr.map((constructionJSON, item) =>
             <div className='hierarchy__content-item'>
               <div className='hierarchy__edit-construction'>
                 <Button dataSetConstruction={`${item}`} name='/' ClickHandler={this.EditConstruction.bind(this)}>/</Button>
@@ -67,31 +112,11 @@ export default class Hierarchy extends React.Component<{}, IHierarchyState> {
 
   private EditConstruction(ev: React.MouseEvent) {
     const item = (ev.currentTarget as HTMLElement).dataset.constructionItem;
-    
-    storeAddEditConstruction.dispatch({
-      type: 'SET_CONSTRUCTION_JSON',
-      payload: this.state.constructionJSONArr[Number(item)]
-    });
-
-    storeAddEditConstruction.dispatch({
-      type: 'SET_VISIBLE',
-      payload: true
-    });
-
-    storeAddEditConstruction.dispatch({
-      type: 'SET_PATH',
-      payload: 'Constructions/EditConstruction'
-    });
-
-    storeAddEditConstruction.dispatch({
-      type: 'SET_HEADER_NAME',
-      payload: `Редактировать здание "${this.state.constructionJSONArr[Number(item)].name}"`
-    });
-
-    storeAddEditConstruction.dispatch({
-      type: 'SET_SUBMIT_NAME',
-      payload: 'Изменить'
-    });
+    this.props.setConstructionJSON(this.props.constructionJSONArr[Number(item)])
+    this.props.setVisible(true);
+    this.props.setEditPathInPath();
+    this.props.setHeaderName(`Редактировать здание "${this.props.constructionJSONArr[Number(item)].name}"`);
+    this.props.setSubmitName('Изменить');
   }
 
   private Init() {
@@ -99,47 +124,23 @@ export default class Hierarchy extends React.Component<{}, IHierarchyState> {
   }
 
   private AddConstruction() {
-
-    storeAddEditConstruction.dispatch({
-      type: 'SET_VISIBLE',
-      payload: true
-    });
-
-    storeAddEditConstruction.dispatch({
-      type: 'SET_PATH',
-      payload: 'Constructions/AddConstruction'
-    });
-
-    storeAddEditConstruction.dispatch({
-      type: 'SET_HEADER_NAME',
-      payload: 'Добавить здание'
-    });
-
-    storeAddEditConstruction.dispatch({
-      type: 'SET_SUBMIT_NAME',
-      payload: 'Добавить'
-    });
+    this.props.setVisible(true);
+    this.props.setAddPathInPath();
+    this.props.setHeaderName('Добавить здание');
+    this.props.setSubmitName('Добавить');
   }
 
   private async GetConstructions() {
-    const response = await fetch(this.constructionPath, {
-      method: 'POST',
-    });
-    let JSONArr = await response.json();
-    this.setState({ constructionJSONArr: JSONArr });
+    this.props.getConstructionJSONArr();
   }
 
   private async DeleteConstruction(ev: React.FormEvent) {
     ev.preventDefault();
-    let formData = new FormData(ev.currentTarget as HTMLFormElement);
-    const response = await fetch('Constructions/DeleteConstruction', {
-      method: 'POST',
-      body: formData
-    });
-
-    let JSONArr = await response.json();
-    this.setState({ constructionJSONArr: JSONArr });
+    const formData = new FormData(ev.currentTarget as HTMLFormElement);
+    this.props.deleteConstruction(formData);
   }
+
+
 
   private mouseX: number;
 
@@ -199,3 +200,29 @@ export default class Hierarchy extends React.Component<{}, IHierarchyState> {
 
   private moveTouch = this.MoveBlockTouch.bind(this);
 }
+
+
+
+function mapStateToProps(state: stateType) {
+  return {
+    constructionJSONArr: state.constructionJSONArr.constructionJSONArr
+  };
+}
+
+function mapDispatchToProps(dispatch: any) {
+  return bindActionCreators({
+    getConstructionJSONArr: getConstructionJSONArr,
+    setAddPathInPath: setAddPathInPath,
+    setEditPathInPath: setEditPathInPath,
+    setConstructionJSON: setConstructionJSON,
+    setVisible: setVisible,
+    setHeaderName: setHeaderName,
+    setSubmitName: setSubmitName,
+    deleteConstruction:deleteConstruction,
+  }, dispatch)
+}
+
+export default connect<ImapStateToProps, ImapDispatchToProps, IHierarchyProps, stateType>(
+  mapStateToProps,
+  mapDispatchToProps
+)(Hierarchy);

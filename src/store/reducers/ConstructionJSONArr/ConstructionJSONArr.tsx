@@ -1,12 +1,23 @@
-import { setConstructionJSONArr, setState } from '../../actions/ConstructionJSONArr/ConstructionJSONArr';
+import { setConstructionJSONArr } from '../../actions/ConstructionJSONArr/ConstructionJSONArr';
 
-type ActionTypes = ReturnType<typeof setConstructionJSONArr> | ReturnType<typeof setState>;
+export type ActionTypes = ReturnType<typeof setConstructionJSONArr> ;
 
-export const reducer = function (state: any, action: ActionTypes) {
+export const reducer = function (state = {
+  constructionJSONArr: [{
+    id: 0,
+    name: '',
+    address: '',
+    haveMachine: false
+  }]
+}, action: ActionTypes) {
   switch (action.type) {
-    case "SET_STATE":
-      return action.payload;
-    case "SET_CONSTRUCTION_JSON":
+    case "CONSTRUCTION_JSON_ARR_SET_CONSTRUCTION_JSON":
       return { ...state, constructionJSONArr: action.payload }
+    default:
+      return state
   }
 }
+
+
+
+export default reducer;

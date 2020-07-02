@@ -27,11 +27,13 @@ export default class AddEditRoom extends React.Component<{}, IAddEditRoomState> 
     storeAddEditRoom.subscribe(this.SetVisible.bind(this));
   }
 
-  private UpdateCallback: (constructionJSONArr: {
+  private UpdateCallback: (roomJSONArr: {
     id: number;
     name: string;
-    address: string;
-  }[]) => void;
+    floor: number;
+    constructionId: number;
+    haveMachine: boolean;
+}[]) => void;
 
   private visibleElement: JSX.Element;
 
@@ -46,7 +48,7 @@ export default class AddEditRoom extends React.Component<{}, IAddEditRoomState> 
       <div className='add-edit-room'>
         <div className='add-edit-room__container'>
           <div className='add-edit-room__header'>
-  <span>{this.headerName}</span>
+            <span>{this.headerName}</span>
             <div className='add-edit-room__close'>
               <Button name='Закрыть' ClickHandler={this.Close.bind(this)}></Button>
             </div>
@@ -79,12 +81,12 @@ export default class AddEditRoom extends React.Component<{}, IAddEditRoomState> 
 
   private Close() {
     storeAddEditRoom.dispatch({
-      type: 'SET_VISIBLE',
+      type: 'ADD_EDIT_ROOM_SET_VISIBLE',
       payload: false
     });
 
     storeAddEditRoom.dispatch({
-      type: 'SET_ROOM_JSON',
+      type: 'ADD_EDIT_ROOM_SET_ROOM_JSON',
       payload: null
     });
   }
@@ -99,7 +101,7 @@ export default class AddEditRoom extends React.Component<{}, IAddEditRoomState> 
     });
 
     storeAddEditRoom.dispatch({
-      type: 'SET_ROOM_JSON',
+      type: 'ADD_EDIT_ROOM_SET_ROOM_JSON',
       payload: null
     });
 
@@ -108,7 +110,7 @@ export default class AddEditRoom extends React.Component<{}, IAddEditRoomState> 
     this.UpdateCallback(JSONArr);
 
     storeAddEditRoom.dispatch({
-      type: 'SET_VISIBLE',
+      type: 'ADD_EDIT_ROOM_SET_VISIBLE',
       payload: false
     });
   }

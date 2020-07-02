@@ -7,7 +7,7 @@ import store from '../store/store';
 import Button from './Button/Button';
 import storeAddEditRoom from '../store/store/AddEditRoom/AddEditRoom';
 import storeAddEditMachine from '../store/store/AddEditMachine/AddEditMachine';
-import storeDeleteMachinePath from '../store/store/DeleteMachinePath/DeleteMachinePath';
+// import storeDeleteMachinePath from '../store/store/DeleteMachinePath/DeleteMachinePath';
 import storeUpdate from '../store/store/UpdateRoomInConstruction/UpdateRoomInConstruction';
 import storeConstructionIdUpdate from '../store/store/UpdateRoomInConstruction/ConstructionId';
 import Indicate from './Indicate/Indicate';
@@ -101,32 +101,32 @@ export default class Construction extends Component<IConstructionProps, IConstru
     const item = (ev.currentTarget as HTMLElement).dataset.roomItem;
 
     storeAddEditRoom.dispatch({
-      type: 'SET_HEADER_NAME',
+      type: 'ADD_EDIT_ROOM_SET_HEADER_NAME',
       payload: `Редактировать комнату в здании "${this.props.constructionJSON.name}"`
     });
-    
+
     storeAddEditRoom.dispatch({
-      type: 'SET_SUBMIT_NAME',
+      type: 'ADD_EDIT_ROOM_SET_SUBMIT_NAME',
       payload: `Изменить`
     });
 
     storeAddEditRoom.dispatch({
-      type: 'SET_ROOM_JSON',
+      type: 'ADD_EDIT_ROOM_SET_ROOM_JSON',
       payload: this.state.roomJSONArr[Number(item)]
     });
 
     storeAddEditRoom.dispatch({
-      type: 'SET_CALLBACK',
+      type: 'ADD_EDIT_ROOM_SET_CALLBACK',
       payload: this.SetRoomJSONArr.bind(this)
     });
 
     storeAddEditRoom.dispatch({
-      type: 'SET_VISIBLE',
+      type: 'ADD_EDIT_ROOM_SET_VISIBLE',
       payload: true
     });
 
     storeAddEditRoom.dispatch({
-      type: 'SET_PATH',
+      type: 'ADD_EDIT_ROOM_SET_PATH',
       payload: 'Rooms/EditRoomInConstruction'
     });
   }
@@ -148,34 +148,36 @@ export default class Construction extends Component<IConstructionProps, IConstru
   }
 
   private async GetMachineInConstruction(formData: FormData): Promise<void> {
+    console.warn(store.getState().constructionJSONArr);
+
     const response = await fetch('Machines/GetMachinesInConstruction?constructionId=' + this.props.constructionJSON.id, {
       method: 'POST',
       body: formData
     });
 
     this.machineJSONArr = await response.json();
-
+    console.warn(store.getState().constructionJSONArr);
     store.dispatch({
-      type: "SET_STATE",
-      state: {
-        machineJSONArr: this.machineJSONArr
-      }
+      type: "SET_MACHINE_ARR",
+      payload: this.machineJSONArr
     });
-
+    console.warn(store.getState().constructionJSONArr);
     storeAddEditMachine.dispatch({
-      type: 'SET_EDIT_PATH',
+      type: 'ADD_EDIT_MACHINE_SET_EDIT_PATH',
       payload: this.editMachineInConstructionPath
     });
-
-    storeDeleteMachinePath.dispatch({
-      type: 'SET_DELETE_PATH',
+    console.warn(store.getState().constructionJSONArr);
+    store.dispatch({
+      type: 'DELETE_MACHINE_PATH_SET_DELETE_PATH',
       payload: `Machines/DeleteMachineInConstruction?constructionId=${this.props.constructionJSON.id}`
     });
-
+    console.warn(store.getState().constructionJSONArr);
     storeConstructionIdUpdate.dispatch({
-      type: 'SET_CONSTRUCTION_ID',
+      type: 'UPDATE_ROOM_IN_CONSTRUCTION_SET_CONSTRUCTION_ID',
       payload: this.props.constructionJSON.id
     });
+
+    console.warn(store.getState().constructionJSONArr);
   }
 
   private UpdateRoomInConstruction() {
@@ -187,17 +189,17 @@ export default class Construction extends Component<IConstructionProps, IConstru
 
   private AddRoomInConstruction() {
     storeAddEditRoom.dispatch({
-      type: 'SET_HEADER_NAME',
+      type: 'ADD_EDIT_ROOM_SET_HEADER_NAME',
       payload: `Добавить комнату в здание "${this.props.constructionJSON.name}"`
     });
 
     storeAddEditRoom.dispatch({
-      type: 'SET_SUBMIT_NAME',
+      type: 'ADD_EDIT_ROOM_SET_SUBMIT_NAME',
       payload: `Добавить комнату`
     });
 
     storeAddEditRoom.dispatch({
-      type: 'SET_ROOM_JSON',
+      type: 'ADD_EDIT_ROOM_SET_ROOM_JSON',
       payload: {
         id: 0,
         name: '',
@@ -208,17 +210,17 @@ export default class Construction extends Component<IConstructionProps, IConstru
     });
 
     storeAddEditRoom.dispatch({
-      type: 'SET_CALLBACK',
+      type: 'ADD_EDIT_ROOM_SET_CALLBACK',
       payload: this.SetRoomJSONArr.bind(this)
     });
 
     storeAddEditRoom.dispatch({
-      type: 'SET_VISIBLE',
+      type: 'ADD_EDIT_ROOM_SET_VISIBLE',
       payload: true
     });
 
     storeAddEditRoom.dispatch({
-      type: 'SET_PATH',
+      type: 'ADD_EDIT_ROOM_SET_PATH',
       payload: 'Rooms/AddRoomInConstruction'
     });
   }

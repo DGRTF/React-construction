@@ -1,13 +1,6 @@
-export const setState = function (state: any) {
-  return {
-    type: GetLiteralInString("SET_STATE"),
-    payload: state
-  }
-};
-
 export const setDeletePath = function (deletePath: string) {
   return {
-    type: GetLiteralInString("SET_DELETE_PATH"),
+    type: GetLiteralInString("DELETE_MACHINE_PATH_SET_DELETE_PATH"),
     payload: deletePath
   }
 };

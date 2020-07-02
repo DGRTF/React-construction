@@ -1,13 +1,6 @@
-export const setState = function (state: any) {
-  return {
-    type: GetLiteralInString("SET_STATE"),
-    payload: state
-  }
-};
-
 export const setConstructionId = function (constructionId: number) {
   return {
-    type: GetLiteralInString("SET_CONSTRUCTION_ID"),
+    type: GetLiteralInString("UPDATE_ROOM_IN_CONSTRUCTION_SET_CONSTRUCTION_ID"),
     payload: constructionId
   }
 };

@@ -1,15 +1,14 @@
 import React from 'react';
 import Hierarchy from './components/Hierarchy';
 import { connect } from 'react-redux';
-import * as actions from "./store/actions";
 import Table from './components/table/Table';
 import store from './store/store';
 import './App.scss';
 import Button from './components/Button/Button';
 import storeAddEditMachine from './store/store/AddEditMachine/AddEditMachine';
-import storeConstructionJSONArr from './store/store/ConstructionJSONArr/ConstructionJSONArr';
-import storeDeleteMachinePath from './store/store/DeleteMachinePath/DeleteMachinePath';
 import storeUpdate from './store/store/UpdateRoomInConstruction/UpdateRoomInConstruction';
+import { getConstructionJSONArr } from "./store/actions/ConstructionJSONArr/ConstructionJSONArr";
+import { bindActionCreators } from 'redux';
 
 interface IAppProps {
   machineJSONArr?: {
@@ -18,9 +17,14 @@ interface IAppProps {
     createYear: number;
     roomId: number;
   }[];
+  getConstructionJSONArr?: () => (dispatch: any) => Promise<any>;
 }
 
-export default class App extends React.Component<IAppProps> {
+interface ImapDispatchToProps {
+  getConstructionJSONArr: () => (dispatch: any) => Promise<any>;
+}
+
+class App extends React.Component<IAppProps> {
 
   constructor(prop: any) {
     super(prop);
@@ -32,8 +36,6 @@ export default class App extends React.Component<IAppProps> {
     createYear: number;
     roomId: number;
   }
-
-  private constructionPath = 'Constructions/GetConstructions?';
 
   render() {
     return (
@@ -57,27 +59,27 @@ export default class App extends React.Component<IAppProps> {
   private EditMachine() {
     if (this.machineJSON) {
       storeAddEditMachine.dispatch({
-        type: 'SET_VISIBLE',
+        type: 'ADD_EDIT_MACHINE_SET_VISIBLE',
         payload: true
       });
 
       storeAddEditMachine.dispatch({
-        type: 'SET_MACHINE_JSON',
+        type: 'ADD_EDIT_MACHINE_SET_MACHINE_JSON',
         payload: this.machineJSON
       });
 
       storeAddEditMachine.dispatch({
-        type: 'SET_PATH',
+        type: 'ADD_EDIT_MACHINE_SET_PATH',
         payload: storeAddEditMachine.getState().editPath
       });
 
       storeAddEditMachine.dispatch({
-        type: 'SET_HEADER_NAME',
+        type: 'ADD_EDIT_MACHINE_SET_HEADER_NAME',
         payload: `Редактировать оборудование`
       });
 
       storeAddEditMachine.dispatch({
-        type: 'SET_SUBMIT_NAME',
+        type: 'ADD_EDIT_MACHINE_SET_SUBMIT_NAME',
         payload: `Готово`
       });
     }
@@ -85,7 +87,7 @@ export default class App extends React.Component<IAppProps> {
 
   private async DeleteMachine() {
     if (this.machineJSON) {
-      let response = await fetch(storeDeleteMachinePath.getState().deletePath +
+      let response = await fetch(store.getState().deleteMachinePath.deletePath +
         `&machineId=${this.machineJSON.id}`, {
         method: 'POST',
       });
@@ -93,24 +95,14 @@ export default class App extends React.Component<IAppProps> {
       let JSONArr = await response.json();
 
       store.dispatch({
-        type: "SET_STATE",
-        state: {
-          machineJSONArr: JSONArr
-        }
+        type: "SET_MACHINE_ARR",
+        payload: JSONArr
       });
 
-      const responseConstruction = await fetch(this.constructionPath, {
-        method: 'POST',
-      });
-      const ConstructionJSONArr = await responseConstruction.json();
-
-      storeConstructionJSONArr.dispatch({
-        type: 'SET_CONSTRUCTION_JSON',
-        payload: ConstructionJSONArr
-      });
+      this.props.getConstructionJSONArr();
 
       storeUpdate.dispatch({
-        type: 'SET_UPDATE',
+        type: 'UPDATE_ROOM_IN_CONSTRUCTION_SET_UPDATE',
         payload: true
       });
     }
@@ -125,19 +117,13 @@ export default class App extends React.Component<IAppProps> {
     this.machineJSON = machineJSON;
   }
 
-};
-
-store.dispatch({
-  type: "SET_STATE",
-  state: {
-    machineJSONArr: [{ id: 1, name: 'name', createYear: 1980 }]
-  }
-});
-
-function mapStateToProps(state: any) {
-  return {
-    machineJSONArr: state.get("machineJSONArr")
-  };
 }
 
-connect(mapStateToProps, actions)(Hierarchy);
+function mapDispatchToProps(dispatch: any) {
+  return bindActionCreators({ getConstructionJSONArr: getConstructionJSONArr }, dispatch)
+}
+
+export default connect<{}, ImapDispatchToProps, IAppProps, {}>(
+  null,
+  mapDispatchToProps
+)(App);

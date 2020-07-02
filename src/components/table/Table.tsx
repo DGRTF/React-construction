@@ -27,13 +27,6 @@ export default class Table extends Component<ITableProps> {
     );
   }
 
-
-  // private machineJSONArr?: {
-  //   id: number;
-  //   name: string;
-  //   createYear: number;
-  // }[];
-
   private contentLineArr: HTMLElement[] = [];
 
   private header: HTMLElement[] = [];
@@ -105,7 +98,6 @@ export default class Table extends Component<ITableProps> {
   private Init(cont: HTMLElement[]) {
     this.Create(cont);
     this.IntervalCheckSize();
-    // this.firstLoad = true;
   }
 
   Create(cont: HTMLElement[]) {
@@ -122,7 +114,7 @@ export default class Table extends Component<ITableProps> {
   }
 
   private ChangeContent() {
-    this.CreateLineArr(store.getState().machineJSONArr);
+    this.CreateLineArr(store.getState().machineJSONArr.machineJSONArr);
     this.AddLines(this.contentLineArr);
   }
 
@@ -143,7 +135,7 @@ export default class Table extends Component<ITableProps> {
     this.selectLine = selectLine;
     if (this.props.GetMachineJSON)
       if (selectLine !== -1)
-        this.props.GetMachineJSON(store.getState().machineJSONArr[selectLine]);
+        this.props.GetMachineJSON(store.getState().machineJSONArr.machineJSONArr[selectLine]);
       else
         this.props.GetMachineJSON(null);
   }
@@ -158,3 +150,4 @@ export default class Table extends Component<ITableProps> {
     }, 50);
   }
 }
+

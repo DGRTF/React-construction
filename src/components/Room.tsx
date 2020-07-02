@@ -4,7 +4,6 @@ import FormOneSubmit from './FormOneSubmit';
 import store from '../store/store';
 import Button from './Button/Button';
 import storeAddEditMachine from '../store/store/AddEditMachine/AddEditMachine';
-import storeDeleteMachinePath from './../store/store/DeleteMachinePath/DeleteMachinePath';
 import storeConstructionIdUpdate from '../store/store/UpdateRoomInConstruction/ConstructionId';
 
 
@@ -52,7 +51,7 @@ export default class Room extends Component<IRoomProps> {
 
   private async GetMachineInRoom(formData: FormData): Promise<void> {
     storeAddEditMachine.dispatch({
-      type: 'SET_EDIT_PATH',
+      type: 'ADD_EDIT_MACHINE_SET_EDIT_PATH',
       payload: this.machineInRoomPathEdit
     });
 
@@ -64,31 +63,29 @@ export default class Room extends Component<IRoomProps> {
 
     this.machineJSONArr = await response.json();
     store.dispatch({
-      type: "SET_STATE",
-      state: {
-        machineJSONArr: this.machineJSONArr
-      }
+      type: "SET_MACHINE_ARR",
+        payload: this.machineJSONArr
     });
 
-    storeDeleteMachinePath.dispatch({
-      type: 'SET_DELETE_PATH',
+    store.dispatch({
+      type: 'DELETE_MACHINE_PATH_SET_DELETE_PATH',
       payload: `Machines/DeleteMachineInRoom?roomId=${this.props.roomJSON.id}`
     });
 
     storeConstructionIdUpdate.dispatch({
-      type: 'SET_CONSTRUCTION_ID',
+      type: 'UPDATE_ROOM_IN_CONSTRUCTION_SET_CONSTRUCTION_ID',
       payload: this.props.roomJSON.constructionId
     });
   }
 
   private AddMachineInRoom() {
     storeAddEditMachine.dispatch({
-      type: 'SET_VISIBLE',
+      type: 'ADD_EDIT_MACHINE_SET_VISIBLE',
       payload: true
     });
 
     storeAddEditMachine.dispatch({
-      type: 'SET_MACHINE_JSON',
+      type: 'ADD_EDIT_MACHINE_SET_MACHINE_JSON',
       payload: {
         id: null,
         name: '',
@@ -98,34 +95,34 @@ export default class Room extends Component<IRoomProps> {
     });
 
     storeAddEditMachine.dispatch({
-      type: 'SET_HEADER_NAME',
+      type: 'ADD_EDIT_MACHINE_SET_HEADER_NAME',
       payload: `Добавить оборудование в комнату "${this.props.roomJSON.name}"`
     });
 
     storeAddEditMachine.dispatch({
-      type: 'SET_SUBMIT_NAME',
+      type: 'ADD_EDIT_MACHINE_SET_SUBMIT_NAME',
       payload: `Добавить оборудование`
     });
 
     storeAddEditMachine.dispatch({
-      type: 'SET_PATH',
+      type: 'ADD_EDIT_MACHINE_SET_PATH',
       payload: this.machineInRoomPathAdd
     });
 
     storeAddEditMachine.dispatch({
-      type: 'SET_EDIT_PATH',
+      type: 'ADD_EDIT_MACHINE_SET_EDIT_PATH',
       payload: this.machineInRoomPathEdit
     });
 
-    storeDeleteMachinePath.dispatch({
-      type: 'SET_DELETE_PATH',
+    store.dispatch({
+      type: 'DELETE_MACHINE_PATH_SET_DELETE_PATH',
       payload: `Machines/DeleteMachineInRoom?constructionId=${this.props.roomJSON.id}`
     });
 
     console.warn(this.props.roomJSON.constructionId);
 
     storeConstructionIdUpdate.dispatch({
-      type: 'SET_CONSTRUCTION_ID',
+      type: 'UPDATE_ROOM_IN_CONSTRUCTION_SET_CONSTRUCTION_ID',
       payload: this.props.roomJSON.constructionId
     });
   }

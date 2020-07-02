@@ -1,31 +1,45 @@
-import { setConstructionJSON, setState, 
-  // setCallback, 
-  setVisible, setHeaderName, setSubmitName, setPath, setEditPath } from '../../actions/AddEditConstruction/AddEditConstruction';
+import {
+  setConstructionJSON,
+  setVisible,
+  setHeaderName,
+  setSubmitName,
+  setPath
+} from '../../actions/AddEditConstruction/AddEditConstruction';
 
-type ActionTypes = ReturnType<typeof setConstructionJSON>
-  | ReturnType<typeof setState>
+type ActionTypes =
+  ReturnType<typeof setConstructionJSON>
   | ReturnType<typeof setVisible>
-  // | ReturnType<typeof setCallback>
   | ReturnType<typeof setHeaderName>
   | ReturnType<typeof setPath>
-  | ReturnType<typeof setSubmitName>
-  | ReturnType<typeof setEditPath>;
+  | ReturnType<typeof setSubmitName>;
 
-export let reducer = function (state: any, action: ActionTypes) {
+export const reducer = function (state = {
+  constructionJSON: {
+    id: 0,
+    name: '',
+    address: '',
+    haveMachine: false,
+  },
+  visible: false,
+  headerName: '',
+  submitName: '',
+  path: '',
+  editPath: ''
+}, action: ActionTypes) {
   switch (action.type) {
-    case "SET_STATE":
-      return action.payload
-    case "SET_VISIBLE":
+    case "ADD_EDIT_CONSTRUCTION_SET_VISIBLE":
       return { ...state, visible: action.payload }
-    case "SET_CONSTRUCTION_JSON":
+    case "ADD_EDIT_CONSTRUCTION_SET_CONSTRUCTION_JSON":
       return { ...state, constructionJSON: action.payload }
-    case 'SET_HEADER_NAME':
+    case 'ADD_EDIT_CONSTRUCTION_SET_HEADER_NAME':
       return { ...state, headerName: action.payload }
-    case 'SET_SUBMIT_NAME':
+    case 'ADD_EDIT_CONSTRUCTION_SET_SUBMIT_NAME':
       return { ...state, submitName: action.payload }
-    case 'SET_PATH':
+    case 'ADD_EDIT_CONSTRUCTION_SET_PATH':
       return { ...state, path: action.payload }
-    case 'SET_EDIT_PATH':
-      return { ...state, editPath: action.payload }
+    default:
+      return state
   }
 }
+
+export default reducer;

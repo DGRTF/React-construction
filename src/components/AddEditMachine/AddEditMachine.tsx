@@ -5,8 +5,10 @@ import Submit from '../Submit';
 import storeAddEditMachine from '../../store/store/AddEditMachine/AddEditMachine';
 import Button from '../Button/Button';
 import store from '../../store/store';
-import storeConstructionJSONArr from '../../store/store/ConstructionJSONArr/ConstructionJSONArr';
 import storeUpdate from '../../store/store/UpdateRoomInConstruction/UpdateRoomInConstruction';
+import { getConstructionJSONArr } from "../../store/actions/ConstructionJSONArr/ConstructionJSONArr";
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
 interface IAddEditMachineState {
   visible: boolean;
@@ -18,7 +20,11 @@ interface IAddEditMachineState {
   };
 }
 
-export default class AddEditMachine extends React.Component<{}, IAddEditMachineState>  {
+interface IAddEditMachineProps {
+  getConstructionJSONArr?: () => (dispatch: any) => Promise<any>;
+}
+
+class AddEditMachine extends React.Component<IAddEditMachineProps, IAddEditMachineState>  {
   constructor(prop: any) {
     super(prop);
     this.state = {
@@ -79,12 +85,12 @@ export default class AddEditMachine extends React.Component<{}, IAddEditMachineS
 
   private Close() {
     storeAddEditMachine.dispatch({
-      type: 'SET_VISIBLE',
+      type: 'ADD_EDIT_MACHINE_SET_VISIBLE',
       payload: false
     });
 
     storeAddEditMachine.dispatch({
-      type: 'SET_MACHINE_JSON',
+      type: 'ADD_EDIT_MACHINE_SET_MACHINE_JSON',
       payload: {
         id: 0,
         name: '',
@@ -96,7 +102,7 @@ export default class AddEditMachine extends React.Component<{}, IAddEditMachineS
 
   private async AddEditConstruction(ev: React.FormEvent) {
     ev.preventDefault();
-    console.warn(this.path);
+
     const formData = new FormData(ev.currentTarget as HTMLFormElement);
     const response = await fetch(this.path, {
       method: 'POST',
@@ -105,31 +111,34 @@ export default class AddEditMachine extends React.Component<{}, IAddEditMachineS
     let JSONArr = await response.json();
 
     store.dispatch({
-      type: "SET_STATE",
-      state: {
-        machineJSONArr: JSONArr
-      }
+      type: "SET_MACHINE_ARR",
+      payload: JSONArr
     });
 
     storeAddEditMachine.dispatch({
-      type: 'SET_VISIBLE',
+      type: 'ADD_EDIT_MACHINE_SET_VISIBLE',
       payload: false
     });
 
-    const responseConstruction = await fetch(this.constructionPath, {
-      method: 'POST',
-    });
-    const ConstructionJSONArr = await responseConstruction.json();
-    
-    storeConstructionJSONArr.dispatch({
-      type: 'SET_CONSTRUCTION_JSON',
-      payload: ConstructionJSONArr
-    });
+    this.props.getConstructionJSONArr();
 
     storeUpdate.dispatch({
-      type: 'SET_UPDATE',
+      type: 'UPDATE_ROOM_IN_CONSTRUCTION_SET_UPDATE',
       payload: true
     });
   }
 
 }
+
+interface ImapDispatchToProps {
+  getConstructionJSONArr: () => (dispatch: any) => Promise<any>;
+}
+
+function mapDispatchToProps(dispatch: any) {
+  return bindActionCreators({ getConstructionJSONArr: getConstructionJSONArr }, dispatch)
+}
+
+export default connect<{}, ImapDispatchToProps, IAddEditMachineProps, {}>(
+  null,
+  mapDispatchToProps
+)(AddEditMachine);

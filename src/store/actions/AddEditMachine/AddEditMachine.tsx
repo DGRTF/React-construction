@@ -1,10 +1,3 @@
-export const setState = function (state: any) {
-  return {
-    type: GetLiteralInString("SET_STATE"),
-    payload: state
-  }
-}
-
 export const setMachineJSON = function (machineJSON: {
   id: number;
   name: string;
@@ -12,42 +5,42 @@ export const setMachineJSON = function (machineJSON: {
   roomId: number;
 }) {
   return {
-    type: GetLiteralInString("SET_MACHINE_JSON"),
+    type: GetLiteralInString("ADD_EDIT_MACHINE_SET_MACHINE_JSON"),
     payload: machineJSON
   }
 }
 
 export const setVisible = function (visible: boolean) {
   return {
-    type: GetLiteralInString("SET_VISIBLE"),
+    type: GetLiteralInString("ADD_EDIT_MACHINE_SET_VISIBLE"),
     payload: visible
   }
 }
 
 export const setHeaderName = (headerName: string) => {
   return {
-    type: GetLiteralInString("SET_HEADER_NAME"),
+    type: GetLiteralInString("ADD_EDIT_MACHINE_SET_HEADER_NAME"),
     payload: headerName
   }
 }
 
 export const setSubmitName = (submitName: string) => {
   return {
-    type: GetLiteralInString("SET_SUBMIT_NAME"),
+    type: GetLiteralInString("ADD_EDIT_MACHINE_SET_SUBMIT_NAME"),
     payload: submitName
   }
 }
 
 export const setPath = (path: string) => {
   return {
-    type: GetLiteralInString('SET_PATH'),
+    type: GetLiteralInString('ADD_EDIT_MACHINE_SET_PATH'),
     payload: path
   }
 }
 
 export const setEditPath = (EditPath: string) => {
   return {
-    type: GetLiteralInString('SET_EDIT_PATH'),
+    type: GetLiteralInString('ADD_EDIT_MACHINE_SET_EDIT_PATH'),
     payload: EditPath
   }
 }

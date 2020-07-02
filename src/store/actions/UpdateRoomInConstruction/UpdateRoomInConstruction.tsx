@@ -1,13 +1,6 @@
-export const setState = function (state: any) {
-  return {
-    type: GetLiteralInString("SET_STATE"),
-    payload: state
-  }
-};
-
 export const setUpdate = function (update: boolean) {
   return {
-    type: GetLiteralInString("SET_UPDATE"),
+    type: GetLiteralInString("UPDATE_ROOM_IN_CONSTRUCTION_SET_UPDATE"),
     payload: update
   }
 };

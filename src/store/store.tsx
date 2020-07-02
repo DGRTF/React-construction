@@ -1,13 +1,11 @@
-import { createStore } from 'redux';
-import { reducer } from './reducer'
+import { createStore, applyMiddleware } from 'redux';
+import reducesApp from './reducers/conbineReducers';
+import thunk from 'redux-thunk';
 
-const store = createStore(reducer);
+const store = createStore(reducesApp, applyMiddleware(thunk));
 
-store.dispatch({
-  type: "SET_STATE",
-  state: {
-    machineJSONArr: []
-  }
-});
+export type stateType = ReturnType<typeof store.getState>;
+
+console.warn(store.getState());
 
 export default store;

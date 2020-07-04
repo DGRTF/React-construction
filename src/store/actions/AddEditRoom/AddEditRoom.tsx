@@ -1,3 +1,5 @@
+import { stateType } from '../../store';
+
 export const setVisible = function (visible: boolean) {
   return {
     type: GetLiteralInString("ADD_EDIT_ROOM_SET_VISIBLE"),
@@ -5,18 +7,18 @@ export const setVisible = function (visible: boolean) {
   }
 };
 
-export const setCallback = function (UpdateCallback: (roomJSONArr: {
-  id: number;
-  name: string;
-  floor: number;
-  constructionId: number;
-  haveMachine: boolean;
-}[]) => void) {
-  return {
-    type: GetLiteralInString("ADD_EDIT_ROOM_SET_CALLBACK"),
-    payload: UpdateCallback
-  }
-};
+// export const setCallback = function (UpdateCallback: (roomJSONArr: {
+//   id: number;
+//   name: string;
+//   floor: number;
+//   constructionId: number;
+//   haveMachine: boolean;
+// }[]) => void) {
+//   return {
+//     type: GetLiteralInString("ADD_EDIT_ROOM_SET_CALLBACK"),
+//     payload: UpdateCallback
+//   }
+// };
 
 export const setRoomJSON = function (roomJSON: {
   id: number;
@@ -51,6 +53,26 @@ export const setSubmitName = function (submitName: string) {
     payload: submitName
   }
 };
+
+export const setAddEditRoomTemplate = function (roomTemplate: {
+  visible: boolean;
+  roomJSON: {
+    id: number;
+    name: string;
+    floor: number;
+    constructionId: number;
+    haveMachine: boolean;
+  };
+  path: string;
+  headerName: string;
+  submitName: string;
+}) {
+  return {
+    type: GetLiteralInString("ADD_EDIT_ROOM_SET_ROOM_TEMPLATE"),
+    payload: roomTemplate
+  }
+};
+
 
 
 function GetLiteralInString<T extends string>(str: T): T {

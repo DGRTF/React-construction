@@ -1,10 +1,10 @@
 import { stateType } from '../../store';
 
 export const setConstructionJSONArr = function (constructionJSONArr: {
-  id: number;
-  name: string;
-  address: string;
-  haveMachine: boolean;
+  id: number
+  name: string
+  address: string
+  haveMachine: boolean
 }[]) {
   return {
     type: GetLiteralInString("CONSTRUCTION_JSON_ARR_SET_CONSTRUCTION_JSON"),
@@ -12,8 +12,22 @@ export const setConstructionJSONArr = function (constructionJSONArr: {
   }
 }
 
+export const setRoomsInConstruction = function (
+  rooms: {
+    id: number
+    name: string
+    floor: number
+    constructionId: number
+    haveMachine: boolean
+  }[]
+) {
+  return {
+    type: GetLiteralInString("CONSTRUCTION_JSON_ARR_SET_ROOMS_IN_CONSTRUCTION"),
+    payload: rooms
+  }
+}
+
 export function getConstructionJSONArr() {
-  console.warn('object');
   return function (dispatch: any) {
     return fetch('Constructions/GetConstructions', {
       method: 'POST',

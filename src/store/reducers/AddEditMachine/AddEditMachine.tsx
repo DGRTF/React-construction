@@ -6,11 +6,14 @@ import {
   setPath,
   setEditPath,
   setAddPathInConstruction,
-  // setAddPathInRoom,
+  setAddPathInRoom,
   setDeletePathInConstruction,
-  // setDeletePathInRoom,
+  setDeletePathInRoom,
   setEditPathInConstruction,
-  // setEditPathInRoom
+  setEditPathInRoom,
+  setMachineTemplate,
+  setAddEditDeletePathsInRoom,
+  setEditDeletePathsInConstruction,
 } from '../../actions/AddEditMachine/AddEditMachine';
 
 type ActionTypes = ReturnType<typeof setMachineJSON>
@@ -22,6 +25,12 @@ type ActionTypes = ReturnType<typeof setMachineJSON>
   | ReturnType<typeof setAddPathInConstruction>
   | ReturnType<typeof setDeletePathInConstruction>
   | ReturnType<typeof setEditPathInConstruction>
+  | ReturnType<typeof setAddPathInRoom>
+  | ReturnType<typeof setDeletePathInRoom>
+  | ReturnType<typeof setEditPathInRoom>
+  | ReturnType<typeof setMachineTemplate>
+  | ReturnType<typeof setAddEditDeletePathsInRoom>
+  | ReturnType<typeof setEditDeletePathsInConstruction>
   ;
 
 export let reducer = function (state = {
@@ -56,6 +65,27 @@ export let reducer = function (state = {
       return { ...state, addPath: action.payload }
     case 'ADD_EDIT_MACHINE_SET_DELETE_PATH':
       return { ...state, deletePath: action.payload }
+    case 'ADD_EDIT_MACHINE_SET_MACHINE_TEMPLATE':
+      return {
+        ...state,
+        visible: action.payload.visible,
+        machineJSON: action.payload.machineJSON,
+        headerName: action.payload.headerName,
+        submitName: action.payload.submitName
+      }
+    case 'ADD_EDIT_MACHINE_SET_ADD_EDIT_DELETE-PATHS':
+      return {
+        ...state,
+        addPath: action.payload.addPath,
+        editPath: action.payload.editPath,
+        deletePath: action.payload.deletePath,
+      }
+    case 'ADD_EDIT_MACHINE_SET_EDIT_DELETE_PATHS':
+      return {
+        ...state,
+        editPath: action.payload.editPath,
+        deletePath: action.payload.deletePath,
+      }
     default:
       return state
   }

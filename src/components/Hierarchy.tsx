@@ -27,11 +27,11 @@ interface IHierarchyProps extends ImapStateToProps, ImapDispatchToProps {
 
 interface ImapStateToProps {
   constructionJSONArr?: {
-    id: number;
-    name: string;
-    address: string;
-    haveMachine: boolean;
-  }[];
+    id: number
+    name: string
+    address: string
+    haveMachine: boolean
+  }[]
 }
 
 interface ImapDispatchToProps {

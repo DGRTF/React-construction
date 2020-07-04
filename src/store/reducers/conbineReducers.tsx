@@ -6,6 +6,7 @@ import constructionJSONArr from './ConstructionJSONArr/ConstructionJSONArr';
 import updateRoomInConstruction from './UpdateRoomInConstruction/UpdateRoomInConstruction';
 import deleteMachinePath from './DeleteMachinePath/DeleteMachinePath';
 import machineJSONArr from '../reducer';
+import roomReducer from './Rooms/Rooms'
 
 const appReducers = combineReducers({
   addEditConstruction,
@@ -14,7 +15,8 @@ const appReducers = combineReducers({
   constructionJSONArr,
   updateRoomInConstruction,
   machineJSONArr,
-  deleteMachinePath
+  deleteMachinePath,
+  roomReducer
 });
 
 export default appReducers;

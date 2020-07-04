@@ -1,21 +1,21 @@
-import { setVisible, setRoomJSON, setCallback, setPath, setHeaderName, setSubmitName } from '../../actions/AddEditRoom/AddEditRoom';
+import {
+  setVisible,
+  setRoomJSON,
+  setPath,
+  setHeaderName,
+  setSubmitName,
+  setAddEditRoomTemplate
+} from '../../actions/AddEditRoom/AddEditRoom';
 
 type ActionTypes = ReturnType<typeof setRoomJSON>
   | ReturnType<typeof setVisible>
-  | ReturnType<typeof setCallback>
   | ReturnType<typeof setPath>
   | ReturnType<typeof setHeaderName>
-  | ReturnType<typeof setSubmitName>;
+  | ReturnType<typeof setSubmitName>
+  | ReturnType<typeof setAddEditRoomTemplate>;
 
 export let reducer = function (state = {
   visible: false,
-  UpdateCallback: (roomJSONArr: {
-    id: number;
-    name: string;
-    floor: number;
-    constructionId: number;
-    haveMachine: boolean;
-  }[]) => { },
   roomJSON: {
     id: 0,
     name: '',
@@ -32,14 +32,14 @@ export let reducer = function (state = {
       return { ...state, visible: action.payload }
     case "ADD_EDIT_ROOM_SET_ROOM_JSON":
       return { ...state, roomJSON: action.payload }
-    case "ADD_EDIT_ROOM_SET_CALLBACK":
-      return { ...state, UpdateCallback: action.payload }
     case "ADD_EDIT_ROOM_SET_PATH":
       return { ...state, path: action.payload }
     case "ADD_EDIT_ROOM_SET_HEADER_NAME":
       return { ...state, headerName: action.payload }
     case "ADD_EDIT_ROOM_SET_SUBMIT_NAME":
       return { ...state, submitName: action.payload }
+    case 'ADD_EDIT_ROOM_SET_ROOM_TEMPLATE':
+      return  action.payload 
     default:
       return state
   }

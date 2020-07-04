@@ -47,45 +47,45 @@ export const setEditPath = (EditPath: string) => {
   }
 }
 
-export const setAddPathInRoom = (id: number) => {
+export const setAddPathInRoom = (roomId: number) => {
   return {
     type: GetLiteralInString('ADD_EDIT_MACHINE_SET_ADD_PATH'),
-    payload: `Machines/AddMachineInRoom?roomId=${id}`
+    payload: `Machines/AddMachineInRoom?roomId=${roomId}`
   }
 }
 
-export const setAddPathInConstruction = (id: number) => {
+export const setAddPathInConstruction = (constructionId: number) => {
   return {
     type: GetLiteralInString('ADD_EDIT_MACHINE_SET_ADD_PATH'),
-    payload: `Machines/AddMachineInConstruction?constructionId=${id}`
+    payload: `Machines/AddMachineInConstruction?constructionId=${constructionId}`
   }
 }
 
-export const setEditPathInRoom = (id: number) => {
+export const setEditPathInRoom = (roomId: number) => {
   return {
     type: GetLiteralInString('ADD_EDIT_MACHINE_SET_EDIT_PATH'),
-    payload: `Machines/EditMachineInRoom?roomId=${id}`
+    payload: `Machines/EditMachineInRoom?roomId=${roomId}`
   }
 }
 
-export const setEditPathInConstruction = (id: number) => {
+export const setEditPathInConstruction = (constructionId: number) => {
   return {
     type: GetLiteralInString('ADD_EDIT_MACHINE_SET_EDIT_PATH'),
-    payload: `Machines/EditMachineInConstruction?constructionId=${id}`
+    payload: `Machines/EditMachineInConstruction?constructionId=${constructionId}`
   }
 }
 
-export const setDeletePathInRoom = (id: number) => {
+export const setDeletePathInRoom = (roomId: number) => {
   return {
     type: GetLiteralInString('ADD_EDIT_MACHINE_SET_DELETE_PATH'),
-    payload: `Machines/DeleteMachineInRoom?roomId=${id}`
+    payload: `Machines/DeleteMachineInRoom?roomId=${roomId}`
   }
 }
 
-export const setDeletePathInConstruction = (id: number) => {
+export const setDeletePathInConstruction = (constructionId: number) => {
   return {
     type: GetLiteralInString('ADD_EDIT_MACHINE_SET_DELETE_PATH'),
-    payload: `Machines/DeleteMachineInConstruction?constructionId=${id}`
+    payload: `Machines/DeleteMachineInConstruction?constructionId=${constructionId}`
   }
 }
 
@@ -98,6 +98,44 @@ export function setPathEqualEditPath() {
 export function setPathEqualAddPath() {
   return function (dispatch: any, getState: () => stateType) {
     return dispatch(setPath(getState().addEditMachine.addPath))
+  }
+}
+
+export function setMachineTemplate(machineTemplate: {
+  visible?: boolean
+  machineJSON?: {
+    id: number
+    name: string
+    createYear: number
+    roomId: number
+  }
+  headerName?: string
+  submitName?: string
+}) {
+  return {
+    type: GetLiteralInString("ADD_EDIT_MACHINE_SET_MACHINE_TEMPLATE"),
+    payload: machineTemplate
+  }
+}
+
+export function setAddEditDeletePathsInRoom(roomId: number) {
+  return {
+    type: GetLiteralInString("ADD_EDIT_MACHINE_SET_ADD_EDIT_DELETE-PATHS"),
+    payload: {
+      addPath: `Machines/AddMachineInRoom?roomId=${roomId}`,
+      editPath: `Machines/EditMachineInRoom?roomId=${roomId}`,
+      deletePath: `Machines/DeleteMachineInRoom?roomId=${roomId}`,
+    }
+  }
+}
+
+export function setEditDeletePathsInConstruction(constructionId: number) {
+  return {
+    type: GetLiteralInString('ADD_EDIT_MACHINE_SET_EDIT_DELETE_PATHS'),
+    payload: {
+      editPath: `Machines/EditMachineInConstruction?constructionId=${constructionId}`,
+      deletePath: `Machines/DeleteMachineInConstruction?constructionId=${constructionId}`,
+    }
   }
 }
 

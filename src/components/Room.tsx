@@ -4,60 +4,49 @@ import FormOneSubmit from './FormOneSubmit';
 import Button from './Button/Button';
 import { getMachineInRoom } from '../store/actions';
 import {
-  setAddPathInRoom,
-  setEditPathInRoom,
-  setDeletePathInRoom,
-  setVisible,
-  setMachineJSON,
-  setHeaderName,
-  setSubmitName,
   setPathEqualAddPath,
+  setMachineTemplate,
+  setAddEditDeletePathsInRoom,
 } from "../store/actions/AddEditMachine/AddEditMachine";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { stateType } from '../store/store';
 
 interface ImapDispatchToProps {
-  setAddPathInRoom?: (id: number) => {
-    type: "ADD_EDIT_MACHINE_SET_ADD_PATH";
-    payload: string;
-  }
-  setEditPathInRoom?: (id: number) => {
-    type: "ADD_EDIT_MACHINE_SET_EDIT_PATH";
-    payload: string;
-  }
-  setDeletePathInRoom?: (id: number) => {
-    type: "ADD_EDIT_MACHINE_SET_DELETE_PATH";
-    payload: string;
+  setAddEditDeletePathsInRoom?: (roomId: number) => {
+    type: "ADD_EDIT_MACHINE_SET_ADD_EDIT_DELETE-PATHS";
+    payload: {
+      addPath: string;
+      editPath: string;
+      deletePath: string;
+    };
   }
   getMachineInRoom?: (roomId: number) => (dispatch: any) => Promise<any>;
-  setVisible?: (visible: boolean) => {
-    type: "ADD_EDIT_MACHINE_SET_VISIBLE";
-    payload: boolean;
-  }
-  setMachineJSON?: (machineJSON: {
-    id: number;
-    name: string;
-    createYear: number;
-    roomId: number;
-  }) => {
-    type: "ADD_EDIT_MACHINE_SET_MACHINE_JSON";
-    payload: {
+  setPathEqualAddPath?: () => (dispatch: any, getState: () => stateType) => Promise<any>;
+  setMachineTemplate?: (machineTemplate: {
+    visible?: boolean;
+    machineJSON?: {
       id: number;
       name: string;
       createYear: number;
       roomId: number;
     };
+    headerName?: string;
+    submitName?: string;
+  }) => {
+    type: "ADD_EDIT_MACHINE_SET_MACHINE_TEMPLATE";
+    payload: {
+      visible?: boolean;
+      machineJSON?: {
+        id: number;
+        name: string;
+        createYear: number;
+        roomId: number;
+      };
+      headerName?: string;
+      submitName?: string;
+    };
   }
-  setHeaderName?: (headerName: string) => {
-    type: "ADD_EDIT_MACHINE_SET_HEADER_NAME";
-    payload: string;
-  }
-  setSubmitName?: (submitName: string) => {
-    type: "ADD_EDIT_MACHINE_SET_SUBMIT_NAME";
-    payload: string;
-  }
-  setPathEqualAddPath?: () => (dispatch: any, getState: () => stateType) => Promise<any>;
 }
 
 interface IRoomProps extends ImapDispatchToProps {
@@ -86,26 +75,25 @@ class Room extends Component<IRoomProps> {
     );
   }
 
-  private async GetMachineInRoom(formData: FormData): Promise<void> {
+  private async GetMachineInRoom() {
     this.props.getMachineInRoom(this.props.roomJSON.id);
-    this.props.setAddPathInRoom(this.props.roomJSON.id);
-    this.props.setEditPathInRoom(this.props.roomJSON.id);
-    this.props.setDeletePathInRoom(this.props.roomJSON.id);
-
-    // storeConstructionIdUpdate.dispatch({
-    //   type: 'UPDATE_ROOM_IN_CONSTRUCTION_SET_CONSTRUCTION_ID',
-    //   payload: this.props.roomJSON.constructionId
-    // });
+    this.props.setAddEditDeletePathsInRoom(this.props.roomJSON.id);
   }
 
   private AddMachineInRoom() {
-    this.props.setVisible(true);
-    this.props.setMachineJSON(null)
-    this.props.setHeaderName(`Добавить оборудование в комнату "${this.props.roomJSON.name}"`);
-    this.props.setSubmitName('Добавить оборудование');
-    this.props.setAddPathInRoom(this.props.roomJSON.id);
+    this.props.setMachineTemplate({
+      visible: true,
+      machineJSON: {
+        id: null,
+        name: '',
+        createYear: null,
+        roomId: this.props.roomJSON.id,
+      },
+      headerName: `Добавить оборудование в комнату "${this.props.roomJSON.name}"`,
+      submitName: 'Добавить оборудование',
+    })
+    this.props.setAddEditDeletePathsInRoom(this.props.roomJSON.id);
     this.props.setPathEqualAddPath();
-    this.props.setDeletePathInRoom(this.props.roomJSON.id);
   }
 
 }
@@ -114,15 +102,10 @@ class Room extends Component<IRoomProps> {
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
-    setAddPathInRoom,
-    setEditPathInRoom,
-    setDeletePathInRoom,
     getMachineInRoom,
-    setVisible,
-    setMachineJSON,
-    setHeaderName,
-    setSubmitName,
     setPathEqualAddPath,
+    setMachineTemplate,
+    setAddEditDeletePathsInRoom,
   }, dispatch)
 }
 

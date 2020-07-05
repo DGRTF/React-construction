@@ -3,8 +3,8 @@ import './AddEditMachine.scss';
 import Input from '../Input/Input';
 import Submit from '../Submit';
 import Button from '../Button/Button';
-import {  setVisible,  setMachineJSON } from "../../store/actions/AddEditMachine/AddEditMachine";
-import { addEditMachine } from '../../store/actions';
+import { closeAddEditMachineForm } from '../../store/actions/actions';
+import { addEditMachine } from '../../store/actions/Machines/Machines';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { stateType } from '../../store/store';
@@ -24,25 +24,8 @@ interface ImapStateToProps {
 }
 
 interface ImapDispatchToProps {
-  setVisible?: (visible: boolean) => {
-    type: "ADD_EDIT_MACHINE_SET_VISIBLE";
-    payload: boolean;
-  }
   addEditMachine?: (formData: FormData) => (dispatch: any, getState: () => stateType) => Promise<any>;
-  setMachineJSON?: (machineJSON: {
-    id: number;
-    name: string;
-    createYear: number;
-    roomId: number;
-  }) => {
-    type: "ADD_EDIT_MACHINE_SET_MACHINE_JSON";
-    payload: {
-      id: number;
-      name: string;
-      createYear: number;
-      roomId: number;
-    };
-  }
+  closeAddEditMachineForm?: () => (dispatch: any, getState: () => stateType) => void;
 }
 
 interface IAddEditMachineProps extends ImapStateToProps, ImapDispatchToProps {
@@ -86,15 +69,13 @@ class AddEditMachine extends React.Component<IAddEditMachineProps>  {
   }
 
   private Close() {
-    this.props.setVisible(false);
-    this.props.setMachineJSON(null);
+    this.props.closeAddEditMachineForm();
   }
 
   private async AddEditConstruction(ev: React.FormEvent) {
     ev.preventDefault();
     const formData = new FormData(ev.currentTarget as HTMLFormElement);
     this.props.addEditMachine(formData);
-    this.props.setVisible(false);
   }
 
 }
@@ -110,9 +91,8 @@ function mapStateToProps(state: stateType) {
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
-    setVisible,
     addEditMachine,
-    setMachineJSON,
+    closeAddEditMachineForm,
   }, dispatch)
 }
 

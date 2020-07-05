@@ -3,12 +3,11 @@ import './AddEditRoom.scss';
 import Submit from '../Submit';
 import Input from '../Input/Input';
 import Button from '../Button/Button';
-import { setVisible, setRoomJSON } from "../../store/actions/AddEditRoom/AddEditRoom";
+import { closeAddEditRoomForm } from '../../store/actions/actions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { stateType } from '../../store/store';
 import { addEditRoomInConstruction } from '../../store/actions/Rooms/Rooms';
-// import { getRoomsInConstruction } from '../../store/actions/ConstructionJSONArr/ConstructionJSONArr';
 
 interface ImapStateToProps {
   visible?: boolean;
@@ -25,28 +24,8 @@ interface ImapStateToProps {
 }
 
 interface ImapDispatchToProps {
-  setRoomJSON?: (roomJSON: {
-    id: number;
-    name: string;
-    floor: number;
-    constructionId: number;
-    haveMachine: boolean;
-  }) => {
-    type: "ADD_EDIT_ROOM_SET_ROOM_JSON";
-    payload: {
-      id: number;
-      name: string;
-      floor: number;
-      constructionId: number;
-      haveMachine: boolean;
-    };
-  }
-  setVisible?: (visible: boolean) => {
-    type: "ADD_EDIT_ROOM_SET_VISIBLE";
-    payload: boolean;
-  }
+  closeAddEditRoomForm?: () => (dispatch: any, getState: () => stateType) => void;
   addEditRoomInConstruction?: (formData: FormData) => (dispatch: any, getState: () => stateType) => Promise<any>;
-  // getRoomsInConstruction?: (constructionId: number) => (dispatch: any, getState: () => stateType) => Promise<any>;
 }
 
 interface IAddEditRoomProps extends ImapStateToProps, ImapDispatchToProps {
@@ -85,17 +64,13 @@ class AddEditRoom extends React.Component<IAddEditRoomProps> {
   }
 
   private Close() {
-    this.props.setVisible(false);
-    this.props.setRoomJSON(null);
+    this.props.closeAddEditRoomForm();
   }
 
   private async AddEditConstruction(ev: React.FormEvent) {
     ev.preventDefault();
     const formData = new FormData(ev.currentTarget as HTMLFormElement);
     this.props.addEditRoomInConstruction(formData);
-    this.props.setRoomJSON(null);
-    this.props.setVisible(false);
-    // this.props.getRoomsInConstruction(this.props.roomJSON.constructionId);
   }
 
 }
@@ -114,10 +89,8 @@ function mapStateToProps(state: stateType) {
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
-    setVisible,
     addEditRoomInConstruction,
-    setRoomJSON,
-    // getRoomsInConstruction,
+    closeAddEditRoomForm,
   }, dispatch)
 }
 

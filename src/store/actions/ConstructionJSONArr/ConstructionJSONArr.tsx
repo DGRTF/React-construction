@@ -1,5 +1,6 @@
 import { stateType } from '../../store';
 import { setSkipMoreConstructions } from '../MoreConstructions/MoreConstructions';
+import { setConstructionJSON, setVisibleAddEditConstructionForm } from '../AddEditConstruction/AddEditConstruction';
 
 const skipConstructions = 0;
 const quantityConstructions = 10;
@@ -30,6 +31,8 @@ export function getConstructionJSONArr() {
 
 export function addEditConstruction(formData: FormData) {
   return function (dispatch: any, getState: () => stateType) {
+    dispatch(setConstructionJSON(null));
+    dispatch(setVisibleAddEditConstructionForm(false));
     const moreConstructions = getState().moreConstructions;
     return fetch(`${getState().addEditConstruction.path}?skip=${moreConstructions.skip}&take=${moreConstructions.quantity}`, {
       method: 'POST',
@@ -39,12 +42,11 @@ export function addEditConstruction(formData: FormData) {
   }
 }
 
-export function deleteConstruction(formData: FormData) {
+export function deleteConstruction(constructionId: number) {
   return function (dispatch: any, getState: () => stateType) {
     const moreConstructions = getState().moreConstructions;
-    return fetch(`Constructions/DeleteConstruction?skip=${moreConstructions.skip}&take=${moreConstructions.quantity}`, {
+    return fetch(`Constructions/DeleteConstruction?constructionId=${constructionId}&skip=${moreConstructions.skip}&take=${moreConstructions.quantity}`, {
       method: 'POST',
-      body: formData
     }).then(response => response.json())
       .then(json => dispatch(setConstructionJSONArr(json)))
   }

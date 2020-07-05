@@ -11,7 +11,7 @@ export const setConstructionJSON = function (constructionJSON: {
 };
 
 
-export const setVisible = function (visible: boolean) {
+export const setVisibleAddEditConstructionForm = function (visible: boolean) {
   return {
     type: GetLiteralInString("ADD_EDIT_CONSTRUCTION_SET_VISIBLE"),
     payload: visible

@@ -1,4 +1,4 @@
-export const setVisible = function (visible: boolean) {
+export const setVisibleAddEditRoomForm = function (visible: boolean) {
   return {
     type: GetLiteralInString("ADD_EDIT_ROOM_SET_VISIBLE"),
     payload: visible
@@ -32,7 +32,7 @@ export const setAddPath = function () {
   }
 };
 
-export const setEditPath = function () {
+export const setEditPathAddEditRoom = function () {
   return {
     type: GetLiteralInString("ADD_EDIT_ROOM_SET_PATH"),
     payload: 'Rooms/EditRoomInConstruction'

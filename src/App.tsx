@@ -6,14 +6,11 @@ import { stateType } from './store/store';
 import './App.scss';
 import Button from './components/Button/Button';
 import { bindActionCreators } from 'redux';
-import {
-  setPathEqualEditPath,
-  setMachineTemplate
-} from "./store/actions/AddEditMachine/AddEditMachine";
+import { openEditMachineForm } from './store/actions/actions';
 import {
   deleteMachine,
   getMoreMachines
-} from './store/actions';
+} from './store/actions/Machines/Machines';
 
 interface IAppProps extends ImapDispatchToProps {
   machineJSONArr?: {
@@ -25,33 +22,14 @@ interface IAppProps extends ImapDispatchToProps {
 }
 
 interface ImapDispatchToProps {
-  setPathEqualEditPath?: () => (dispatch: any, getState: () => stateType) => Promise<any>;
   deleteMachine?: (id: number) => (dispatch: any, getState: () => stateType) => Promise<any>;
-  setMachineTemplate?: (machineTemplate: {
-    visible?: boolean;
-    machineJSON?: {
-      id: number;
-      name: string;
-      createYear: number;
-      roomId: number;
-    };
-    headerName?: string;
-    submitName?: string;
-  }) => {
-    type: "ADD_EDIT_MACHINE_SET_MACHINE_TEMPLATE";
-    payload: {
-      visible?: boolean;
-      machineJSON?: {
-        id: number;
-        name: string;
-        createYear: number;
-        roomId: number;
-      };
-      headerName?: string;
-      submitName?: string;
-    };
-  }
   getMoreMachines?: () => (dispatch: any, getState: () => stateType) => Promise<any>;
+  openEditMachineForm?: (machine: {
+    id: number;
+    name: string;
+    createYear: number;
+    roomId: number;
+  }) => (dispatch: any, getState: () => stateType) => void;
 }
 
 class App extends React.Component<IAppProps> {
@@ -88,15 +66,7 @@ class App extends React.Component<IAppProps> {
   }
 
   private EditMachine() {
-    if (this.machineJSON) {
-      this.props.setMachineTemplate({
-        visible: true,
-        machineJSON: this.machineJSON,
-        headerName: 'Редактировать оборудование',
-        submitName: 'Готово',
-      })
-      this.props.setPathEqualEditPath();
-    }
+    this.props.openEditMachineForm(this.machineJSON);
   }
 
   private async DeleteMachine() {
@@ -122,10 +92,9 @@ class App extends React.Component<IAppProps> {
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
-    setPathEqualEditPath,
     deleteMachine,
-    setMachineTemplate,
-    getMoreMachines
+    getMoreMachines,
+    openEditMachineForm,
   }, dispatch)
 }
 

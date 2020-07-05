@@ -1,5 +1,5 @@
 import {
-  setVisible,
+  setVisibleAddEditRoomForm,
   setRoomJSON,
   setPath,
   setHeaderName,
@@ -8,7 +8,7 @@ import {
 } from '../../actions/AddEditRoom/AddEditRoom';
 
 type ActionTypes = ReturnType<typeof setRoomJSON>
-  | ReturnType<typeof setVisible>
+  | ReturnType<typeof setVisibleAddEditRoomForm>
   | ReturnType<typeof setPath>
   | ReturnType<typeof setHeaderName>
   | ReturnType<typeof setSubmitName>

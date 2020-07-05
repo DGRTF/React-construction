@@ -1,27 +1,26 @@
 import React, { Component } from 'react';
 import './Construction.scss';
 import Room from './Room';
-import Submit from './Submit';
 import Button from './Button/Button';
-import { getMachineInConstruction } from '../store/actions';
+import { getMachineInConstruction } from '../store/actions/Machines/Machines';
+import {
+  openAddRoomForm,
+} from '../store/actions/actions';
 import {
   getRoomsInConstruction,
   removeRoomsInStore,
-  deleteRoomsInConstruction,
   getMoreRooms,
 } from '../store/actions/Rooms/Rooms';
-import Indicate from './Indicate/Indicate';
-import {
-  setEditDeletePathsInConstruction
-} from "../store/actions/AddEditMachine/AddEditMachine";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {
-  setAddPath,
-  setEditPath,
-  setAddEditRoomTemplate
-} from "../store/actions/AddEditRoom/AddEditRoom";
 import { stateType } from '../store/store';
+import { ActionsPanel } from './ActionsPanel/ActionsPanel';
+import {
+  openEditConstructionForm
+} from '../store/actions/actions';
+import {
+  deleteConstruction,
+} from "../store/actions/ConstructionJSONArr/ConstructionJSONArr";
 
 interface ImapStateToProps {
   rooms?: {
@@ -35,52 +34,21 @@ interface ImapStateToProps {
 }
 
 interface ImapDispatchToProps {
-  setEditDeletePathsInConstruction?: (constructionId: number) => {
-    type: "ADD_EDIT_MACHINE_SET_EDIT_DELETE_PATHS";
-    payload: {
-      editPath: string;
-      deletePath: string;
-    };
-  }
   getMachineInConstruction?: (constructionId: number) => (dispatch: any, getState: () => stateType) => Promise<any>;
-  setAddPath?: () => {
-    type: "ADD_EDIT_ROOM_SET_PATH";
-    payload: string;
-  }
-  setEditPath?: () => {
-    type: "ADD_EDIT_ROOM_SET_PATH";
-    payload: string;
-  }
-  setAddEditRoomTemplate?: (roomTemplate: {
-    visible: boolean;
-    roomJSON: {
-      id: number;
-      name: string;
-      floor: number;
-      constructionId: number;
-      haveMachine: boolean;
-    };
-    headerName: string;
-    submitName: string;
-  }) => {
-    type: "ADD_EDIT_ROOM_SET_ROOM_TEMPLATE";
-    payload: {
-      visible: boolean;
-      roomJSON: {
-        id: number;
-        name: string;
-        floor: number;
-        constructionId: number;
-        haveMachine: boolean;
-      };
-      headerName: string;
-      submitName: string;
-    }
-  }
-  deleteRoomsInConstruction?: (constructionId: number, formData: FormData) => (dispatch: any, getState: () => stateType) => Promise<any>;
   getRoomsInConstruction?: (constructionId: number) => (dispatch: any, getState: () => stateType) => Promise<any>;
   removeRoomsInStore?: (constructionId: number) => (dispatch: any, getState: () => stateType) => void;
   getMoreRooms?: (constructionId: number) => (dispatch: any, getState: () => stateType) => Promise<any>;
+  openAddRoomForm?: (construction: {
+    id: number;
+    name: string;
+  }) => (dispatch: any, getState: () => stateType) => void;
+  openEditConstructionForm?: (construction: {
+    id: number;
+    name: string;
+    address: string;
+    haveMachine: boolean;
+  }) => (dispatch: any, getState: () => stateType) => void;
+  deleteConstruction?: (constructionId: number) => (dispatch: any, getState: () => stateType) => Promise<any>;
 }
 
 interface IConstructionProps extends ImapDispatchToProps, ImapStateToProps {
@@ -108,35 +76,26 @@ class Construction extends Component<IConstructionProps, IConstructionState> {
     return (
       <div className='construction'>
         <div className='construction__head'>
-          <div className='construction__label'>
-            <Button ClickHandler={this.GetRoomsInConstruction.bind(this)} name='V' />
-          </div>
-          <div className='construction__header'>
-            <div className='construction__add-room'>
-              <Button name='+' ClickHandler={this.AddRoomInConstruction.bind(this)} />
-            </div>
-            <Button name={this.props.constructionJSON.name}
-              ClickHandler={this.GetMachineInConstruction.bind(this)} />
-          </div>
+          <ActionsPanel
+            AddItem={this.AddRoomInConstruction.bind(this)}
+            EditItem={this.EditConstruction.bind(this)}
+            DeleteItem={this.DeleteConstruction.bind(this)}
+            indicate={this.props.constructionJSON.haveMachine}
+          />
+          <Button ClickHandler={this.GetRoomsInConstruction.bind(this)} name='V' />
+          <Button name={this.props.constructionJSON.name}
+            ClickHandler={this.GetMachineInConstruction.bind(this)}
+          />
         </div>
         <div className={'construction__content ' + (this.state.showContent ? '' : 'construction__content-hide')}>
           <div className='construction__list'>
             {this.props.rooms && this.props.rooms.map((room, item) => {
               return (room.constructionId === this.props.constructionJSON.id ?
                 <div key={room.id} className='construction__content-item'>
-                  <div className='construction__edit-room'>
-                    <Button dataSetRoom={`${item}`} name='/' ClickHandler={this.EditRoom.bind(this)}></Button>
-                  </div>
-                  <div className='construction__delete-room'>
-                    <form onSubmit={this.DeleteRoomInConstruction.bind(this)}>
-                      <input type="hidden" value={`${room.id}`} name='roomId' />
-                      <Submit name='X' />
-                    </form>
-                  </div>
-                  <Indicate indicate={room.haveMachine} />
                   <Room roomJSON={room}></Room>
                 </div>
-                : null)
+                : null
+              )
             }
             )}
             <Button name='Ещё' ClickHandler={this.MoreRooms.bind(this)} />
@@ -144,6 +103,14 @@ class Construction extends Component<IConstructionProps, IConstructionState> {
         </div>
       </div>
     );
+  }
+
+  private EditConstruction() {
+    this.props.openEditConstructionForm(this.props.constructionJSON);
+  }
+
+  private async DeleteConstruction() {
+    this.props.deleteConstruction(this.props.constructionJSON.id);
   }
 
   private GetRoomsInConstruction() {
@@ -155,45 +122,15 @@ class Construction extends Component<IConstructionProps, IConstructionState> {
   }
 
   private AddRoomInConstruction() {
-    this.props.setAddEditRoomTemplate({
-      visible: true,
-      headerName: `Добавить комнату в здание "${this.props.constructionJSON.name}"`,
-      submitName: 'Добавить комнату',
-      roomJSON: {
-        id: 0,
-        name: '',
-        floor: null,
-        haveMachine: false,
-        constructionId: this.props.constructionJSON.id,
-      },
-    });
-    this.props.setAddPath();
-  }
-
-  private EditRoom(ev: React.MouseEvent) {
-    const item = (ev.currentTarget as HTMLElement).dataset.roomItem;
-    this.props.setAddEditRoomTemplate({
-      visible: true,
-      headerName: `Редактировать комнату в здании "${this.props.constructionJSON.name}"`,
-      submitName: 'Изменить',
-      roomJSON: this.props.rooms[Number(item)],
-    });
-    this.props.setEditPath();
-  }
-
-  private async DeleteRoomInConstruction(ev: React.FormEvent) {
-    ev.preventDefault();
-    const formData = new FormData(ev.currentTarget as HTMLFormElement);
-    this.props.deleteRoomsInConstruction(this.props.constructionJSON.id, formData);
-  }
-
-  private async GetMachineInConstruction() {
-    this.props.getMachineInConstruction(this.props.constructionJSON.id);
-    this.props.setEditDeletePathsInConstruction(this.props.constructionJSON.id);
+    this.props.openAddRoomForm(this.props.constructionJSON);
   }
 
   private MoreRooms() {
     this.props.getMoreRooms(this.props.constructionJSON.id);
+  }
+
+  private async GetMachineInConstruction() {
+    this.props.getMachineInConstruction(this.props.constructionJSON.id);
   }
 
 }
@@ -208,15 +145,13 @@ function mapStateToProps(state: stateType) {
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
-    setEditDeletePathsInConstruction,
     getMachineInConstruction,
-    setAddEditRoomTemplate,
     getRoomsInConstruction,
-    deleteRoomsInConstruction,
     removeRoomsInStore,
-    setAddPath,
-    setEditPath,
-    getMoreRooms
+    getMoreRooms,
+    openAddRoomForm,
+    deleteConstruction,
+    openEditConstructionForm,
   }, dispatch)
 }
 

@@ -3,7 +3,7 @@ import addEditConstruction from './AddEditConstruction/AddEditConstruction';
 import addEditMachine from './AddEditMachine/AddEditMachine';
 import addEditRoom from './AddEditRoom/AddEditRoom';
 import constructionJSONArr from './ConstructionJSONArr/ConstructionJSONArr';
-import machineJSONArr from '../reducer';
+import machineJSONArr from './Machines/Machines';
 import roomReducer from './Rooms/Rooms'
 import moreMachines from './MoreMachines/MoreMachines';
 import moreRooms from './MoreRooms/MoreRooms';

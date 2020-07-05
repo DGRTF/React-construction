@@ -1,6 +1,6 @@
 import {
   setConstructionJSON,
-  setVisible,
+  setVisibleAddEditConstructionForm,
   setHeaderName,
   setSubmitName,
   setPath,
@@ -9,7 +9,7 @@ import {
 
 type ActionTypes =
   ReturnType<typeof setConstructionJSON>
-  | ReturnType<typeof setVisible>
+  | ReturnType<typeof setVisibleAddEditConstructionForm>
   | ReturnType<typeof setHeaderName>
   | ReturnType<typeof setPath>
   | ReturnType<typeof setSubmitName>

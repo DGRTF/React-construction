@@ -12,7 +12,7 @@ export const setMachineJSON = function (machineJSON: {
   }
 }
 
-export const setVisible = function (visible: boolean) {
+export const setVisibleAddEditMachineForm = function (visible: boolean) {
   return {
     type: GetLiteralInString("ADD_EDIT_MACHINE_SET_VISIBLE"),
     payload: visible

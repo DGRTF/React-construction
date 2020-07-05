@@ -1,6 +1,6 @@
 import {
   setMachineJSON,
-  setVisible,
+  setVisibleAddEditMachineForm,
   setHeaderName,
   setSubmitName,
   setPath,
@@ -17,7 +17,7 @@ import {
 } from '../../actions/AddEditMachine/AddEditMachine';
 
 type ActionTypes = ReturnType<typeof setMachineJSON>
-  | ReturnType<typeof setVisible>
+  | ReturnType<typeof setVisibleAddEditMachineForm>
   | ReturnType<typeof setHeaderName>
   | ReturnType<typeof setPath>
   | ReturnType<typeof setSubmitName>

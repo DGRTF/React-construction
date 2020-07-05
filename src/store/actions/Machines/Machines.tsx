@@ -1,7 +1,18 @@
-import { stateType } from './store';
-import { getRoomsInConstructionWithCurrentMachine } from './actions/Rooms/Rooms';
-import { getConstructionJSONArr } from "./actions/ConstructionJSONArr/ConstructionJSONArr";
-import { setQuantityMoreMachines, setGetMachineInConstructionPathMoreMachines, setGetMachineInRoomPathMoreMachines } from './actions/MoreMachines/MoreMachines';
+import { stateType } from '../../store';
+import { getRoomsInConstructionWithCurrentMachine } from '../Rooms/Rooms';
+import { getConstructionJSONArr } from "../ConstructionJSONArr/ConstructionJSONArr";
+import {
+  setQuantityMoreMachines,
+  setGetMachineInConstructionPathMoreMachines,
+  setGetMachineInRoomPathMoreMachines
+} from '../MoreMachines/MoreMachines';
+import {
+  setEditDeletePathsInConstruction,
+  setMachineJSON,
+  setVisibleAddEditMachineForm,
+  setAddEditDeletePathsInRoom
+} from '../AddEditMachine/AddEditMachine';
+
 
 
 export let setMachineArr = function (machineJSONArr: {
@@ -20,6 +31,8 @@ export function addEditMachine(formData: FormData) {
   const roomId: number = Number(formData.get('roomId'))
   formData.delete('roomId');
   return function (dispatch: any, getState: () => stateType) {
+    dispatch(setVisibleAddEditMachineForm(false));
+    dispatch(setMachineJSON(null));
     return fetch(`${getState().addEditMachine.path}&skip=${getState().moreMachines.skip}&take=${getState().moreMachines.quantity}`, {
       method: 'POST',
       body: formData
@@ -44,7 +57,7 @@ export function deleteMachine(id: number) {
             roomId = el.roomId;
         })
         dispatch(setMachineArr(json));
-        getConstructionJSONArr()(dispatch,getState);
+        getConstructionJSONArr()(dispatch, getState);
         getRoomsInConstructionWithCurrentMachine(roomId)(dispatch, getState);
       })
   }
@@ -62,6 +75,7 @@ export function getMachineInConstruction(constructionId: number) {
     }).then(response => response.json())
       .then(json => {
         dispatch(setMachineArr(json));
+        dispatch(setEditDeletePathsInConstruction(constructionId));
       })
   }
 }
@@ -75,6 +89,7 @@ export function getMachineInRoom(roomId: number) {
     }).then(response => response.json())
       .then(json => {
         dispatch(setMachineArr(json));
+        dispatch(setAddEditDeletePathsInRoom(roomId));
       })
   }
 }

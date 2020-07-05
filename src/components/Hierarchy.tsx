@@ -2,21 +2,16 @@ import React from 'react';
 import './Hierarchy.scss';
 import Construction from './Construction';
 import Button from './Button/Button';
-import Submit from './Submit';
 import { connect } from 'react-redux';
 import { stateType } from '../store/store';
-import Indicate from './Indicate/Indicate';
 import {
   getConstructionJSONArr,
-  deleteConstruction,
   moreConstructions,
 } from "../store/actions/ConstructionJSONArr/ConstructionJSONArr";
 import { bindActionCreators } from 'redux';
 import {
-  setAddPathInPath,
-  setEditPathInPath,
-  setConstructionTemplate,
-} from '../store/actions/AddEditConstruction/AddEditConstruction';
+  openAddConstructionForm,
+} from '../store/actions/actions';
 
 
 
@@ -34,40 +29,8 @@ interface ImapStateToProps {
 
 interface ImapDispatchToProps {
   getConstructionJSONArr?: () => (dispatch: any, getState: () => stateType) => Promise<any>;
-  setAddPathInPath?: () => {
-    type: 'ADD_EDIT_CONSTRUCTION_SET_PATH',
-    payload: string
-  };
-  setEditPathInPath?: () => {
-    type: 'ADD_EDIT_CONSTRUCTION_SET_PATH',
-    payload: string
-  };
-  setConstructionTemplate?: (constructionTemplate: {
-    constructionJSON: {
-      id: number;
-      name: string;
-      address: string;
-      haveMachine: boolean;
-    };
-    visible: boolean;
-    headerName: string;
-    submitName: string;
-  }) => {
-    type: "ADD_EDIT_CONSTRUCTION_SET_CONSTRUCTION_TEMPLATE";
-    payload: {
-      constructionJSON: {
-        id: number;
-        name: string;
-        address: string;
-        haveMachine: boolean;
-      };
-      visible: boolean;
-      headerName: string;
-      submitName: string;
-    }
-  }
-  deleteConstruction?: (formData: FormData) => (dispatch: any, getState: () => stateType) => Promise<any>;
   moreConstructions?: () => (dispatch: any, getState: () => stateType) => Promise<any>;
+  openAddConstructionForm?: () => (dispatch: any, getState: () => stateType) => void;
 }
 
 class Hierarchy extends React.Component<IHierarchyProps> {
@@ -81,22 +44,11 @@ class Hierarchy extends React.Component<IHierarchyProps> {
       <div className="hierarchy" style={{ width: '150px', minWidth: '150px' }}>
         <div className="hierarchy__content">
           <Button name='Добавить здание' ClickHandler={this.AddConstruction.bind(this)} />
-          {this.props.constructionJSONArr && this.props.constructionJSONArr.map((constructionJSON, item) =>
-            <div className='hierarchy__content-item'>
-              <div className='hierarchy__edit-construction'>
-                <Button dataSetConstruction={`${item}`} name='/' ClickHandler={this.EditConstruction.bind(this)}>/</Button>
-              </div>
-              <div className='hierarchy__delete-construction'>
-                <form onSubmit={this.DeleteConstruction.bind(this)}>
-                  <input type="hidden" value={`${constructionJSON.id}`} name='constructionId' />
-                  <Submit name='X' />
-                </form>
-              </div>
-              <Indicate indicate={constructionJSON.haveMachine} />
+          {this.props.constructionJSONArr && this.props.constructionJSONArr.map(constructionJSON =>
+            <div key={constructionJSON.id} className='hierarchy__content-item'>
               <Construction constructionJSON={constructionJSON} />
             </div>
-          )
-          }
+          )}
           <Button name='Больше зданий' ClickHandler={this.MoreConstructions.bind(this)} />
         </div>
         <div className="hierarchy__border-move" style={{ left: '148px' }}
@@ -108,40 +60,16 @@ class Hierarchy extends React.Component<IHierarchyProps> {
     );
   }
 
-  private EditConstruction(ev: React.MouseEvent) {
-    const item = (ev.currentTarget as HTMLElement).dataset.constructionItem;
-    this.props.setConstructionTemplate({
-      constructionJSON: this.props.constructionJSONArr[Number(item)],
-      visible: true,
-      headerName: `Редактировать здание "${this.props.constructionJSONArr[Number(item)].name}"`,
-      submitName: 'Изменить',
-    });
-    this.props.setEditPathInPath();
-
-  }
-
   private Init() {
     this.GetConstructions();
   }
 
   private AddConstruction() {
-    this.props.setAddPathInPath();
-    this.props.setConstructionTemplate({
-      constructionJSON: null,
-      visible: true,
-      headerName: 'Добавить здание',
-      submitName: 'Добавить',
-    });
+    this.props.openAddConstructionForm();
   }
 
   private async GetConstructions() {
     this.props.getConstructionJSONArr();
-  }
-
-  private async DeleteConstruction(ev: React.FormEvent) {
-    ev.preventDefault();
-    const formData = new FormData(ev.currentTarget as HTMLFormElement);
-    this.props.deleteConstruction(formData);
   }
 
   private MoreConstructions() {
@@ -220,12 +148,8 @@ function mapStateToProps(state: stateType) {
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
     getConstructionJSONArr,
-    setAddPathInPath,
-    setEditPathInPath,
-    setConstructionTemplate,
-    deleteConstruction,
+    openAddConstructionForm,
     moreConstructions,
-
   }, dispatch)
 }
 

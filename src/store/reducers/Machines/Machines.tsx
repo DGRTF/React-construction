@@ -1,4 +1,4 @@
-import { setMachineArr } from './actions';
+import { setMachineArr } from '../../actions/Machines/Machines';
 
 type ActionTypes = ReturnType<typeof setMachineArr>;
 

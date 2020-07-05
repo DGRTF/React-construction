@@ -1,6 +1,5 @@
 import React from 'react';
 import './AddEditConstruction.scss';
-// import storeAddEditConstruction from '../../store/store/AddEditConstruction/AddEditConstruction';
 import { stateType } from '../../store/store';
 import Button from '../Button/Button';
 import Submit from '../Submit';
@@ -8,28 +7,11 @@ import Input from '../Input/Input';
 import { addEditConstruction } from "../../store/actions/ConstructionJSONArr/ConstructionJSONArr";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { setVisible, setConstructionJSON } from '../../store/actions/AddEditConstruction/AddEditConstruction';
+import { closeAddEditConstructionForm } from '../../store/actions/actions';
 
 interface ImapDispatchToProps {
   addEditConstruction?: (formData: FormData) => (dispatch: any, getState: () => stateType) => Promise<any>;
-  setVisible?: (visible: boolean) => {
-    type: "ADD_EDIT_CONSTRUCTION_SET_VISIBLE";
-    payload: boolean;
-  };
-  setConstructionJSON?: (constructionJSON: {
-    id: number;
-    name: string;
-    address: string;
-    haveMachine: boolean;
-  }) => {
-    type: "ADD_EDIT_CONSTRUCTION_SET_CONSTRUCTION_JSON";
-    payload: {
-      id: number;
-      name: string;
-      address: string;
-      haveMachine: boolean;
-    };
-  };
+  closeAddEditConstructionForm?: () => (dispatch: any, getState: () => stateType) => void;
 }
 
 interface ImapStateToProps {
@@ -44,7 +26,7 @@ interface ImapStateToProps {
   submitName?: string;
 }
 
-interface IAddConstructionProps extends ImapDispatchToProps, ImapStateToProps {}
+interface IAddConstructionProps extends ImapDispatchToProps, ImapStateToProps { }
 
 class AddConstruction extends React.Component<IAddConstructionProps> {
   constructor(prop: any) {
@@ -82,16 +64,13 @@ class AddConstruction extends React.Component<IAddConstructionProps> {
   }
 
   private Close() {
-    this.props.setVisible(false);
-    this.props.setConstructionJSON(null);
+    this.props.closeAddEditConstructionForm();
   }
 
   private async AddEditConstruction(ev: React.FormEvent) {
     ev.preventDefault();
     const formData = new FormData(ev.currentTarget as HTMLFormElement);
     this.props.addEditConstruction(formData);
-    this.props.setConstructionJSON(null);
-    this.props.setVisible(false);
   }
 
 }
@@ -109,9 +88,8 @@ function mapStateToProps(state: stateType) {
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
-    addEditConstruction: addEditConstruction,
-    setVisible: setVisible,
-    setConstructionJSON: setConstructionJSON
+    addEditConstruction,
+    closeAddEditConstructionForm,
   }, dispatch)
 }
 

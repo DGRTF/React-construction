@@ -1,5 +1,6 @@
 import { stateType } from '../../store'
 import { setSkipQuantityMoreRooms, deleteElementSkipTakeMoreRooms, addSkipQuantityMoreRooms, editSkipTake } from '../MoreRooms/MoreRooms';
+import { setRoomJSON, setVisibleAddEditRoomForm } from '../AddEditRoom/AddEditRoom';
 
 export function setRooms(rooms: {
   id: number;
@@ -66,13 +67,12 @@ export function getRoomsInConstruction(constructionId: number) {
   }
 }
 
-export function deleteRoomsInConstruction(constructionId: number, formData: FormData) {
+export function deleteRoomsInConstruction(constructionId: number, roomId: number) {
   return function (dispatch: any, getState: () => stateType) {
     const skipTake = findSkipTakeByConstructionId(constructionId, getState);
     return fetch(
-      `Rooms/DeleteRoomInConstruction?constructionId=${constructionId}&skip=${skipTake.skip}&take=${skipTake.quantity}`, {
+      `Rooms/DeleteRoomInConstruction?constructionId=${constructionId}&roomId=${roomId}&skip=${skipTake.skip}&take=${skipTake.quantity}`, {
       method: 'POST',
-      body: formData
     }).then(response => response.json())
       .then(json => {
         const state = getState().roomReducer.rooms.slice();
@@ -92,6 +92,8 @@ export function deleteRoomsInConstruction(constructionId: number, formData: Form
 
 export function addEditRoomInConstruction(formData: FormData) {
   return function (dispatch: any, getState: () => stateType) {
+    dispatch(setRoomJSON(null));
+    dispatch(setVisibleAddEditRoomForm(false));
     const constructionId: number = Number(formData.get('constructionId'));
     const skipTake = findSkipTakeByConstructionId(constructionId, getState);
     return fetch(`${getState().addEditRoom.path}?skip=${skipTake.skip}&take=${skipTake.quantity}`, {
@@ -176,7 +178,8 @@ export function getMoreRooms(constructionId: number) {
             quantity: changeQuantity,
             constructionId
           })(dispatch);
-      });
+      })
+      .catch(error => alert('Что-то пошло не так :('));
   }
 }
 

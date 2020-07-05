@@ -1,4 +1,10 @@
 import { stateType } from '../../store';
+import { setSkipMoreConstructions } from '../MoreConstructions/MoreConstructions';
+
+const skipConstructions = 0;
+const quantityConstructions = 10;
+const quantityConstructionsStep = 10;
+
 
 export const setConstructionJSONArr = function (constructionJSONArr: {
   id: number
@@ -12,24 +18,10 @@ export const setConstructionJSONArr = function (constructionJSONArr: {
   }
 }
 
-export const setRoomsInConstruction = function (
-  rooms: {
-    id: number
-    name: string
-    floor: number
-    constructionId: number
-    haveMachine: boolean
-  }[]
-) {
-  return {
-    type: GetLiteralInString("CONSTRUCTION_JSON_ARR_SET_ROOMS_IN_CONSTRUCTION"),
-    payload: rooms
-  }
-}
-
 export function getConstructionJSONArr() {
-  return function (dispatch: any) {
-    return fetch('Constructions/GetConstructions', {
+  return function (dispatch: any, getState: () => stateType) {
+    const moreConstructions = getState().moreConstructions;
+    return fetch(`Constructions/GetConstructions?skip=${moreConstructions.skip}&take=${moreConstructions.quantity}`, {
       method: 'POST',
     }).then(response => response.json())
       .then(json => dispatch(setConstructionJSONArr(json)))
@@ -38,7 +30,8 @@ export function getConstructionJSONArr() {
 
 export function addEditConstruction(formData: FormData) {
   return function (dispatch: any, getState: () => stateType) {
-    return fetch(getState().addEditConstruction.path, {
+    const moreConstructions = getState().moreConstructions;
+    return fetch(`${getState().addEditConstruction.path}?skip=${moreConstructions.skip}&take=${moreConstructions.quantity}`, {
       method: 'POST',
       body: formData
     }).then(response => response.json())
@@ -47,12 +40,27 @@ export function addEditConstruction(formData: FormData) {
 }
 
 export function deleteConstruction(formData: FormData) {
-  return function (dispatch: any) {
-    return fetch('Constructions/DeleteConstruction', {
+  return function (dispatch: any, getState: () => stateType) {
+    const moreConstructions = getState().moreConstructions;
+    return fetch(`Constructions/DeleteConstruction?skip=${moreConstructions.skip}&take=${moreConstructions.quantity}`, {
       method: 'POST',
       body: formData
     }).then(response => response.json())
       .then(json => dispatch(setConstructionJSONArr(json)))
+  }
+}
+
+export function moreConstructions() {
+  return function (dispatch: any, getState: () => stateType) {
+    const moreConstructions = getState().moreConstructions;
+    return fetch(`Constructions/GetConstructions?skip=${moreConstructions.skip}&take=${moreConstructions.quantity + quantityConstructionsStep}`, {
+      method: 'POST',
+    }).then(response => response.json())
+      .then(json => {
+        dispatch(setConstructionJSONArr(json));
+        if (json.length >= moreConstructions.quantity)
+          setSkipMoreConstructions(moreConstructions.quantity + quantityConstructionsStep);
+      })
   }
 }
 

@@ -26,7 +26,7 @@ export function addEditMachine(formData: FormData) {
     }).then(response => response.json())
       .then(json => {
         dispatch(setMachineArr(json));
-        getConstructionJSONArr()(dispatch);
+        getConstructionJSONArr()(dispatch, getState);
         getRoomsInConstructionWithCurrentMachine(roomId)(dispatch, getState);
       })
   }
@@ -44,7 +44,7 @@ export function deleteMachine(id: number) {
             roomId = el.roomId;
         })
         dispatch(setMachineArr(json));
-        getConstructionJSONArr()(dispatch);
+        getConstructionJSONArr()(dispatch,getState);
         getRoomsInConstructionWithCurrentMachine(roomId)(dispatch, getState);
       })
   }

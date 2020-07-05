@@ -7,6 +7,7 @@ import machineJSONArr from '../reducer';
 import roomReducer from './Rooms/Rooms'
 import moreMachines from './MoreMachines/MoreMachines';
 import moreRooms from './MoreRooms/MoreRooms';
+import moreConstructions from './MoreConstructions/MoreConstructions';
 
 const appReducers = combineReducers({
   addEditConstruction,
@@ -17,6 +18,7 @@ const appReducers = combineReducers({
   roomReducer,
   moreMachines,
   moreRooms,
+  moreConstructions,
 });
 
 export default appReducers;

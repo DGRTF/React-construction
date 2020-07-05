@@ -9,6 +9,7 @@ import Indicate from './Indicate/Indicate';
 import {
   getConstructionJSONArr,
   deleteConstruction,
+  moreConstructions,
 } from "../store/actions/ConstructionJSONArr/ConstructionJSONArr";
 import { bindActionCreators } from 'redux';
 import {
@@ -65,7 +66,8 @@ interface ImapDispatchToProps {
       submitName: string;
     }
   }
-  deleteConstruction?: (formData: FormData) => (dispatch: any) => Promise<any>;
+  deleteConstruction?: (formData: FormData) => (dispatch: any, getState: () => stateType) => Promise<any>;
+  moreConstructions?: () => (dispatch: any, getState: () => stateType) => Promise<any>;
 }
 
 class Hierarchy extends React.Component<IHierarchyProps> {
@@ -95,7 +97,7 @@ class Hierarchy extends React.Component<IHierarchyProps> {
             </div>
           )
           }
-          <Button name='Больше зданий>' ClickHandler={this.MoreConstructions.bind(this)} />
+          <Button name='Больше зданий' ClickHandler={this.MoreConstructions.bind(this)} />
         </div>
         <div className="hierarchy__border-move" style={{ left: '148px' }}
           onMouseDown={this.AddEventMouseMove.bind(this)}
@@ -143,7 +145,7 @@ class Hierarchy extends React.Component<IHierarchyProps> {
   }
 
   private MoreConstructions() {
-    
+    this.props.moreConstructions();
   }
 
 
@@ -222,6 +224,8 @@ function mapDispatchToProps(dispatch: any) {
     setEditPathInPath,
     setConstructionTemplate,
     deleteConstruction,
+    moreConstructions,
+
   }, dispatch)
 }
 

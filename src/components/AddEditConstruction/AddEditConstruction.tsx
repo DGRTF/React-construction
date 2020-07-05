@@ -49,19 +49,9 @@ interface IAddConstructionProps extends ImapDispatchToProps, ImapStateToProps {}
 class AddConstruction extends React.Component<IAddConstructionProps> {
   constructor(prop: any) {
     super(prop);
-    // this.state = {
-    //   visible: false,
-    //   constructionJSON: storeAddEditConstruction.getState().constructionJSON
-    // };
-
-    // storeAddEditConstruction.subscribe(this.SetConstructionJSON.bind(this));
   }
 
   private visibleElement: JSX.Element;
-
-  // private headerName: string;
-
-  // private submitName: string;
 
   render() {
     this.visibleElement = this.props.visible ?
@@ -92,50 +82,19 @@ class AddConstruction extends React.Component<IAddConstructionProps> {
   }
 
   private Close() {
-    // storeAddEditConstruction.dispatch({
-    //   type: 'ADD_EDIT_CONSTRUCTION_SET_VISIBLE',
-    //   payload: false
-    // });
-
-    // storeAddEditConstruction.dispatch({
-    //   type: 'ADD_EDIT_CONSTRUCTION_SET_CONSTRUCTION_JSON',
-    //   payload: null
-    // });
     this.props.setVisible(false);
     this.props.setConstructionJSON(null);
   }
-
-  // private SetConstructionJSON() {
-  //   this.setState({
-  //     constructionJSON: storeAddEditConstruction.getState().constructionJSON
-  //   });
-  //   this.setState({
-  //     visible: storeAddEditConstruction.getState().visible
-  //   });
-  //   this.headerName = storeAddEditConstruction.getState().headerName;
-  //   this.submitName = storeAddEditConstruction.getState().submitName;
-  // }
 
   private async AddEditConstruction(ev: React.FormEvent) {
     ev.preventDefault();
     const formData = new FormData(ev.currentTarget as HTMLFormElement);
     this.props.addEditConstruction(formData);
-
-    // storeAddEditConstruction.dispatch({
-    //   type: 'ADD_EDIT_CONSTRUCTION_SET_CONSTRUCTION_JSON',
-    //   payload: null
-    // });
-
-    // storeAddEditConstruction.dispatch({
-    //   type: 'ADD_EDIT_CONSTRUCTION_SET_VISIBLE',
-    //   payload: false
-    // });
     this.props.setConstructionJSON(null);
     this.props.setVisible(false);
   }
 
 }
-
 
 
 

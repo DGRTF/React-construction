@@ -14,10 +14,7 @@ import { bindActionCreators } from 'redux';
 import {
   setAddPathInPath,
   setEditPathInPath,
-  setConstructionJSON,
-  setVisible,
-  setHeaderName,
-  setSubmitName
+  setConstructionTemplate,
 } from '../store/actions/AddEditConstruction/AddEditConstruction';
 
 
@@ -44,32 +41,30 @@ interface ImapDispatchToProps {
     type: 'ADD_EDIT_CONSTRUCTION_SET_PATH',
     payload: string
   };
-  setVisible?: (visible: boolean) => {
-    type: "ADD_EDIT_CONSTRUCTION_SET_VISIBLE";
-    payload: boolean;
-  }
-  setConstructionJSON?: (constructionJSON: {
-    id: number;
-    name: string;
-    address: string;
-    haveMachine: boolean;
-  }) => {
-    type: "ADD_EDIT_CONSTRUCTION_SET_CONSTRUCTION_JSON";
-    payload: {
+  setConstructionTemplate?: (constructionTemplate: {
+    constructionJSON: {
       id: number;
       name: string;
       address: string;
       haveMachine: boolean;
     };
-  };
-  setHeaderName?: (headerName: string) => {
-    type: "ADD_EDIT_CONSTRUCTION_SET_HEADER_NAME";
-    payload: string;
-  };
-  setSubmitName?: (submitName: string) => {
-    type: "ADD_EDIT_CONSTRUCTION_SET_SUBMIT_NAME";
-    payload: string;
-  };
+    visible: boolean;
+    headerName: string;
+    submitName: string;
+  }) => {
+    type: "ADD_EDIT_CONSTRUCTION_SET_CONSTRUCTION_TEMPLATE";
+    payload: {
+      constructionJSON: {
+        id: number;
+        name: string;
+        address: string;
+        haveMachine: boolean;
+      };
+      visible: boolean;
+      headerName: string;
+      submitName: string;
+    }
+  }
   deleteConstruction?: (formData: FormData) => (dispatch: any) => Promise<any>;
 }
 
@@ -100,6 +95,7 @@ class Hierarchy extends React.Component<IHierarchyProps> {
             </div>
           )
           }
+          <Button name='Больше зданий>' ClickHandler={this.MoreConstructions.bind(this)} />
         </div>
         <div className="hierarchy__border-move" style={{ left: '148px' }}
           onMouseDown={this.AddEventMouseMove.bind(this)}
@@ -112,11 +108,14 @@ class Hierarchy extends React.Component<IHierarchyProps> {
 
   private EditConstruction(ev: React.MouseEvent) {
     const item = (ev.currentTarget as HTMLElement).dataset.constructionItem;
-    this.props.setConstructionJSON(this.props.constructionJSONArr[Number(item)])
-    this.props.setVisible(true);
+    this.props.setConstructionTemplate({
+      constructionJSON: this.props.constructionJSONArr[Number(item)],
+      visible: true,
+      headerName: `Редактировать здание "${this.props.constructionJSONArr[Number(item)].name}"`,
+      submitName: 'Изменить',
+    });
     this.props.setEditPathInPath();
-    this.props.setHeaderName(`Редактировать здание "${this.props.constructionJSONArr[Number(item)].name}"`);
-    this.props.setSubmitName('Изменить');
+
   }
 
   private Init() {
@@ -124,10 +123,13 @@ class Hierarchy extends React.Component<IHierarchyProps> {
   }
 
   private AddConstruction() {
-    this.props.setVisible(true);
     this.props.setAddPathInPath();
-    this.props.setHeaderName('Добавить здание');
-    this.props.setSubmitName('Добавить');
+    this.props.setConstructionTemplate({
+      constructionJSON: null,
+      visible: true,
+      headerName: 'Добавить здание',
+      submitName: 'Добавить',
+    });
   }
 
   private async GetConstructions() {
@@ -138,6 +140,10 @@ class Hierarchy extends React.Component<IHierarchyProps> {
     ev.preventDefault();
     const formData = new FormData(ev.currentTarget as HTMLFormElement);
     this.props.deleteConstruction(formData);
+  }
+
+  private MoreConstructions() {
+    
   }
 
 
@@ -211,14 +217,11 @@ function mapStateToProps(state: stateType) {
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
-    getConstructionJSONArr: getConstructionJSONArr,
-    setAddPathInPath: setAddPathInPath,
-    setEditPathInPath: setEditPathInPath,
-    setConstructionJSON: setConstructionJSON,
-    setVisible: setVisible,
-    setHeaderName: setHeaderName,
-    setSubmitName: setSubmitName,
-    deleteConstruction:deleteConstruction,
+    getConstructionJSONArr,
+    setAddPathInPath,
+    setEditPathInPath,
+    setConstructionTemplate,
+    deleteConstruction,
   }, dispatch)
 }
 

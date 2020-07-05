@@ -1,24 +1,9 @@
-import { stateType } from '../../store';
-
 export const setVisible = function (visible: boolean) {
   return {
     type: GetLiteralInString("ADD_EDIT_ROOM_SET_VISIBLE"),
     payload: visible
   }
 };
-
-// export const setCallback = function (UpdateCallback: (roomJSONArr: {
-//   id: number;
-//   name: string;
-//   floor: number;
-//   constructionId: number;
-//   haveMachine: boolean;
-// }[]) => void) {
-//   return {
-//     type: GetLiteralInString("ADD_EDIT_ROOM_SET_CALLBACK"),
-//     payload: UpdateCallback
-//   }
-// };
 
 export const setRoomJSON = function (roomJSON: {
   id: number;
@@ -37,6 +22,20 @@ export const setPath = function (path: string) {
   return {
     type: GetLiteralInString("ADD_EDIT_ROOM_SET_PATH"),
     payload: path
+  }
+};
+
+export const setAddPath = function () {
+  return {
+    type: GetLiteralInString("ADD_EDIT_ROOM_SET_PATH"),
+    payload: 'Rooms/AddRoomInConstruction'
+  }
+};
+
+export const setEditPath = function () {
+  return {
+    type: GetLiteralInString("ADD_EDIT_ROOM_SET_PATH"),
+    payload: 'Rooms/EditRoomInConstruction'
   }
 };
 
@@ -63,7 +62,6 @@ export const setAddEditRoomTemplate = function (roomTemplate: {
     constructionId: number;
     haveMachine: boolean;
   };
-  path: string;
   headerName: string;
   submitName: string;
 }) {

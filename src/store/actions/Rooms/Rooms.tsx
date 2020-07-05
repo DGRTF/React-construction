@@ -1,4 +1,5 @@
 import { stateType } from '../../store'
+import { setSkipQuantityMoreRooms, deleteElementSkipTakeMoreRooms, addSkipQuantityMoreRooms, editSkipTake } from '../MoreRooms/MoreRooms';
 
 export function setRooms(rooms: {
   id: number;
@@ -43,7 +44,7 @@ export function removeRoomsInStore(constructionId: number) {
 
 export function getRoomsInConstruction(constructionId: number) {
   return function (dispatch: any, getState: () => stateType) {
-    return fetch(`Rooms/GetRoomsInConstruction?constructionId=${constructionId}`, {
+    return fetch(`Rooms/GetRoomsInConstruction?constructionId=${constructionId}&skip=${skipRooms}&take=${takeRooms}`, {
       method: 'POST',
     }).then(response => response.json())
       .then(json => {
@@ -58,13 +59,18 @@ export function getRoomsInConstruction(constructionId: number) {
         })
         dispatch(setRooms(reserveState));
         dispatch(addRooms(json));
+
+        deleteElementSkipTakeMoreRooms(constructionId)(dispatch, getState);
+        dispatch(addSkipQuantityMoreRooms(constructionId));
       })
   }
 }
 
 export function deleteRoomsInConstruction(constructionId: number, formData: FormData) {
   return function (dispatch: any, getState: () => stateType) {
-    return fetch(`Rooms/DeleteRoomInConstruction?constructionId=${constructionId}`, {
+    const skipTake = findSkipTakeByConstructionId(constructionId, getState);
+    return fetch(
+      `Rooms/DeleteRoomInConstruction?constructionId=${constructionId}&skip=${skipTake.skip}&take=${skipTake.quantity}`, {
       method: 'POST',
       body: formData
     }).then(response => response.json())
@@ -86,14 +92,15 @@ export function deleteRoomsInConstruction(constructionId: number, formData: Form
 
 export function addEditRoomInConstruction(formData: FormData) {
   return function (dispatch: any, getState: () => stateType) {
-    return fetch(getState().addEditRoom.path, {
+    const constructionId: number = Number(formData.get('constructionId'));
+    const skipTake = findSkipTakeByConstructionId(constructionId, getState);
+    return fetch(`${getState().addEditRoom.path}?skip=${skipTake.skip}&take=${skipTake.quantity}`, {
       method: 'POST',
       body: formData
     }).then(response => response.json())
       .then(json => {
         const state = getState().roomReducer.rooms.slice();
         let reserveState = state.slice();
-        const constructionId: number = Number(formData.get('constructionId'));
         state.forEach((el) => {
           if (el.constructionId === constructionId) {
             const index = reserveState.indexOf(el);
@@ -118,7 +125,9 @@ export function getRoomsInConstructionWithCurrentMachine(roomId: number) {
         break;
       }
     }
-    return fetch(`Rooms/GetRoomsInConstruction?constructionId=${constructionId}`, {
+    const skipTake = findSkipTakeByConstructionId(constructionId, getState);
+    return fetch(
+      `Rooms/GetRoomsInConstruction?constructionId=${constructionId}&skip=${skipTake.skip}&take=${skipTake.quantity}`, {
       method: 'POST',
     }).then(response => response.json())
       .then(json => {
@@ -127,7 +136,7 @@ export function getRoomsInConstructionWithCurrentMachine(roomId: number) {
           if (el.constructionId === constructionId) {
             const index = reserveRooms.indexOf(el);
             if (index > -1)
-            reserveRooms.splice(index, 1);
+              reserveRooms.splice(index, 1);
           }
         })
         dispatch(setRooms(reserveRooms));
@@ -135,6 +144,58 @@ export function getRoomsInConstructionWithCurrentMachine(roomId: number) {
       })
   }
 }
+
+const skipRooms = 0;
+const takeRooms = 10;
+const takeRoomsStep = 10;
+
+export function getMoreRooms(constructionId: number) {
+  return function (dispatch: any, getState: () => stateType) {
+    const skipTake = findSkipTakeByConstructionId(constructionId, getState);
+    return fetch(
+      `Rooms/GetRoomsInConstruction?constructionId=${constructionId}&skip=${skipTake.skip}&take=${skipTake.quantity + takeRoomsStep}`, {
+      method: 'POST',
+    }).then(response => response.json())
+      .then(json => {
+        const state = getState().roomReducer.rooms.slice();
+        let reserveState = state.slice();
+        state.forEach(el => {
+          if (el.constructionId === constructionId) {
+            const index = reserveState.indexOf(el);
+            if (index > -1)
+              reserveState.splice(index, 1);
+          }
+        })
+        dispatch(setRooms(reserveState));
+        dispatch(addRooms(json));
+        const changeQuantity = skipTake.quantity + takeRoomsStep;
+        console.warn('object');
+        if (json.length >= skipTake.quantity)
+          editSkipTake({
+            skip: skipRooms,
+            quantity: changeQuantity,
+            constructionId
+          })(dispatch);
+      });
+  }
+}
+
+export function findSkipTakeByConstructionId(constructionId: number, getState: () => stateType) {
+  const moreRooms = getState().moreRooms;
+  let skipTate: {
+    skip: number;
+    quantity: number;
+    constructionId: number;
+  };
+  for (let i = 0; i < moreRooms.skipQuantityConstriction.length; i++) {
+    if (moreRooms.skipQuantityConstriction[i].constructionId === constructionId) {
+      skipTate = moreRooms.skipQuantityConstriction[i];
+      break;
+    }
+  }
+  return skipTate;
+}
+
 
 
 

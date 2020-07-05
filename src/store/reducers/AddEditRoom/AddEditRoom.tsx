@@ -39,7 +39,12 @@ export let reducer = function (state = {
     case "ADD_EDIT_ROOM_SET_SUBMIT_NAME":
       return { ...state, submitName: action.payload }
     case 'ADD_EDIT_ROOM_SET_ROOM_TEMPLATE':
-      return  action.payload 
+      return  { 
+        ...state,
+        roomJSON: action.payload.roomJSON,
+        visible: action.payload.visible,
+        headerName: action.payload.headerName,
+        submitName: action.payload.submitName, } 
     default:
       return state
   }

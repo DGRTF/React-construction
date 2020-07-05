@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './Construction.scss';
-import FormOneSubmit from './FormOneSubmit';
 import Room from './Room';
 import Submit from './Submit';
 import Button from './Button/Button';
@@ -8,7 +7,8 @@ import { getMachineInConstruction } from '../store/actions';
 import {
   getRoomsInConstruction,
   removeRoomsInStore,
-  deleteRoomsInConstruction
+  deleteRoomsInConstruction,
+  getMoreRooms,
 } from '../store/actions/Rooms/Rooms';
 import Indicate from './Indicate/Indicate';
 import {
@@ -16,7 +16,11 @@ import {
 } from "../store/actions/AddEditMachine/AddEditMachine";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { setAddEditRoomTemplate } from "../store/actions/AddEditRoom/AddEditRoom";
+import {
+  setAddPath,
+  setEditPath,
+  setAddEditRoomTemplate
+} from "../store/actions/AddEditRoom/AddEditRoom";
 import { stateType } from '../store/store';
 
 interface ImapStateToProps {
@@ -38,8 +42,12 @@ interface ImapDispatchToProps {
       deletePath: string;
     };
   }
-  getMachineInConstruction?: (constructionId: number) => (dispatch: any) => Promise<any>;
-  setPath?: (path: string) => {
+  getMachineInConstruction?: (constructionId: number) => (dispatch: any, getState: () => stateType) => Promise<any>;
+  setAddPath?: () => {
+    type: "ADD_EDIT_ROOM_SET_PATH";
+    payload: string;
+  }
+  setEditPath?: () => {
     type: "ADD_EDIT_ROOM_SET_PATH";
     payload: string;
   }
@@ -52,7 +60,6 @@ interface ImapDispatchToProps {
       constructionId: number;
       haveMachine: boolean;
     };
-    path: string;
     headerName: string;
     submitName: string;
   }) => {
@@ -66,7 +73,6 @@ interface ImapDispatchToProps {
         constructionId: number;
         haveMachine: boolean;
       };
-      path: string;
       headerName: string;
       submitName: string;
     }
@@ -74,6 +80,7 @@ interface ImapDispatchToProps {
   deleteRoomsInConstruction?: (constructionId: number, formData: FormData) => (dispatch: any, getState: () => stateType) => Promise<any>;
   getRoomsInConstruction?: (constructionId: number) => (dispatch: any, getState: () => stateType) => Promise<any>;
   removeRoomsInStore?: (constructionId: number) => (dispatch: any, getState: () => stateType) => void;
+  getMoreRooms?: (constructionId: number) => (dispatch: any, getState: () => stateType) => Promise<any>;
 }
 
 interface IConstructionProps extends ImapDispatchToProps, ImapStateToProps {
@@ -108,8 +115,8 @@ class Construction extends Component<IConstructionProps, IConstructionState> {
             <div className='construction__add-room'>
               <Button name='+' ClickHandler={this.AddRoomInConstruction.bind(this)} />
             </div>
-            <FormOneSubmit name={this.props.constructionJSON.name}
-              EventGetData={this.GetMachineInConstruction.bind(this)}></FormOneSubmit>
+            <Button name={this.props.constructionJSON.name}
+              ClickHandler={this.GetMachineInConstruction.bind(this)} />
           </div>
         </div>
         <div className={'construction__content ' + (this.state.showContent ? '' : 'construction__content-hide')}>
@@ -132,6 +139,7 @@ class Construction extends Component<IConstructionProps, IConstructionState> {
                 : null)
             }
             )}
+            <Button name='Ещё' ClickHandler={this.MoreRooms.bind(this)} />
           </div>
         </div>
       </div>
@@ -149,7 +157,6 @@ class Construction extends Component<IConstructionProps, IConstructionState> {
   private AddRoomInConstruction() {
     this.props.setAddEditRoomTemplate({
       visible: true,
-      path: 'Rooms/AddRoomInConstruction',
       headerName: `Добавить комнату в здание "${this.props.constructionJSON.name}"`,
       submitName: 'Добавить комнату',
       roomJSON: {
@@ -160,17 +167,18 @@ class Construction extends Component<IConstructionProps, IConstructionState> {
         constructionId: this.props.constructionJSON.id,
       },
     });
+    this.props.setAddPath();
   }
 
   private EditRoom(ev: React.MouseEvent) {
     const item = (ev.currentTarget as HTMLElement).dataset.roomItem;
     this.props.setAddEditRoomTemplate({
       visible: true,
-      path: 'Rooms/EditRoomInConstruction',
       headerName: `Редактировать комнату в здании "${this.props.constructionJSON.name}"`,
       submitName: 'Изменить',
       roomJSON: this.props.rooms[Number(item)],
     });
+    this.props.setEditPath();
   }
 
   private async DeleteRoomInConstruction(ev: React.FormEvent) {
@@ -179,9 +187,13 @@ class Construction extends Component<IConstructionProps, IConstructionState> {
     this.props.deleteRoomsInConstruction(this.props.constructionJSON.id, formData);
   }
 
-  private async GetMachineInConstruction(): Promise<void> {
+  private async GetMachineInConstruction() {
     this.props.getMachineInConstruction(this.props.constructionJSON.id);
     this.props.setEditDeletePathsInConstruction(this.props.constructionJSON.id);
+  }
+
+  private MoreRooms() {
+    this.props.getMoreRooms(this.props.constructionJSON.id);
   }
 
 }
@@ -202,6 +214,9 @@ function mapDispatchToProps(dispatch: any) {
     getRoomsInConstruction,
     deleteRoomsInConstruction,
     removeRoomsInStore,
+    setAddPath,
+    setEditPath,
+    getMoreRooms
   }, dispatch)
 }
 

@@ -53,6 +53,24 @@ export const setAddPathInPath = () => {
   }
 }
 
+export function setConstructionTemplate(constructionTemplate: {
+  constructionJSON: {
+    id: number;
+    name: string;
+    address: string;
+    haveMachine: boolean;
+  },
+  visible: boolean,
+  headerName: string,
+  submitName: string,
+}) {
+  return {
+    type: GetLiteralInString('ADD_EDIT_CONSTRUCTION_SET_CONSTRUCTION_TEMPLATE'),
+    payload: constructionTemplate
+  }
+}
+
+
 
 function GetLiteralInString<T extends string>(str: T): T {
   return str;

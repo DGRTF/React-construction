@@ -10,7 +10,10 @@ import {
   setPathEqualEditPath,
   setMachineTemplate
 } from "./store/actions/AddEditMachine/AddEditMachine";
-import { deleteMachine } from './store/actions';
+import {
+  deleteMachine,
+  getMoreMachines
+} from './store/actions';
 
 interface IAppProps extends ImapDispatchToProps {
   machineJSONArr?: {
@@ -48,6 +51,7 @@ interface ImapDispatchToProps {
       submitName?: string;
     };
   }
+  getMoreMachines?: () => (dispatch: any, getState: () => stateType) => Promise<any>;
 }
 
 class App extends React.Component<IAppProps> {
@@ -77,6 +81,7 @@ class App extends React.Component<IAppProps> {
             </div>
           </div>
           <Table machineJSONArr={this.props.machineJSONArr} GetMachineJSON={this.SetMachineJSON.bind(this)} />
+          <Button name='Ещё' ClickHandler={this.MoreMachines.bind(this)} />
         </div>
       </div>
     );
@@ -85,10 +90,10 @@ class App extends React.Component<IAppProps> {
   private EditMachine() {
     if (this.machineJSON) {
       this.props.setMachineTemplate({
-        visible:true,
-        machineJSON:this.machineJSON,
-        headerName:'Редактировать оборудование',
-        submitName:'Готово',
+        visible: true,
+        machineJSON: this.machineJSON,
+        headerName: 'Редактировать оборудование',
+        submitName: 'Готово',
       })
       this.props.setPathEqualEditPath();
     }
@@ -109,13 +114,18 @@ class App extends React.Component<IAppProps> {
     this.machineJSON = machineJSON;
   }
 
+  private MoreMachines() {
+    this.props.getMoreMachines();
+  }
+
 }
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
     setPathEqualEditPath,
     deleteMachine,
-    setMachineTemplate
+    setMachineTemplate,
+    getMoreMachines
   }, dispatch)
 }
 

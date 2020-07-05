@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './Room.scss';
-import FormOneSubmit from './FormOneSubmit';
 import Button from './Button/Button';
 import { getMachineInRoom } from '../store/actions';
 import {
@@ -11,6 +10,7 @@ import {
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { stateType } from '../store/store';
+import { setGetMachineInRoomPathMoreMachines } from '../store/actions/MoreMachines/MoreMachines';
 
 interface ImapDispatchToProps {
   setAddEditDeletePathsInRoom?: (roomId: number) => {
@@ -21,7 +21,7 @@ interface ImapDispatchToProps {
       deletePath: string;
     };
   }
-  getMachineInRoom?: (roomId: number) => (dispatch: any) => Promise<any>;
+  getMachineInRoom?: (roomId: number) => (dispatch: any, getState: () => stateType) => Promise<any>;
   setPathEqualAddPath?: () => (dispatch: any, getState: () => stateType) => Promise<any>;
   setMachineTemplate?: (machineTemplate: {
     visible?: boolean;
@@ -47,6 +47,10 @@ interface ImapDispatchToProps {
       submitName?: string;
     };
   }
+  setGetMachineInRoomPathMoreMachines?: (roomId: number) => {
+    type: "MORE_MACHINE_SET_PATH";
+    payload: string;
+  }
 }
 
 interface IRoomProps extends ImapDispatchToProps {
@@ -66,11 +70,10 @@ class Room extends Component<IRoomProps> {
   render() {
     return (
       <div className='room'>
-        <div className='room__label'></div>
         <div className='room__add-machine'>
           <Button name='+' ClickHandler={this.AddMachineInRoom.bind(this)} />
         </div>
-        <FormOneSubmit name={this.props.roomJSON.name} EventGetData={this.GetMachineInRoom.bind(this)}></FormOneSubmit>
+        <Button name={this.props.roomJSON.name} ClickHandler={this.GetMachineInRoom.bind(this)} />
       </div >
     );
   }
@@ -94,6 +97,7 @@ class Room extends Component<IRoomProps> {
     })
     this.props.setAddEditDeletePathsInRoom(this.props.roomJSON.id);
     this.props.setPathEqualAddPath();
+    this.props.setGetMachineInRoomPathMoreMachines(this.props.roomJSON.id);
   }
 
 }
@@ -106,6 +110,7 @@ function mapDispatchToProps(dispatch: any) {
     setPathEqualAddPath,
     setMachineTemplate,
     setAddEditDeletePathsInRoom,
+    setGetMachineInRoomPathMoreMachines,
   }, dispatch)
 }
 

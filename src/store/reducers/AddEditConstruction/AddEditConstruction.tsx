@@ -3,7 +3,8 @@ import {
   setVisible,
   setHeaderName,
   setSubmitName,
-  setPath
+  setPath,
+  setConstructionTemplate,
 } from '../../actions/AddEditConstruction/AddEditConstruction';
 
 type ActionTypes =
@@ -11,7 +12,9 @@ type ActionTypes =
   | ReturnType<typeof setVisible>
   | ReturnType<typeof setHeaderName>
   | ReturnType<typeof setPath>
-  | ReturnType<typeof setSubmitName>;
+  | ReturnType<typeof setSubmitName>
+  | ReturnType<typeof setConstructionTemplate>
+  ;
 
 export const reducer = function (state = {
   constructionJSON: {
@@ -37,6 +40,14 @@ export const reducer = function (state = {
       return { ...state, submitName: action.payload }
     case 'ADD_EDIT_CONSTRUCTION_SET_PATH':
       return { ...state, path: action.payload }
+    case 'ADD_EDIT_CONSTRUCTION_SET_CONSTRUCTION_TEMPLATE':
+      return {
+        ...state,
+        constructionJSON: action.payload.constructionJSON,
+        visible: action.payload.visible,
+        headerName: action.payload.headerName,
+        submitName: action.payload.submitName,
+      }
     default:
       return state
   }

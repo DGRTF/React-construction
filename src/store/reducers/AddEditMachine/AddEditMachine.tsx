@@ -50,7 +50,7 @@ export let reducer = function (state = {
 }, action: ActionTypes) {
   switch (action.type) {
     case "ADD_EDIT_MACHINE_SET_MACHINE_JSON":
-      console.warn(action.payload); return { ...state, machineJSON: action.payload };
+      return { ...state, machineJSON: action.payload };
     case 'ADD_EDIT_MACHINE_SET_VISIBLE':
       return { ...state, visible: action.payload }
     case 'ADD_EDIT_MACHINE_SET_HEADER_NAME':

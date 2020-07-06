@@ -9,7 +9,7 @@ interface IIndicateProps {
 export default class Indicate extends Component<IIndicateProps>{
   render() {
     return (
-      <div className='indicate' style={this.props.indicate ? { backgroundColor: 'green' } : { backgroundColor: 'red' }}></div>
+      <div className='indicate font-icons14' style={this.props.indicate ? { color: 'green' } : { color: 'red' }}>check_circle</div>
     );
   }
 }

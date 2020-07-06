@@ -1,5 +1,5 @@
 import React from 'react';
-import Submit from '../Submit';
+import './ActionsPanel.scss';
 import Button from '../Button/Button';
 import Indicate from '../Indicate/Indicate';
 
@@ -13,15 +13,15 @@ interface IActionsPanel {
 export class ActionsPanel extends React.Component<IActionsPanel> {
   render() {
     return (
-      <div style={{ display: 'flex' }}>
-        <div className='construction__add-room'>
-          <Button name='+' ClickHandler={this.props.AddItem} />
+      <div className='actions-panel'>
+        <div className='actions-panel__add'>
+          <Button name='add' font='icons' ClickHandler={this.props.AddItem} />
         </div>
-        <div className='hierarchy__delete-construction'>
-          <Button name='X' ClickHandler={this.props.DeleteItem} />
+        <div className='actions-panel__delete-construction'>
+          <Button name='delete_forever' font='icons' ClickHandler={this.props.DeleteItem} />
         </div>
-        <div className='hierarchy__edit-construction'>
-          <Button name='/' ClickHandler={this.props.EditItem} />
+        <div className='actions-panel__edit-construction'>
+          <Button name='edit' font='icons' ClickHandler={this.props.EditItem} />
         </div>
         <Indicate indicate={this.props.indicate} />
       </div>

@@ -13,12 +13,6 @@ import {
 } from './store/actions/Machines/Machines';
 
 interface IAppProps extends ImapDispatchToProps {
-  machineJSONArr?: {
-    id: number;
-    name: string;
-    createYear: number;
-    roomId: number;
-  }[];
 }
 
 interface ImapDispatchToProps {
@@ -38,7 +32,7 @@ class App extends React.Component<IAppProps> {
     super(prop);
   }
 
-  private machineJSON: {
+  private machine: {
     id: number;
     name: string;
     createYear: number;
@@ -58,7 +52,7 @@ class App extends React.Component<IAppProps> {
               <Button name='Удалить' ClickHandler={this.DeleteMachine.bind(this)} />
             </div>
           </div>
-          <Table machineJSONArr={this.props.machineJSONArr} GetMachineJSON={this.SetMachineJSON.bind(this)} />
+          <Table GetMachine={this.SetMachine.bind(this)} />
           <Button name='Ещё' ClickHandler={this.MoreMachines.bind(this)} />
         </div>
       </div>
@@ -66,22 +60,22 @@ class App extends React.Component<IAppProps> {
   }
 
   private EditMachine() {
-    this.props.openEditMachineForm(this.machineJSON);
+    this.props.openEditMachineForm(this.machine);
   }
 
   private async DeleteMachine() {
-    if (this.machineJSON) {
-      this.props.deleteMachine(this.machineJSON.id);
+    if (this.machine) {
+      this.props.deleteMachine(this.machine.id);
     }
   }
 
-  private SetMachineJSON(machineJSON: {
+  private SetMachine(machine: {
     id: number;
     name: string;
     createYear: number;
     roomId: number;
   }) {
-    this.machineJSON = machineJSON;
+    this.machine = machine;
   }
 
   private MoreMachines() {

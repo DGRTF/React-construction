@@ -52,6 +52,7 @@ export function openEditMachineForm(machine: {
   roomId: number;
 }) {
   return function (dispatch: any, getState: () => stateType) {
+    console.warn(machine);
     dispatch(setMachineTemplate({
       visible: true,
       machineJSON: machine,

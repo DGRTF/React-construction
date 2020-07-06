@@ -13,7 +13,7 @@ import { stateType } from '../../store/store';
 
 interface ImapStateToProps {
   visible?: boolean;
-  machineJSON?: {
+  machine?: {
     id: number;
     name: string;
     createYear: number;
@@ -28,20 +28,16 @@ interface ImapDispatchToProps {
   closeAddEditMachineForm?: () => (dispatch: any, getState: () => stateType) => void;
 }
 
-interface IAddEditMachineProps extends ImapStateToProps, ImapDispatchToProps {
-
-}
+interface IAddEditMachineProps extends ImapStateToProps, ImapDispatchToProps { }
 
 class AddEditMachine extends React.Component<IAddEditMachineProps>  {
   constructor(prop: any) {
     super(prop);
   }
 
-  private visibleElement: JSX.Element;
-
   render() {
-    this.visibleElement = this.props.visible ?
-      <div className='add-edit-machine'>
+    return (
+      <div className='add-edit-machine' style={this.props.visible ? { display: 'flex' } : { display: 'none' }}>
         <div className='add-edit-machine__container'>
           <div className='add-edit-machine__header'>
             <span>{this.props.headerName}</span>
@@ -50,10 +46,10 @@ class AddEditMachine extends React.Component<IAddEditMachineProps>  {
             </div>
           </div>
           <form className='add-edit-machine__form' onSubmit={this.AddEditConstruction.bind(this)}>
-            <input type="hidden" name='machineId' value={this.props.machineJSON ? this.props.machineJSON.id : 0} />
-            <input type="hidden" name='roomId' value={this.props.machineJSON ? this.props.machineJSON.roomId : 0} />
-            <Input text='Введите название' name='name' value={this.props.machineJSON ? this.props.machineJSON.name : ''} />
-            <Input text='Введите год изготовления' name='createYear' value={this.props.machineJSON ? `${this.props.machineJSON.createYear}` : ''} />
+            <input type="hidden" name='machineId' value={this.props.machine ? this.props.machine.id : 0} />
+            <input type="hidden" name='roomId' value={this.props.machine ? this.props.machine.roomId : 0} />
+            <Input text='Введите название' name='name' value={this.props.machine ? this.props.machine.name : ''} />
+            <Input text='Введите год изготовления' type='number' name='createYear' value={this.props.machine ? `${this.props.machine.createYear}` : ''} />
             <div>
               <div className='add-edit-machine__submit-container'>
                 <Submit name={this.props.submitName} />
@@ -62,11 +58,9 @@ class AddEditMachine extends React.Component<IAddEditMachineProps>  {
           </form>
         </div>
       </div>
-      : null
-    return (
-      this.visibleElement
     );
   }
+
 
   private Close() {
     this.props.closeAddEditMachineForm();
@@ -83,7 +77,7 @@ class AddEditMachine extends React.Component<IAddEditMachineProps>  {
 function mapStateToProps(state: stateType) {
   return {
     visible: state.addEditMachine.visible,
-    machineJSON: state.addEditMachine.machineJSON,
+    machine: state.addEditMachine.machineJSON,
     headerName: state.addEditMachine.headerName,
     submitName: state.addEditMachine.submitName,
   };

@@ -6,13 +6,13 @@ import BordersControl from './Control/BordersFacade';
 import store from './../../store/store';
 
 interface ITableProps {
-  machineJSONArr?: {
+  machines?: {
     id: number;
     name: string;
     createYear: number;
     roomId: number;
   }[];
-  GetMachineJSON?: (machineJSON: {
+  GetMachine: (machineJSON: {
     id: number;
     name: string;
     createYear: number;
@@ -54,7 +54,7 @@ export default class Table extends Component<ITableProps> {
   constructor(props: any) {
     super(props);
     this.CreateHeader();
-    this.CreateLineArr(this.props.machineJSONArr);
+    this.CreateLineArr(this.props.machines);
     store.subscribe(this.ChangeContent.bind(this));
   }
 
@@ -133,11 +133,11 @@ export default class Table extends Component<ITableProps> {
 
   private SetSelectLine(selectLine: number): void {
     this.selectLine = selectLine;
-    if (this.props.GetMachineJSON)
+    if (this.props.GetMachine)
       if (selectLine !== -1)
-        this.props.GetMachineJSON(store.getState().machineJSONArr.machineJSONArr[selectLine]);
+        this.props.GetMachine(store.getState().machineJSONArr.machineJSONArr[selectLine]);
       else
-        this.props.GetMachineJSON(null);
+        this.props.GetMachine(null);
   }
 
   private IntervalCheckSize() {

@@ -36,11 +36,10 @@ class AddEditRoom extends React.Component<IAddEditRoomProps> {
   constructor(prop: any) {
     super(prop);
   }
-  private visibleElement: JSX.Element;
 
   render() {
-    this.visibleElement = this.props.visible ?
-      <div className='add-edit-room'>
+    return (
+      <div className='add-edit-room' style={this.props.visible ? { display: 'flex' } : { display: 'none' }}>
         <div className='add-edit-room__container'>
           <div className='add-edit-room__header'>
             <span>{this.props.headerName}</span>
@@ -52,14 +51,11 @@ class AddEditRoom extends React.Component<IAddEditRoomProps> {
             <input type="hidden" name='roomId' value={this.props.roomJSON ? this.props.roomJSON.id : 0} />
             <input type="hidden" name='constructionId' value={this.props.roomJSON ? this.props.roomJSON.constructionId : 0} />
             <Input text='Введите название' name='name' value={this.props.roomJSON ? this.props.roomJSON.name : ''}></Input>
-            <Input text='Введите этаж' name='floor' value={this.props.roomJSON ? `${this.props.roomJSON.floor}` : ''}></Input>
+            <Input text='Введите этаж' type='number' name='floor' value={this.props.roomJSON ? `${this.props.roomJSON.floor}` : ''}></Input>
             <Submit name={this.props.submitName} />
           </form>
         </div>
       </div>
-      : null
-    return (
-      this.visibleElement
     );
   }
 

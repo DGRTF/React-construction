@@ -1,21 +1,21 @@
-.app{
+.app {
   display: flex;
   align-items: flex-start;
   width: 95%;
   margin: auto;
-  height: 500px;
+  min-height: 500px;
 
-  &__table-container{
+  &__table-container {
     width: 100%;
   }
 
-  &__table-edit-delete{
+  &__table-edit-delete {
     display: flex;
     justify-content: space-around;
     margin: 20px;
   }
 
-  &__edit &__delete{
+  &__edit &__delete {
     width: 100px;
   }
 }

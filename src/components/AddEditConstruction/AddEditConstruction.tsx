@@ -33,11 +33,9 @@ class AddConstruction extends React.Component<IAddConstructionProps> {
     super(prop);
   }
 
-  private visibleElement: JSX.Element;
-
   render() {
-    this.visibleElement = this.props.visible ?
-      <div className='add-edit-construction'>
+    return (
+      <div className='add-edit-construction' style={this.props.visible ? { display: 'flex' } : { display: 'none' }}>
         <div className='add-edit-construction__container'>
           <div className='add-edit-construction__header'>
             <span>{this.props.headerName}</span>
@@ -57,9 +55,6 @@ class AddConstruction extends React.Component<IAddConstructionProps> {
           </form>
         </div>
       </div>
-      : null
-    return (
-      this.visibleElement
     );
   }
 

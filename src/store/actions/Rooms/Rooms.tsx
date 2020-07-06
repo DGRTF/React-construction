@@ -1,6 +1,13 @@
 import { stateType } from '../../store'
-import { setSkipQuantityMoreRooms, deleteElementSkipTakeMoreRooms, addSkipQuantityMoreRooms, editSkipTake } from '../MoreRooms/MoreRooms';
-import { setRoomJSON, setVisibleAddEditRoomForm } from '../AddEditRoom/AddEditRoom';
+import {
+  deleteElementSkipTakeMoreRooms,
+  addSkipQuantityMoreRooms,
+  editSkipTake
+} from '../MoreRooms/MoreRooms';
+import {
+  setRoomJSON,
+  setVisibleAddEditRoomForm
+} from '../AddEditRoom/AddEditRoom';
 
 export function setRooms(rooms: {
   id: number;
@@ -188,7 +195,6 @@ export function findSkipTakeByConstructionId(constructionId: number, getState: (
   let skipTate: {
     skip: number;
     quantity: number;
-    constructionId: number;
   };
   for (let i = 0; i < moreRooms.skipQuantityConstriction.length; i++) {
     if (moreRooms.skipQuantityConstriction[i].constructionId === constructionId) {
@@ -196,7 +202,10 @@ export function findSkipTakeByConstructionId(constructionId: number, getState: (
       break;
     }
   }
-  return skipTate;
+  return skipTate ? skipTate : {
+    skip: skipRooms,
+    quantity: takeRooms,
+  };
 }
 
 

@@ -1,0 +1,15 @@
+.actions-panel {
+  display: flex;
+
+  &__delete-construction {
+    min-width: 20px;
+  }
+
+  &__edit-construction {
+    min-width: 20px;
+  }
+
+  &__add-room {
+    min-width: 20px;
+  }
+}

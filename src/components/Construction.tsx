@@ -82,7 +82,9 @@ class Construction extends Component<IConstructionProps, IConstructionState> {
             DeleteItem={this.DeleteConstruction.bind(this)}
             indicate={this.props.constructionJSON.haveMachine}
           />
-          <Button ClickHandler={this.GetRoomsInConstruction.bind(this)} name='V' />
+          <div className='construction__more-less'>
+            <Button name='expand_more' font='icons24' ClickHandler={this.GetRoomsInConstruction.bind(this)} />
+          </div>
           <Button name={this.props.constructionJSON.name}
             ClickHandler={this.GetMachineInConstruction.bind(this)}
           />
@@ -113,11 +115,16 @@ class Construction extends Component<IConstructionProps, IConstructionState> {
     this.props.deleteConstruction(this.props.constructionJSON.id);
   }
 
-  private GetRoomsInConstruction() {
-    if (!this.state.showContent)
+  private GetRoomsInConstruction(ev: React.MouseEvent) {
+    const el = ev.currentTarget as HTMLElement;
+    if (!this.state.showContent) {
       this.props.getRoomsInConstruction(this.props.constructionJSON.id);
-    else
+      el.innerText = 'expand_less';
+    }
+    else {
       this.props.removeRoomsInStore(this.props.constructionJSON.id);
+      el.innerText = 'expand_more';
+    }
     this.setState({ showContent: !this.state.showContent });
   }
 

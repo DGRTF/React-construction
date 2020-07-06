@@ -8,18 +8,8 @@
     display: flex;
   }
 
-  &__label {
-    min-width: 20px;
-  }
-
-  &__header {
-    display: flex;
-    width: 100%;
-    overflow: hidden;
-  }
-
-  &__add-room{
-    min-width: 20px;
+  &__more-less{
+    min-width: 34px;
   }
 
   &__content {
@@ -33,13 +23,5 @@
   &__content-item {
     display: flex;
     background-color: rgba(41, 46, 104, 0.301);
-  }
-
-  &__edit-room{
-    min-width: 20px;
-  }
-
-  &__delete-room{
-    min-width: 20px;
   }
 }

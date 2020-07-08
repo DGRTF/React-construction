@@ -60,12 +60,15 @@ class App extends React.Component<IAppProps> {
   }
 
   private EditMachine() {
-    this.props.openEditMachineForm(this.machine);
+    if (this.machine)
+      this.props.openEditMachineForm(this.machine);
   }
 
-  private async DeleteMachine() {
+  private DeleteMachine() {
     if (this.machine) {
-      this.props.deleteMachine(this.machine.id);
+      const isDeleteMachine = window.confirm(`Вы действительно хотите удалить комнату "${this.machine.name}" ?`);
+      if (isDeleteMachine)
+        this.props.deleteMachine(this.machine.id);
     }
   }
 

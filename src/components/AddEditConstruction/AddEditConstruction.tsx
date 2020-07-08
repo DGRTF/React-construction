@@ -45,7 +45,7 @@ class AddConstruction extends React.Component<IAddConstructionProps> {
           </div>
           <form className='add-edit-construction__form' onSubmit={this.AddEditConstruction.bind(this)}>
             <input type='hidden' name='constructionId' value={this.props.constructionJSON ? `${this.props.constructionJSON.id}` : ''}></input>
-            <Input text='Введите название' name='name' value={this.props.constructionJSON ? this.props.constructionJSON.name : ''}></Input>
+            <Input text='Введите название' name='name' value={this.props.constructionJSON ? this.props.constructionJSON.name : null}></Input>
             <Input text='Введите адрес' name='address' value={this.props.constructionJSON ? this.props.constructionJSON.address : ''}></Input>
             <div>
               <div className='add-edit-construction__submit-container'>

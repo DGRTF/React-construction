@@ -26,6 +26,7 @@ export function getConstructionJSONArr() {
       method: 'POST',
     }).then(response => response.json())
       .then(json => dispatch(setConstructionJSONArr(json)))
+      .catch(error => alert('Что-то пошло не так :('));
   }
 }
 
@@ -39,6 +40,7 @@ export function addEditConstruction(formData: FormData) {
       body: formData
     }).then(response => response.json())
       .then(json => dispatch(setConstructionJSONArr(json)))
+      .catch(error => alert('Что-то пошло не так :('));
   }
 }
 
@@ -49,6 +51,7 @@ export function deleteConstruction(constructionId: number) {
       method: 'POST',
     }).then(response => response.json())
       .then(json => dispatch(setConstructionJSONArr(json)))
+      .catch(error => alert('Что-то пошло не так :('));
   }
 }
 
@@ -63,6 +66,7 @@ export function moreConstructions() {
         if (json.length >= moreConstructions.quantity)
           setSkipMoreConstructions(moreConstructions.quantity + quantityConstructionsStep);
       })
+      .catch(error => alert('Что-то пошло не так :('));
   }
 }
 

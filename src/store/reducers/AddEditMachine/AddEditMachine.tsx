@@ -66,7 +66,7 @@ export let reducer = function (state = {
     case 'ADD_EDIT_MACHINE_SET_DELETE_PATH':
       return { ...state, deletePath: action.payload }
     case 'ADD_EDIT_MACHINE_SET_MACHINE_TEMPLATE':
-      return {
+     console.warn(action.payload.machineJSON); return {
         ...state,
         visible: action.payload.visible,
         machineJSON: action.payload.machineJSON,

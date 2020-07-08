@@ -3,15 +3,19 @@ import './Table.scss';
 import VerticalBorder from './Control/VerticalBorder';
 import ColumnLineFacade from './View/ColumnLineFacade';
 import BordersControl from './Control/BordersFacade';
-import store from './../../store/store';
+import { stateType } from './../../store/store';
+import { connect } from 'react-redux';
 
-interface ITableProps {
+interface ImapStateToProps {
   machines?: {
     id: number;
     name: string;
     createYear: number;
     roomId: number;
-  }[];
+  }[]
+}
+
+interface ITableProps extends ImapStateToProps {
   GetMachine: (machineJSON: {
     id: number;
     name: string;
@@ -20,8 +24,9 @@ interface ITableProps {
   }) => void;
 }
 
-export default class Table extends Component<ITableProps> {
+class Table extends Component<ITableProps> {
   render() {
+    this.ChangeContent();
     return (
       <div className='table' ref='table'></div>
     );
@@ -55,7 +60,6 @@ export default class Table extends Component<ITableProps> {
     super(props);
     this.CreateHeader();
     this.CreateLineArr(this.props.machines);
-    store.subscribe(this.ChangeContent.bind(this));
   }
 
   componentDidMount() {
@@ -114,7 +118,7 @@ export default class Table extends Component<ITableProps> {
   }
 
   private ChangeContent() {
-    this.CreateLineArr(store.getState().machineJSONArr.machineJSONArr);
+    this.CreateLineArr(this.props.machines);
     this.AddLines(this.contentLineArr);
   }
 
@@ -135,7 +139,7 @@ export default class Table extends Component<ITableProps> {
     this.selectLine = selectLine;
     if (this.props.GetMachine)
       if (selectLine !== -1)
-        this.props.GetMachine(store.getState().machineJSONArr.machineJSONArr[selectLine]);
+        this.props.GetMachine(this.props.machines[selectLine]);
       else
         this.props.GetMachine(null);
   }
@@ -151,3 +155,13 @@ export default class Table extends Component<ITableProps> {
   }
 }
 
+
+function mapStateToProps(state: stateType) {
+  return {
+    machines: state.machineJSONArr.machineJSONArr
+  };
+}
+
+export default connect<ImapStateToProps, {}, ITableProps, stateType>(
+  mapStateToProps
+)(Table);

@@ -112,7 +112,9 @@ class Construction extends Component<IConstructionProps, IConstructionState> {
   }
 
   private async DeleteConstruction() {
-    this.props.deleteConstruction(this.props.constructionJSON.id);
+    const isDeleteConstruction = window.confirm(`Вы действительно хотите удалить здание "${this.props.constructionJSON.name}" ?`);
+    if (isDeleteConstruction)
+      this.props.deleteConstruction(this.props.constructionJSON.id);
   }
 
   private GetRoomsInConstruction(ev: React.MouseEvent) {

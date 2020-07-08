@@ -32,7 +32,7 @@ export function openAddMachineForm(room: {
       visible: true,
       machineJSON: {
         id: null,
-        name: '',
+        name: null,
         createYear: null,
         roomId: room.id,
       },
@@ -81,7 +81,7 @@ export function openAddRoomForm(construction: {
       submitName: 'Добавить комнату',
       roomJSON: {
         id: 0,
-        name: '',
+        name: null,
         floor: null,
         haveMachine: false,
         constructionId: construction.id,

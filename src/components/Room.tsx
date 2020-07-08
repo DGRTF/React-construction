@@ -63,7 +63,9 @@ class Room extends Component<IRoomProps> {
   }
 
   private async DeleteRoomInConstruction() {
-    this.props.deleteRoomsInConstruction(this.props.roomJSON.constructionId, this.props.roomJSON.id);
+    const isDeleteRoom = window.confirm(`Вы действительно хотите удалить комнату "${this.props.roomJSON.name}" ?`);
+    if (isDeleteRoom)
+      this.props.deleteRoomsInConstruction(this.props.roomJSON.constructionId, this.props.roomJSON.id);
   }
 
   private async GetMachineInRoom() {

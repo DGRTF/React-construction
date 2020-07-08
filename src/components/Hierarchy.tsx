@@ -41,7 +41,7 @@ class Hierarchy extends React.Component<IHierarchyProps> {
 
   render() {
     return (
-      <div className="hierarchy" style={{ width: '150px', minWidth: '150px' }}>
+      <div className="hierarchy" style={{ width: '250px', minWidth: '250px' }}>
         <div className="hierarchy__content">
           <Button name='Добавить здание' ClickHandler={this.AddConstruction.bind(this)} />
           {this.props.constructionJSONArr && this.props.constructionJSONArr.map(constructionJSON =>
@@ -51,7 +51,7 @@ class Hierarchy extends React.Component<IHierarchyProps> {
           )}
           <Button name='Больше зданий' ClickHandler={this.MoreConstructions.bind(this)} />
         </div>
-        <div className="hierarchy__border-move" style={{ left: '148px' }}
+        <div className="hierarchy__border-move" style={{ left: '248px' }}
           onMouseDown={this.AddEventMouseMove.bind(this)}
           onTouchStart={this.AddEventTouchMove.bind(this)}>
           <div className="hierarchy__border-move-handle"></div>

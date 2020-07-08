@@ -42,6 +42,7 @@ export function addEditMachine(formData: FormData) {
         getConstructionJSONArr()(dispatch, getState);
         getRoomsInConstructionWithCurrentMachine(roomId)(dispatch, getState);
       })
+      .catch(error => alert('Что-то пошло не так :('));
   }
 }
 
@@ -60,6 +61,7 @@ export function deleteMachine(id: number) {
         getConstructionJSONArr()(dispatch, getState);
         getRoomsInConstructionWithCurrentMachine(roomId)(dispatch, getState);
       })
+      .catch(error => alert('Что-то пошло не так :('));
   }
 }
 
@@ -77,6 +79,7 @@ export function getMachineInConstruction(constructionId: number) {
         dispatch(setMachineArr(json));
         dispatch(setEditDeletePathsInConstruction(constructionId));
       })
+      .catch(error => alert('Что-то пошло не так :('));
   }
 }
 
@@ -91,6 +94,7 @@ export function getMachineInRoom(roomId: number) {
         dispatch(setMachineArr(json));
         dispatch(setAddEditDeletePathsInRoom(roomId));
       })
+      .catch(error => alert('Что-то пошло не так :('));
   }
 }
 
@@ -106,6 +110,7 @@ export function getMoreMachines() {
         if (json.length >= moreMachines.quantity)
           dispatch(setQuantityMoreMachines(changeQuantity));
       })
+      .catch(error => alert('Что-то пошло не так :('));
   }
 }
 

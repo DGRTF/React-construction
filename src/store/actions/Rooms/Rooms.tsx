@@ -71,6 +71,7 @@ export function getRoomsInConstruction(constructionId: number) {
         deleteElementSkipTakeMoreRooms(constructionId)(dispatch, getState);
         dispatch(addSkipQuantityMoreRooms(constructionId));
       })
+      .catch(error => alert('Что-то пошло не так :('));
   }
 }
 
@@ -94,6 +95,7 @@ export function deleteRoomsInConstruction(constructionId: number, roomId: number
         dispatch(setRooms(reserveState));
         dispatch(addRooms(json));
       })
+      .catch(error => alert('Что-то пошло не так :('));
   }
 }
 
@@ -120,6 +122,7 @@ export function addEditRoomInConstruction(formData: FormData) {
         dispatch(setRooms(reserveState));
         dispatch(addRooms(json))
       })
+      .catch(error => alert('Что-то пошло не так :('));
   }
 }
 
@@ -151,6 +154,7 @@ export function getRoomsInConstructionWithCurrentMachine(roomId: number) {
         dispatch(setRooms(reserveRooms));
         dispatch(addRooms(json));
       })
+      .catch(error => alert('Что-то пошло не так :('));
   }
 }
 

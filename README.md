@@ -1,44 +1,42 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## `Web-приложение учёта оборудования`
+Реализут CRUD зданий, находящихся в ней комнат и оборудования.
+Сделано согласно ТЗ описанному ниже.
+[Baclend-часть](https://github.com/dgrtf/ConstructionReactWebServer)
+[Docker](https://hub.docker.com/r/dgrtf/constructionreact)
 
-## Available Scripts
+### `Техническое задание:`
 
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+#### `Предметная область:`
+Существует некоторая крупная организация.
+Физически эта организация располагается в нескольких зданиях, каждое здание состоит из комнат.
+В каждой комнате может располагаться некоторое оборудование.
+#### `Задача:`
+Необходимо создать приложение, в левой части которого можно будет просмотреть иерархию
+зданий/комнат, а в правой части – просмотреть имеющееся в этом здании или комнате оборудование.
+Оборудование здания = оборудование всех комнат здания.
+Возле каждого здания и комнаты в левой части следует располагать индикатор, находится ли в нем/ней
+оборудование.
+Оборудование характеризуется наименованием и количеством.
+Должна быть возможность работать с оборудованием в выбранной комнате: добавлять, редактировать,
+удалять.
+#### `Ограничения:`
+Использовать при реализации VS2017, .NET 4.x, C#, ASP.NET WebApi 1/2 – ASP.NET CORE 1.x/2.0, HTML5, Angular
+/ ReactJS, TypeScript, CSS.
+Вызов просмотра содержимого здания/комнаты должен производиться без полной перерисовки страницы
+(использовать AJAX).
+Можно использовать контролы сторонних библиотек Angular / ReactJS.
+Данные рекомендуется хранить в БД MS SQL Server.
+Предоставить архив, содержащий код программы и инструкцию по его развертыванию на полигоне.
+### `Оценивается:`
+1)
+Работоспособность решения;
+2)
+Соответствие его заявленным задачам и ограничениям;
+3)
+Качество декомпозиции кода;
+4)
+Уместность использования технологий;
+5)
+Полнота решения, а также его устойчивость к возможным изменениям задач и предметной области.
+В случае, если Вы не обладаете какой-то из перечисленных технологией - оцениваться будет также и то, как
+быстро Вы смогли в ней разобраться.

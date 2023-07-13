@@ -19,7 +19,7 @@
     "ii": "^0.1.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1",
+    "react-scripts": "5.0.1",
     "save-dev": "0.0.1-security",
     "typescript": "^3.7.5"
   },
@@ -54,7 +54,7 @@
     "eslint-plugin-react-hooks": "^4.0.4",
     "immutable": "^4.0.0-rc.12",
     "material-design-icons": "^3.0.1",
-    "node-sass": "^4.14.1",
+    "node-sass": "^9.0.0",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.2.0",
     "redux": "^4.0.5",
